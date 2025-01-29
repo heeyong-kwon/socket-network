@@ -1,0 +1,30 @@
+version: 2.32.4
+
+services:
+  # Server
+  server:
+    image: "ubuntu:latest"
+    container_name: "socket_server"
+    tty: "True"
+    stdin_open: "True"
+    restart: "always"
+    ports:
+      - "1316:1316"
+    volumes:
+      - "..:/socket"
+    command:
+      ["bash"]
+  
+  # Client
+  client:
+    image: "ubuntu:latest"
+    container_name: "socket_client"
+    tty: "True"
+    stdin_open: "True"
+    restart: "always"
+    ports:
+      - "1317:1317"
+    volumes:
+      - "..:/socket"
+    command:
+      ["bash"]
