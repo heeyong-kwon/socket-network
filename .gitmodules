@@ -1,0 +1,3 @@
+[submodule "pqc/oqs-provider"]
+	path = pqc/oqs-provider
+	url = https://github.com/open-quantum-safe/oqs-provider.git
