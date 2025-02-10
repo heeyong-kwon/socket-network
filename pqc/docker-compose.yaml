@@ -1,0 +1,36 @@
+version: 2.32.4
+
+services:
+  # Server
+  pqc_server:
+    image: "arm64v8/ubuntu:latest"
+    container_name: "pqc_server"
+    tty: "True"
+    stdin_open: "True"
+    restart: "always"
+    ports:
+      - "1316:1316"
+    volumes:
+      - "..:/socket"
+    command:
+      ["bash"]
+  
+  # Client
+  pqc_client:
+    image: "arm64v8/ubuntu:latest"
+    container_name: "pqc_client"
+    tty: "True"
+    stdin_open: "True"
+    restart: "always"
+    ports:
+      - "1317:1317"
+    volumes:
+      - "..:/socket"
+    command:
+      ["bash"]
+
+
+
+
+
+
