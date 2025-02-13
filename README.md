@@ -23,6 +23,7 @@ docker exec -it pqc_server bash
     cd socket/pqc/
     (path: /socket/pqc/)
     bash setup.sh
+    source ~/.bashrc
     (path: /socket/pqc/)
     (optional: If you want to test the installation)
     cd oqs-provider
