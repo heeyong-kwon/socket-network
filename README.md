@@ -23,6 +23,7 @@ docker exec -it pqc_server bash
     cd socket/pqc/
     (path: /socket/pqc/)
     bash setup.sh
+    alias python=python3
     source ~/.bashrc
     (path: /socket/pqc/)
     (optional: If you want to test the installation)
@@ -30,6 +31,50 @@ docker exec -it pqc_server bash
     cd _build && ctest --parallel 5 --rerun-failed --output-on-failure -V
     (path: /socket/pqc/_build/)
 ```
+
+
+
+##### Example
+1. Generate a digital certificate
+```bash
+openssl req -x509 -new -newkey falcon1024 -keyout falcon1024_CA.key -out falcon1024_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+openssl genpkey -algorithm falcon1024 -out falcon1024_srv.key
+openssl req -new -newkey falcon1024 -keyout falcon1024_srv.key -out falcon1024_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+openssl x509 -req -in falcon1024_srv.csr -out falcon1024_srv.crt -CA falcon1024_CA.crt -CAkey falcon1024_CA.key -CAcreateserial -days 365
+```
+2. Run server
+```bash
+openssl s_server -cert falcon1024_srv.crt -key falcon1024_srv.key -www -tls1_3 -groups mlkem512
+```
+3. Run client
+```bash
+openssl s_client -groups mlkem512
+```
+
+
+
+
+
+<!-- 지금 연결은 되는데, verification 21 <- 서버 인증서를 신뢰할 수 없어서 발생하는 문제임. TLS 연결은 성공적으로 설정됨> -->
+
+
+
+This is Hee-Yong's implementation
+```bash
+(path: /socket/pqc/)
+cd src
+(path: /socket/pqc/src/)
+mkdir build && cd build
+(path: /socket/pqc/src/build)
+cmake ..
+make
+./server
+./client
+```
+
+
+
+
 
 
 
