@@ -1,15 +1,5 @@
 // client.c
-#include <openssl/ssl.h>
-#include <openssl/err.h>
-#include <stdio.h>
-#include <string.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <openssl/provider.h>
-
-#define SERVER_ADDR "172.24.0.3"
-#define SERVER_PORT 1316
-
+#include "pq_tls.client.h"
 
 void init_openssl() {
     SSL_library_init();
@@ -34,11 +24,19 @@ SSL_CTX* create_client_context() {
 
 void communicate_with_server(SSL *ssl) {
     char buffer[1024];
-    SSL_write(ssl, "Hello from PQC-TLS Client", 25);
-    int bytes = SSL_read(ssl, buffer, sizeof(buffer));
-    if (bytes > 0) {
-        printf("Server response: %s\n", buffer);
+    for (int i = 0; i < NUM_MESSAGES; i++) {
+        sprintf(buffer, "Message %d", i);
+        SSL_write(ssl, buffer, strlen(buffer));
+        int bytes = SSL_read(ssl, buffer, sizeof(buffer));
+        if (bytes > 0) {
+            printf("Server response: %s\n", buffer);
+        }
     }
+    // SSL_write(ssl, "Hello from PQC-TLS Client", 25);
+    // int bytes = SSL_read(ssl, buffer, sizeof(buffer));
+    // if (bytes > 0) {
+    //     printf("Server response: %s\n", buffer);
+    // }
 }
 
 void run_client() {

@@ -1,6 +1,6 @@
 CMakeFiles/client.dir/pq_tls_client.c.o: /socket/pqc/src/pq_tls_client.c \
- /usr/include/stdc-predef.h /usr/include/openssl/ssl.h \
- /usr/include/openssl/macros.h \
+ /usr/include/stdc-predef.h /socket/pqc/src/pq_tls.client.h \
+ /usr/include/openssl/ssl.h /usr/include/openssl/macros.h \
  /usr/include/aarch64-linux-gnu/openssl/opensslconf.h \
  /usr/include/aarch64-linux-gnu/openssl/configuration.h \
  /usr/include/openssl/opensslv.h /usr/include/openssl/e_os2.h \

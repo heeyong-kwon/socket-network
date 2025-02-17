@@ -3,6 +3,7 @@
 
 CMakeFiles/client.dir/pq_tls_client.c.o
  /socket/pqc/src/pq_tls_client.c
+ /socket/pqc/src/pq_tls.client.h
  /usr/include/aarch64-linux-gnu/asm/bitsperlong.h
  /usr/include/aarch64-linux-gnu/asm/errno.h
  /usr/include/aarch64-linux-gnu/asm/posix_types.h

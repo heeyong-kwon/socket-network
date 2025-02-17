@@ -1,15 +1,5 @@
 // server.c
-#include <openssl/ssl.h>
-#include <openssl/err.h>
-#include <stdio.h>
-#include <string.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <openssl/provider.h>
-
-#define SERVER_CERT "/socket/pqc/src/build/falcon1024_srv.crt"
-#define SERVER_KEY "/socket/pqc/src/build/falcon1024_srv.key"
-#define PORT 1316
+#include "pq_tls_server.h"
 
 void init_openssl() {
     SSL_library_init();
@@ -42,10 +32,12 @@ SSL_CTX* create_server_context() {
 
 void handle_client(SSL *ssl) {
     char buffer[1024] = {0};
-    int bytes = SSL_read(ssl, buffer, sizeof(buffer));
-    if (bytes > 0) {
-        printf("Client message: %s\n", buffer);
-        SSL_write(ssl, "Hello from PQC-TLS Server", 26);
+    for (int i = 0; i < 256; i++){
+        int bytes = SSL_read(ssl, buffer, sizeof(buffer));
+        if (bytes > 0) {
+            printf("Client message: %s\n", buffer);
+            SSL_write(ssl, "Hello from PQC-TLS Server", 26);
+        }
     }
     SSL_shutdown(ssl);
     SSL_free(ssl);
