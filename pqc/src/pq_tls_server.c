@@ -7,8 +7,8 @@
 #include <unistd.h>
 #include <openssl/provider.h>
 
-#define SERVER_CERT "server_cert.pem"
-#define SERVER_KEY "server_key.pem"
+#define SERVER_CERT "/socket/pqc/falcon1024_srv.crt"
+#define SERVER_KEY "/socket/pqc/falcon1024_srv.key"
 #define PORT 4433
 
 void init_openssl() {
