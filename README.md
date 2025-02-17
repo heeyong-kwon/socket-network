@@ -3,18 +3,24 @@
 
 #### Install oqs-provider
 
-1. Move to the pqc project directory ($(ROOT_DIR)/pqc/)
+1. Clone the repository
+```bash
+git clone $(git address)
+cd socket-network
+```
+
+2. Move to the pqc project directory ($(ROOT_DIR)/pqc/)
 ```bash
 cd pqc
 # git submodule update --init --recursive
 ```
-2. Run server and client dockers by docker compose
+3. Run server and client dockers by docker compose
 ```bash
 (path: $(ROOT_DIR)/pqc/)
 docker compose up -d
 ```
 
-3. Set the docker environment -> install oqs-provider
+4. Set the server's docker environment -> install oqs-provider
 ```bash
 (path: $(ROOT_DIR)/pqc/)
 docker exec -it pqc_server bash
@@ -23,13 +29,20 @@ docker exec -it pqc_server bash
     cd socket/pqc/
     (path: /socket/pqc/)
     bash setup.sh
-    alias python=python3
     source ~/.bashrc
     (path: /socket/pqc/)
     (optional: If you want to test the installation)
     cd oqs-provider
     cd _build && ctest --parallel 5 --rerun-failed --output-on-failure -V
     (path: /socket/pqc/_build/)
+```
+
+5. Set the client's docker environment -> install oqs-provider
+```bash
+(path: $(ROOT_DIR)/pqc/)
+docker exec -it pqc_client bash
+    (pqc_client container)
+    ... # Same to that executed in the server container
 ```
 
 

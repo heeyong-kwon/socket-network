@@ -1,10 +1,10 @@
 #!/bin/bash
 
 apt update && apt upgrade -y
+apt install vim screen -y
 apt install git wget build-essential checkinstall zlib1g-dev -y
 # For liboqs
 apt install astyle cmake gcc ninja-build libssl-dev python3-pytest python3-pytest-xdist unzip xsltproc doxygen graphviz python3-yaml valgrind -y
-apt install vim screen -y
 apt install python3 python3-pip python3-dev python3-venv -y
 
 # Install OpenSSL >= version 3.3
@@ -57,6 +57,8 @@ liboqs_DIR=../liboqs cmake -DOPENSSL_ROOT_DIR=$OPENSSL_PATH -S . -B _build && cm
 cd ..
 cp rp5_openssl.cnf $OPENSSL_PATH/openssl.cnf
 STRING="export OPENSSL_CONF=$OPENSSL_PATH/openssl.cnf"
+grep -qxF "$STRING" ~/.bashrc || echo "$STRING" >> ~/.bashrc
+STRING="alias python=python3"
 grep -qxF "$STRING" ~/.bashrc || echo "$STRING" >> ~/.bashrc
 # STRING='export OPENSSL_MODULES=/usr/lib/aarch64-linux-gnu/ossl-modules'
 # grep -qxF "$STRING" ~/.bashrc || echo "$STRING" >> ~/.bashrc

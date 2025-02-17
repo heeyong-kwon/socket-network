@@ -14,6 +14,8 @@ services:
       - "..:/socket"
     command:
       ["bash"]
+    networks: 
+      - "pqc_network"
   
   # Client
   pqc_client:
@@ -28,6 +30,13 @@ services:
       - "..:/socket"
     command:
       ["bash"]
+    networks: 
+      - "pqc_network"
+
+networks:
+  pqc_network:
+    name: pqc_network
+    driver: bridge
 
 
 

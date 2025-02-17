@@ -7,8 +7,9 @@
 #include <unistd.h>
 #include <openssl/provider.h>
 
-#define SERVER_ADDR "127.0.0.1"
-#define SERVER_PORT 4433
+#define SERVER_ADDR "172.24.0.3"
+#define SERVER_PORT 1316
+
 
 void init_openssl() {
     SSL_library_init();
