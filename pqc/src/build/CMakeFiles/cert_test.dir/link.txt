@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/cert_test.dir/test/cert_test.c.o -o cert_test 

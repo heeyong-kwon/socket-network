@@ -69,33 +69,65 @@ include CMakeFiles/server.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/server.dir/flags.make
 
-CMakeFiles/server.dir/pq_tls_server.c.o: CMakeFiles/server.dir/flags.make
-CMakeFiles/server.dir/pq_tls_server.c.o: /socket/pqc/src/pq_tls_server.c
-CMakeFiles/server.dir/pq_tls_server.c.o: CMakeFiles/server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/server.dir/pq_tls_server.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/server.dir/pq_tls_server.c.o -MF CMakeFiles/server.dir/pq_tls_server.c.o.d -o CMakeFiles/server.dir/pq_tls_server.c.o -c /socket/pqc/src/pq_tls_server.c
+CMakeFiles/server.dir/pq_server.c.o: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/pq_server.c.o: /socket/pqc/src/pq_server.c
+CMakeFiles/server.dir/pq_server.c.o: CMakeFiles/server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/server.dir/pq_server.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/server.dir/pq_server.c.o -MF CMakeFiles/server.dir/pq_server.c.o.d -o CMakeFiles/server.dir/pq_server.c.o -c /socket/pqc/src/pq_server.c
 
-CMakeFiles/server.dir/pq_tls_server.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/server.dir/pq_tls_server.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /socket/pqc/src/pq_tls_server.c > CMakeFiles/server.dir/pq_tls_server.c.i
+CMakeFiles/server.dir/pq_server.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/server.dir/pq_server.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /socket/pqc/src/pq_server.c > CMakeFiles/server.dir/pq_server.c.i
 
-CMakeFiles/server.dir/pq_tls_server.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/server.dir/pq_tls_server.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /socket/pqc/src/pq_tls_server.c -o CMakeFiles/server.dir/pq_tls_server.c.s
+CMakeFiles/server.dir/pq_server.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/server.dir/pq_server.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /socket/pqc/src/pq_server.c -o CMakeFiles/server.dir/pq_server.c.s
+
+CMakeFiles/server.dir/pq_server_funcs.c.o: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/pq_server_funcs.c.o: /socket/pqc/src/pq_server_funcs.c
+CMakeFiles/server.dir/pq_server_funcs.c.o: CMakeFiles/server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/server.dir/pq_server_funcs.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/server.dir/pq_server_funcs.c.o -MF CMakeFiles/server.dir/pq_server_funcs.c.o.d -o CMakeFiles/server.dir/pq_server_funcs.c.o -c /socket/pqc/src/pq_server_funcs.c
+
+CMakeFiles/server.dir/pq_server_funcs.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/server.dir/pq_server_funcs.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /socket/pqc/src/pq_server_funcs.c > CMakeFiles/server.dir/pq_server_funcs.c.i
+
+CMakeFiles/server.dir/pq_server_funcs.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/server.dir/pq_server_funcs.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /socket/pqc/src/pq_server_funcs.c -o CMakeFiles/server.dir/pq_server_funcs.c.s
+
+CMakeFiles/server.dir/pq_openssl.c.o: CMakeFiles/server.dir/flags.make
+CMakeFiles/server.dir/pq_openssl.c.o: /socket/pqc/src/pq_openssl.c
+CMakeFiles/server.dir/pq_openssl.c.o: CMakeFiles/server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/server.dir/pq_openssl.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/server.dir/pq_openssl.c.o -MF CMakeFiles/server.dir/pq_openssl.c.o.d -o CMakeFiles/server.dir/pq_openssl.c.o -c /socket/pqc/src/pq_openssl.c
+
+CMakeFiles/server.dir/pq_openssl.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/server.dir/pq_openssl.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /socket/pqc/src/pq_openssl.c > CMakeFiles/server.dir/pq_openssl.c.i
+
+CMakeFiles/server.dir/pq_openssl.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/server.dir/pq_openssl.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /socket/pqc/src/pq_openssl.c -o CMakeFiles/server.dir/pq_openssl.c.s
 
 # Object files for target server
 server_OBJECTS = \
-"CMakeFiles/server.dir/pq_tls_server.c.o"
+"CMakeFiles/server.dir/pq_server.c.o" \
+"CMakeFiles/server.dir/pq_server_funcs.c.o" \
+"CMakeFiles/server.dir/pq_openssl.c.o"
 
 # External object files for target server
 server_EXTERNAL_OBJECTS =
 
-server: CMakeFiles/server.dir/pq_tls_server.c.o
+server: CMakeFiles/server.dir/pq_server.c.o
+server: CMakeFiles/server.dir/pq_server_funcs.c.o
+server: CMakeFiles/server.dir/pq_openssl.c.o
 server: CMakeFiles/server.dir/build.make
 server: /usr/lib/aarch64-linux-gnu/libssl.so
 server: /usr/lib/aarch64-linux-gnu/libcrypto.so
 server: CMakeFiles/server.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable server"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable server"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/server.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

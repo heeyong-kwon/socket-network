@@ -1,6 +1,10 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/client.dir/pq_tls_client.c.o"
-  "CMakeFiles/client.dir/pq_tls_client.c.o.d"
+  "CMakeFiles/client.dir/pq_client.c.o"
+  "CMakeFiles/client.dir/pq_client.c.o.d"
+  "CMakeFiles/client.dir/pq_client_funcs.c.o"
+  "CMakeFiles/client.dir/pq_client_funcs.c.o.d"
+  "CMakeFiles/client.dir/pq_openssl.c.o"
+  "CMakeFiles/client.dir/pq_openssl.c.o.d"
   "client"
   "client.pdb"
 )

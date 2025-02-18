@@ -142,53 +142,141 @@ client/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/build
 .PHONY : client/fast
 
-pq_tls_client.o: pq_tls_client.c.o
-.PHONY : pq_tls_client.o
+#=============================================================================
+# Target rules for targets named cert_test
+
+# Build rule for target.
+cert_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cert_test
+.PHONY : cert_test
+
+# fast build rule for target.
+cert_test/fast:
+	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/cert_test.dir/build.make test/CMakeFiles/cert_test.dir/build
+.PHONY : cert_test/fast
+
+pq_client.o: pq_client.c.o
+.PHONY : pq_client.o
 
 # target to build an object file
-pq_tls_client.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_tls_client.c.o
-.PHONY : pq_tls_client.c.o
+pq_client.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_client.c.o
+.PHONY : pq_client.c.o
 
-pq_tls_client.i: pq_tls_client.c.i
-.PHONY : pq_tls_client.i
+pq_client.i: pq_client.c.i
+.PHONY : pq_client.i
 
 # target to preprocess a source file
-pq_tls_client.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_tls_client.c.i
-.PHONY : pq_tls_client.c.i
+pq_client.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_client.c.i
+.PHONY : pq_client.c.i
 
-pq_tls_client.s: pq_tls_client.c.s
-.PHONY : pq_tls_client.s
+pq_client.s: pq_client.c.s
+.PHONY : pq_client.s
 
 # target to generate assembly for a file
-pq_tls_client.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_tls_client.c.s
-.PHONY : pq_tls_client.c.s
+pq_client.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_client.c.s
+.PHONY : pq_client.c.s
 
-pq_tls_server.o: pq_tls_server.c.o
-.PHONY : pq_tls_server.o
+pq_client_funcs.o: pq_client_funcs.c.o
+.PHONY : pq_client_funcs.o
 
 # target to build an object file
-pq_tls_server.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_tls_server.c.o
-.PHONY : pq_tls_server.c.o
+pq_client_funcs.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_client_funcs.c.o
+.PHONY : pq_client_funcs.c.o
 
-pq_tls_server.i: pq_tls_server.c.i
-.PHONY : pq_tls_server.i
+pq_client_funcs.i: pq_client_funcs.c.i
+.PHONY : pq_client_funcs.i
 
 # target to preprocess a source file
-pq_tls_server.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_tls_server.c.i
-.PHONY : pq_tls_server.c.i
+pq_client_funcs.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_client_funcs.c.i
+.PHONY : pq_client_funcs.c.i
 
-pq_tls_server.s: pq_tls_server.c.s
-.PHONY : pq_tls_server.s
+pq_client_funcs.s: pq_client_funcs.c.s
+.PHONY : pq_client_funcs.s
 
 # target to generate assembly for a file
-pq_tls_server.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_tls_server.c.s
-.PHONY : pq_tls_server.c.s
+pq_client_funcs.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_client_funcs.c.s
+.PHONY : pq_client_funcs.c.s
+
+pq_openssl.o: pq_openssl.c.o
+.PHONY : pq_openssl.o
+
+# target to build an object file
+pq_openssl.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_openssl.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_openssl.c.o
+.PHONY : pq_openssl.c.o
+
+pq_openssl.i: pq_openssl.c.i
+.PHONY : pq_openssl.i
+
+# target to preprocess a source file
+pq_openssl.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_openssl.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_openssl.c.i
+.PHONY : pq_openssl.c.i
+
+pq_openssl.s: pq_openssl.c.s
+.PHONY : pq_openssl.s
+
+# target to generate assembly for a file
+pq_openssl.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_openssl.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/pq_openssl.c.s
+.PHONY : pq_openssl.c.s
+
+pq_server.o: pq_server.c.o
+.PHONY : pq_server.o
+
+# target to build an object file
+pq_server.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_server.c.o
+.PHONY : pq_server.c.o
+
+pq_server.i: pq_server.c.i
+.PHONY : pq_server.i
+
+# target to preprocess a source file
+pq_server.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_server.c.i
+.PHONY : pq_server.c.i
+
+pq_server.s: pq_server.c.s
+.PHONY : pq_server.s
+
+# target to generate assembly for a file
+pq_server.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_server.c.s
+.PHONY : pq_server.c.s
+
+pq_server_funcs.o: pq_server_funcs.c.o
+.PHONY : pq_server_funcs.o
+
+# target to build an object file
+pq_server_funcs.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_server_funcs.c.o
+.PHONY : pq_server_funcs.c.o
+
+pq_server_funcs.i: pq_server_funcs.c.i
+.PHONY : pq_server_funcs.i
+
+# target to preprocess a source file
+pq_server_funcs.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_server_funcs.c.i
+.PHONY : pq_server_funcs.c.i
+
+pq_server_funcs.s: pq_server_funcs.c.s
+.PHONY : pq_server_funcs.s
+
+# target to generate assembly for a file
+pq_server_funcs.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/pq_server_funcs.c.s
+.PHONY : pq_server_funcs.c.s
 
 # Help Target
 help:
@@ -198,14 +286,24 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... cert_test"
 	@echo "... client"
 	@echo "... server"
-	@echo "... pq_tls_client.o"
-	@echo "... pq_tls_client.i"
-	@echo "... pq_tls_client.s"
-	@echo "... pq_tls_server.o"
-	@echo "... pq_tls_server.i"
-	@echo "... pq_tls_server.s"
+	@echo "... pq_client.o"
+	@echo "... pq_client.i"
+	@echo "... pq_client.s"
+	@echo "... pq_client_funcs.o"
+	@echo "... pq_client_funcs.i"
+	@echo "... pq_client_funcs.s"
+	@echo "... pq_openssl.o"
+	@echo "... pq_openssl.i"
+	@echo "... pq_openssl.s"
+	@echo "... pq_server.o"
+	@echo "... pq_server.i"
+	@echo "... pq_server.s"
+	@echo "... pq_server_funcs.o"
+	@echo "... pq_server_funcs.i"
+	@echo "... pq_server_funcs.s"
 .PHONY : help
 
 

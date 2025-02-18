@@ -8,7 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/socket/pqc/src/pq_tls_server.c" "CMakeFiles/server.dir/pq_tls_server.c.o" "gcc" "CMakeFiles/server.dir/pq_tls_server.c.o.d"
+  "/socket/pqc/src/pq_openssl.c" "CMakeFiles/server.dir/pq_openssl.c.o" "gcc" "CMakeFiles/server.dir/pq_openssl.c.o.d"
+  "/socket/pqc/src/pq_server.c" "CMakeFiles/server.dir/pq_server.c.o" "gcc" "CMakeFiles/server.dir/pq_server.c.o.d"
+  "/socket/pqc/src/pq_server_funcs.c" "CMakeFiles/server.dir/pq_server_funcs.c.o" "gcc" "CMakeFiles/server.dir/pq_server_funcs.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

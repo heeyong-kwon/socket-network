@@ -1,0 +1,17 @@
+{
+    "cmake.sourceDirectory": "/home/hykwon/Downloads/mizzou/socket-network/pqc/src",
+    "files.associations": {
+        "pq_tls_server.h": "c",
+        "pq_tls.client.h": "c",
+        "err.h": "c",
+        "pq_server.h": "c",
+        "pq_server_funcs.h": "c",
+        "pq_server_params.h": "c",
+        "pq_openssl.h": "c",
+        "ssl.h": "c",
+        "typeinfo": "c",
+        "cert_test_params.h": "c",
+        "evp.h": "c",
+        "cert_test_funcs.h": "c"
+    }
+}

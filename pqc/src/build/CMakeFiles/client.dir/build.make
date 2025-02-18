@@ -69,33 +69,65 @@ include CMakeFiles/client.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/client.dir/flags.make
 
-CMakeFiles/client.dir/pq_tls_client.c.o: CMakeFiles/client.dir/flags.make
-CMakeFiles/client.dir/pq_tls_client.c.o: /socket/pqc/src/pq_tls_client.c
-CMakeFiles/client.dir/pq_tls_client.c.o: CMakeFiles/client.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/client.dir/pq_tls_client.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/client.dir/pq_tls_client.c.o -MF CMakeFiles/client.dir/pq_tls_client.c.o.d -o CMakeFiles/client.dir/pq_tls_client.c.o -c /socket/pqc/src/pq_tls_client.c
+CMakeFiles/client.dir/pq_client.c.o: CMakeFiles/client.dir/flags.make
+CMakeFiles/client.dir/pq_client.c.o: /socket/pqc/src/pq_client.c
+CMakeFiles/client.dir/pq_client.c.o: CMakeFiles/client.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/client.dir/pq_client.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/client.dir/pq_client.c.o -MF CMakeFiles/client.dir/pq_client.c.o.d -o CMakeFiles/client.dir/pq_client.c.o -c /socket/pqc/src/pq_client.c
 
-CMakeFiles/client.dir/pq_tls_client.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/client.dir/pq_tls_client.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /socket/pqc/src/pq_tls_client.c > CMakeFiles/client.dir/pq_tls_client.c.i
+CMakeFiles/client.dir/pq_client.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/client.dir/pq_client.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /socket/pqc/src/pq_client.c > CMakeFiles/client.dir/pq_client.c.i
 
-CMakeFiles/client.dir/pq_tls_client.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/client.dir/pq_tls_client.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /socket/pqc/src/pq_tls_client.c -o CMakeFiles/client.dir/pq_tls_client.c.s
+CMakeFiles/client.dir/pq_client.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/client.dir/pq_client.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /socket/pqc/src/pq_client.c -o CMakeFiles/client.dir/pq_client.c.s
+
+CMakeFiles/client.dir/pq_client_funcs.c.o: CMakeFiles/client.dir/flags.make
+CMakeFiles/client.dir/pq_client_funcs.c.o: /socket/pqc/src/pq_client_funcs.c
+CMakeFiles/client.dir/pq_client_funcs.c.o: CMakeFiles/client.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/client.dir/pq_client_funcs.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/client.dir/pq_client_funcs.c.o -MF CMakeFiles/client.dir/pq_client_funcs.c.o.d -o CMakeFiles/client.dir/pq_client_funcs.c.o -c /socket/pqc/src/pq_client_funcs.c
+
+CMakeFiles/client.dir/pq_client_funcs.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/client.dir/pq_client_funcs.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /socket/pqc/src/pq_client_funcs.c > CMakeFiles/client.dir/pq_client_funcs.c.i
+
+CMakeFiles/client.dir/pq_client_funcs.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/client.dir/pq_client_funcs.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /socket/pqc/src/pq_client_funcs.c -o CMakeFiles/client.dir/pq_client_funcs.c.s
+
+CMakeFiles/client.dir/pq_openssl.c.o: CMakeFiles/client.dir/flags.make
+CMakeFiles/client.dir/pq_openssl.c.o: /socket/pqc/src/pq_openssl.c
+CMakeFiles/client.dir/pq_openssl.c.o: CMakeFiles/client.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/client.dir/pq_openssl.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/client.dir/pq_openssl.c.o -MF CMakeFiles/client.dir/pq_openssl.c.o.d -o CMakeFiles/client.dir/pq_openssl.c.o -c /socket/pqc/src/pq_openssl.c
+
+CMakeFiles/client.dir/pq_openssl.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/client.dir/pq_openssl.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /socket/pqc/src/pq_openssl.c > CMakeFiles/client.dir/pq_openssl.c.i
+
+CMakeFiles/client.dir/pq_openssl.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/client.dir/pq_openssl.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /socket/pqc/src/pq_openssl.c -o CMakeFiles/client.dir/pq_openssl.c.s
 
 # Object files for target client
 client_OBJECTS = \
-"CMakeFiles/client.dir/pq_tls_client.c.o"
+"CMakeFiles/client.dir/pq_client.c.o" \
+"CMakeFiles/client.dir/pq_client_funcs.c.o" \
+"CMakeFiles/client.dir/pq_openssl.c.o"
 
 # External object files for target client
 client_EXTERNAL_OBJECTS =
 
-client: CMakeFiles/client.dir/pq_tls_client.c.o
+client: CMakeFiles/client.dir/pq_client.c.o
+client: CMakeFiles/client.dir/pq_client_funcs.c.o
+client: CMakeFiles/client.dir/pq_openssl.c.o
 client: CMakeFiles/client.dir/build.make
 client: /usr/lib/aarch64-linux-gnu/libssl.so
 client: /usr/lib/aarch64-linux-gnu/libcrypto.so
 client: CMakeFiles/client.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable client"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/socket/pqc/src/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable client"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/client.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
