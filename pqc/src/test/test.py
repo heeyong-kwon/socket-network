@@ -23,7 +23,7 @@ if __name__ == "__main__":
     move_to_target_dir("../../../oqs-provider")
     build_oqs_provider()
     
-    test_alg    = "hyalg"
+    test_alg    = "hyalg1"
     test_cert(test_alg=test_alg)
 
 
