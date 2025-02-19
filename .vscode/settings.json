@@ -12,6 +12,7 @@
         "typeinfo": "c",
         "cert_test_params.h": "c",
         "evp.h": "c",
-        "cert_test_funcs.h": "c"
+        "cert_test_funcs.h": "c",
+        "oqs_endecoder_local.h": "c"
     }
 }

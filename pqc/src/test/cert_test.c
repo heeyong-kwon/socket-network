@@ -18,7 +18,7 @@
         "CROSSrsdp128balanced"
     };
 #else
-    char* SUPPORTED_SIG_ALGS[]  = {"p521_falcon1024"};
+    char* SUPPORTED_SIG_ALGS[]  = {"p256_falcon512"};
 #endif
 
 

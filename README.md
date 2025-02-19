@@ -31,10 +31,12 @@ docker exec -it pqc_server bash
     bash setup.sh
     source ~/.bashrc
     (path: /socket/pqc/)
-    (optional: If you want to test the installation)
+    (Optional: If you want to test the installation)
     cd oqs-provider
     cd _build && ctest --parallel 5 --rerun-failed --output-on-failure -V
     (path: /socket/pqc/_build/)
+    (Optional) Give a permission to the root directory
+    chmod 777 -R ../..
 ```
 
 5. Set the client's docker environment -> install oqs-provider
@@ -43,6 +45,11 @@ docker exec -it pqc_server bash
 docker exec -it pqc_client bash
     (pqc_client container)
     ... # Same to that executed in the server container
+```
+
+6. 
+```bash
+
 ```
 
 
