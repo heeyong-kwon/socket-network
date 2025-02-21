@@ -22,6 +22,9 @@ SSL_CTX* create_server_context() {
 void *handle_client(void *arg) {
     SSL *ssl = (SSL *)arg;
     char buffer[BUFFER_SIZE];
+    char response[BUFFER_SIZE];
+
+    data_t parsed_message;
 
     while (1) {
         memset(buffer, 0, BUFFER_SIZE);
@@ -39,8 +42,18 @@ void *handle_client(void *arg) {
             break;
         }
 
-        char response[] = "Message received by PQC-TLS Server";
-        SSL_write(ssl, response, strlen(response));
+        if ( 0 == safe_strton(buffer, &parsed_message) ) {
+            #if (DATA_TYPE == TYPE_INTEGER)
+                sprintf(response, "Message received by PQC-TLS Server %d", parsed_message + 1);
+            #elif (DATA_TYPE == TYPE_FLOAT)
+                sprintf(response, "Message received by PQC-TLS Server %.7f", parsed_message + 1);
+            #elif (DATA_TYPE == TYPE_DOUBLE)
+                sprintf(response, "Message received by PQC-TLS Server %.15f", parsed_message + 1);
+            #endif
+            SSL_write(ssl, response, strlen(response));
+        } else {
+            printf("Message received by Client is not number");
+        }
     }
 
     SSL_shutdown(ssl);
@@ -70,4 +83,26 @@ void *handle_client(void *arg) {
     // // }
     // SSL_shutdown(ssl);
     // SSL_free(ssl);
+}
+
+int safe_strton(const char *str, data_t *out) {
+    char *endptr;
+    errno = 0;
+
+    #if (DATA_TYPE == TYPE_INTEGER)
+        data_t val  = STR_TO_NUM(str, &endptr, 10); // 10 is base
+    #else
+        data_t val  = STR_TO_NUM(str, &endptr);
+    #endif
+
+    if (errno == ERANGE || val > NUM_MAX|| val < NUM_MIN) {
+        return -1;
+    }
+
+    if (endptr == str) {
+        return -1;
+    }
+
+    *out = val;
+    return 0;
 }
