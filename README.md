@@ -1,7 +1,7 @@
 
 # Installation (this project was installed on Raspberry Pi 5 (aarch64))
 
-#### Install oqs-provider
+## Install oqs-provider (It includes the installation of the openssl and liboqs libraries)
 
 1. Clone the repository
 ```bash
