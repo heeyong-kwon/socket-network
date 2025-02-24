@@ -1,7 +1,52 @@
 
 # Installation (this project was installed on Raspberry Pi 5 (aarch64))
 
+
+## Setting up the Raspberry Pi 5
+- Environment
+  - Raspberry Pi 5 (aarch64)
+- Settings
+  1. Install Raspbian OS (e.g., Raspberry Pi OS (64-bit))
+  2. OS customization
+     1. Host setting: raspberrypi.local
+     2. Set User name and password
+     3. (optional) Set wireless LAN
+     4. Use SSH with password authentication
+  3. Connect Wifi
+  4. Change Properties
+     1. Raspberry Pi Configuration -> Localisation
+     2. Set Locale, Country -> US (United States), Character Set -> UTF-8
+     3. Set Timzone, Area -> US, Location -> Central
+     4. Set Keyboard, Layout -> English (US)
+     5. Set Wireless LAN Country, Country -> US (United States)
+     6. Change password (It might be different from waht you wanted because of keyboard difference)
+     7. Turn off Auto login
+     8. reboot
+  5. (Optional)Turn On Raspberry Pi Connect and Sign in
+  6. Now, you might be access to the your raspberry pi server 
+     1. ```ssh raspberrypi.local```
+  7. Update your installed packages
+     1. ```sudo apt update && sudo apt full-upgrade -y```
+  8. (Optional) Update your raspberry pi firmware
+     1. ```sudo rpi-update```
+     2. ```sudo reboot```
+
+
+
+
+
+
+
+
+
+
+
 ## Install oqs-provider (It includes the installation of the openssl and liboqs libraries)
+
+
+
+<!-- It is required to explain host setting, e.g., install docker, docker compose, etc. -->
+
 
 1. Clone the repository
 ```bash
@@ -9,18 +54,18 @@ git clone $(git address)
 cd socket-network
 ```
 
-2. Move to the pqc project directory ($(ROOT_DIR)/pqc/)
+1. Move to the pqc project directory ($(ROOT_DIR)/pqc/)
 ```bash
 cd pqc
 # git submodule update --init --recursive
 ```
-3. Run server and client dockers by docker compose
+1. Run server and client dockers by docker compose
 ```bash
 (path: $(ROOT_DIR)/pqc/)
 docker compose up -d
 ```
 
-4. Set the server's docker environment -> install oqs-provider
+1. Set the server's docker environment -> install oqs-provider
 ```bash
 (path: $(ROOT_DIR)/pqc/)
 docker exec -it pqc_server bash
@@ -39,7 +84,7 @@ docker exec -it pqc_server bash
     chmod 777 -R ../..
 ```
 
-5. Set the client's docker environment -> install oqs-provider
+1. Set the client's docker environment -> install oqs-provider
 ```bash
 (path: $(ROOT_DIR)/pqc/)
 docker exec -it pqc_client bash
@@ -47,7 +92,7 @@ docker exec -it pqc_client bash
     ... # Same to that executed in the server container
 ```
 
-6. 
+1. 
 ```bash
 
 ```
