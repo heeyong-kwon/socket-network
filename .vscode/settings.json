@@ -13,6 +13,15 @@
         "cert_test_params.h": "c",
         "evp.h": "c",
         "cert_test_funcs.h": "c",
-        "oqs_endecoder_local.h": "c"
+        "oqs_endecoder_local.h": "c",
+        "sig_falcon.h": "c",
+        "macrof.h": "c",
+        "params.h": "c",
+        "stdio.h": "c",
+        "pq_client.h": "c",
+        "pq_client_funcs.h": "c",
+        "pq_client_params.h": "c",
+        "string.h": "c",
+        "stdlib.h": "c"
     }
 }

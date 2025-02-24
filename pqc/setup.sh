@@ -1,7 +1,8 @@
 #!/bin/bash
 
-apt update && apt upgrade -y
+apt update
 apt install vim screen -y
+apt upgrade -y
 apt install git wget build-essential checkinstall zlib1g-dev -y
 # For liboqs
 apt install astyle cmake gcc ninja-build libssl-dev python3-pytest python3-pytest-xdist unzip xsltproc doxygen graphviz python3-yaml valgrind -y

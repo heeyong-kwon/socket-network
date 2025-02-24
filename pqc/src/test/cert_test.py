@@ -10,8 +10,8 @@ oqs_sig_algs    = subprocess.getoutput(f"openssl list -signature-algorithms | gr
 oqs_sig_algs    = oqs_sig_algs.split(f"\n")
 for i in range(len(oqs_sig_algs)):
     oqs_sig_algs[i] = oqs_sig_algs[i].replace(token, "").strip()
-print(oqs_sig_algs)
-exit()
+# print(oqs_sig_algs)
+# exit()
 
 # Make test directory
 path_certs_dir  = "./certs"

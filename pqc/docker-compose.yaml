@@ -2,14 +2,14 @@ version: 2.32.4
 
 services:
   # Server
-  pqc_server:
+  pqc_server1:
     image: "arm64v8/ubuntu:latest"
-    container_name: "pqc_server"
+    container_name: "pqc_server1"
     tty: "True"
     stdin_open: "True"
     restart: "always"
     ports:
-      - "1316:1316"
+      - "1318:1318"
     volumes:
       - "..:/socket"
     command:
@@ -18,14 +18,14 @@ services:
       - "pqc_network"
   
   # Client
-  pqc_client:
+  pqc_client1:
     image: "arm64v8/ubuntu:latest"
-    container_name: "pqc_client"
+    container_name: "pqc_client1"
     tty: "True"
     stdin_open: "True"
     restart: "always"
     ports:
-      - "1317:1317"
+      - "1319:1319"
     volumes:
       - "..:/socket"
     command:
