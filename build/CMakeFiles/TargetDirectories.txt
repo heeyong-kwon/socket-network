@@ -1,7 +1,0 @@
-/home/hykwon/Downloads/mizzou/socket-network/build/CMakeFiles/server.dir
-/home/hykwon/Downloads/mizzou/socket-network/build/CMakeFiles/client.dir
-/home/hykwon/Downloads/mizzou/socket-network/build/CMakeFiles/edit_cache.dir
-/home/hykwon/Downloads/mizzou/socket-network/build/CMakeFiles/rebuild_cache.dir
-/home/hykwon/Downloads/mizzou/socket-network/build/test/CMakeFiles/cert_test.dir
-/home/hykwon/Downloads/mizzou/socket-network/build/test/CMakeFiles/edit_cache.dir
-/home/hykwon/Downloads/mizzou/socket-network/build/test/CMakeFiles/rebuild_cache.dir

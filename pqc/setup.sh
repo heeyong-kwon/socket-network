@@ -60,5 +60,5 @@ STRING="export OPENSSL_CONF=$OPENSSL_PATH/openssl.cnf"
 grep -qxF "$STRING" ~/.bashrc || echo "$STRING" >> ~/.bashrc
 STRING="alias python=python3"
 grep -qxF "$STRING" ~/.bashrc || echo "$STRING" >> ~/.bashrc
-# STRING='export OPENSSL_MODULES=/usr/lib/aarch64-linux-gnu/ossl-modules'
-# grep -qxF "$STRING" ~/.bashrc || echo "$STRING" >> ~/.bashrc
+STRING='export OPENSSL_MODULES=/usr/lib/aarch64-linux-gnu/ossl-modules'
+grep -qxF "$STRING" ~/.bashrc || echo "$STRING" >> ~/.bashrc
