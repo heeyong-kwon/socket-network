@@ -1,4 +1,5 @@
 ############################################### This setup.sh was deprecated on Feb. 26, 2025
+echo "This setup.sh was deprecated on Feb. 26, 2025"
 exit
 
 #!/bin/bash
