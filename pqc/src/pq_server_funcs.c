@@ -19,6 +19,10 @@ SSL_CTX* create_server_context() {
     return ctx;
 }
 
+void handle_client_message(data_t *parsed_message) {
+    *parsed_message += 1;
+}
+
 void *handle_client(void *arg) {
     SSL *ssl = (SSL *)arg;
     char buffer[BUFFER_SIZE];
