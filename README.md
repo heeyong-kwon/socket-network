@@ -11,62 +11,36 @@
 2. Docker and docker compose
    - Check the docker settings in [[Manual](https://github.com/heeyong-kwon/helper/blob/main/README.md)]
 
-
-## Install oqs-provider (It includes the installation of the openssl and liboqs libraries)
-
-
-
-<!-- It is required to explain host setting, e.g., install docker, docker compose, etc. -->
-
-
-1. Clone the repository
+3. Clone the repository
 ```bash
 git clone $(git address)
-cd socket-network
-```
-
-1. Move to the pqc project directory ($(ROOT_DIR)/pqc/)
-```bash
-cd pqc
-# git submodule update --init --recursive
-```
-1. Run server and client dockers by docker compose
-```bash
+cd socket-network/pqc
 (path: $(ROOT_DIR)/pqc/)
 docker compose up -d
 ```
 
-1. Set the server's docker environment -> install oqs-provider
+4. If you get the error "no image", build image from Dockerfile
+```bash
+(path: $(ROOT_DIR)/pqc/)
+docker build -t <image_name>
+docker build -t mizzou-pqc
+docker compose up -d
+```
+
+
+5. (Optional) Test the installation (in the server's docker environment)
 ```bash
 (path: $(ROOT_DIR)/pqc/)
 docker exec -it pqc_server bash
     (pqc_server container)
     (path: /)
-    cd socket/pqc/
-    (path: /socket/pqc/)
-    bash setup.sh
-    source ~/.bashrc
-    (path: /socket/pqc/)
-    (Optional: If you want to test the installation)
-    cd oqs-provider
+    cd home/oqs-provider/
+    (path: /home/oqs-provider/)
     cd _build && ctest --parallel 5 --rerun-failed --output-on-failure -V
-    (path: /socket/pqc/_build/)
     (Optional) Give a permission to the root directory
-    chmod 777 -R ../..
+    chmod 777 -R ../socket
 ```
 
-1. Set the client's docker environment -> install oqs-provider
-```bash
-(path: $(ROOT_DIR)/pqc/)
-docker exec -it pqc_client bash
-    (pqc_client container)
-    ... # Same to that executed in the server container
-```
-
-1. 
-```bash
-
-```
 
 
 

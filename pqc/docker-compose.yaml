@@ -1,9 +1,9 @@
-version: 2.33.0
+# version: 2.33.0
 
 services:
   # Server
   pqc_server:
-    image: "arm64v8/ubuntu:latest"
+    image: "mizzou-pqc"
     container_name: "pqc_server"
     tty: "True"
     stdin_open: "True"
@@ -11,7 +11,7 @@ services:
     ports:
       - "1316:1316"
     volumes:
-      - "..:/socket"
+      - "..:/home/socket"
     command:
       ["bash"]
     networks: 
@@ -19,7 +19,7 @@ services:
   
   # Client
   pqc_client:
-    image: "arm64v8/ubuntu:latest"
+    image: "mizzou-pqc"
     container_name: "pqc_client"
     tty: "True"
     stdin_open: "True"
@@ -27,7 +27,7 @@ services:
     ports:
       - "1317:1317"
     volumes:
-      - "..:/socket"
+      - "..:/home/socket"
     command:
       ["bash"]
     networks: 

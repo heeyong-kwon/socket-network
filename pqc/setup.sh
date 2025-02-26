@@ -1,3 +1,6 @@
+############################################### This setup.sh was deprecated on Feb. 26, 2025
+exit
+
 #!/bin/bash
 
 apt update && apt upgrade -y
