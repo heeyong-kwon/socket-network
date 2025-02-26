@@ -3,18 +3,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 ## Python
 1. Run Server's and Client's docker containers
 ```
