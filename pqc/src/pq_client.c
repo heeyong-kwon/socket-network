@@ -28,8 +28,8 @@ void run_client() {
         communicate_with_server(ssl);
     }
 
-    SSL_shutdown(ssl);
-    SSL_free(ssl);
+    // SSL_shutdown(ssl);
+    // SSL_free(ssl);
     close(sock);
     SSL_CTX_free(ctx);
     cleanup_openssl();

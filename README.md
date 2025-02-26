@@ -84,9 +84,9 @@ openssl s_client -groups mlkem512
 <!-- c code로 실행하는 건 아직 검증 안 됨 -->
 This is Hee-Yong's implementation
 ```bash
-(path: /socket/pqc/)
+(path: /home/socket/pqc/)
 cd src
-(path: /socket/pqc/src/)
+(path: /home/socket/pqc/src/)
 mkdir build
 cd build
 (path: /socket/pqc/src/build)
