@@ -21,9 +21,9 @@ void communicate_with_server(SSL *ssl) {
         do{
             fgets(buffer, sizeof(buffer), stdin);
             buffer[strcspn(buffer, "\n")] = '\0';
-            // 🔥 빈 입력이면 다시 입력받도록 처리
+            // 🔥 If an empty input is given, prompt the user to enter a message again.
             if (strlen(buffer) == 0) {
-                printf("Empty input. Please enter a message.\n");
+                printf("Empty input. Please enter a message.\nEnter message: ");
                 continue;
             }
         } while(strlen(buffer) == 0);

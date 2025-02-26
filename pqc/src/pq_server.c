@@ -59,8 +59,8 @@ void run_server() {
         pthread_t thread;
         if (pthread_create(&thread, NULL, handle_client, (void *)ssl) != 0) {
             perror("Failed to create thread");
-            SSL_shutdown(ssl);
-            SSL_free(ssl);
+            // SSL_shutdown(ssl);
+            // SSL_free(ssl);
             close(client_fd);
         }
 

@@ -26,7 +26,8 @@
 
 SSL_CTX* create_server_context();
 // void *handle_client(SSL *);
+void handle_client_message(data_t *);
 void *handle_client(void *);
-
-int safe_strton(const char *, data_t *out);
+int is_valid_number(const char *);
+int safe_strton(const char *, data_t *);
 #endif
