@@ -23,7 +23,7 @@ docker compose up -d
 ```bash
 (path: $(ROOT_DIR)/pqc/)
 docker build -t <image_name>
-docker build -t mizzou-pqc
+(example) docker build -t mizzou-pqc
 docker compose up -d
 ```
 
@@ -40,6 +40,14 @@ docker exec -it pqc_server bash
     (Optional) Give a permission to the root directory
     chmod 777 -R ../socket
 ```
+
+
+
+
+
+
+
+
 
 
 
@@ -89,8 +97,6 @@ make
 
 
 
-![alt text](image.png)
-- Cert related codes
 
 
 
