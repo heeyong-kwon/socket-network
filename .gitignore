@@ -4,4 +4,4 @@ pqc/oqs-provider
 pqc/src/test/certs
 pqc/src/test/csrs
 pqc/src/test/keys
-# pqc/src/build
+pqc/src/build
