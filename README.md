@@ -86,6 +86,7 @@ Exception handling for both server and client sides about identifying not number
 
 
 <!-- c code로 실행하는 건 아직 검증 안 됨 -->
+<!-- TODO: verify falcon512k works on c code -->
 This is Hee-Yong's implementation
 ```bash
 (path: /home/socket/pqc/)
