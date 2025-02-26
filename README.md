@@ -1,44 +1,15 @@
 
-# Installation (this project was installed on Raspberry Pi 5 (aarch64))
+# Installation (this project was conducted on Raspberry Pi 5 (aarch64))
 
+## Set up environment
 
-## Setting up the Raspberry Pi 5
-- Environment
-  - Raspberry Pi 5 (aarch64)
-- Settings
-  1. Install Raspbian OS (e.g., Raspberry Pi OS (64-bit))
-  2. OS customization
-     1. Host setting: raspberrypi.local
-     2. Set User name and password
-     3. (optional) Set wireless LAN
-     4. Use SSH with password authentication
-  3. Connect Wifi
-  4. Change Properties
-     1. Raspberry Pi Configuration -> Localisation
-     2. Set Locale, Country -> US (United States), Character Set -> UTF-8
-     3. Set Timzone, Area -> US, Location -> Central
-     4. Set Keyboard, Layout -> English (US)
-     5. Set Wireless LAN Country, Country -> US (United States)
-     6. Change password (It might be different from waht you wanted because of keyboard difference)
-     7. Turn off Auto login
-     8. reboot
-  5. (Optional)Turn On Raspberry Pi Connect and Sign in
-  6. Now, you might be access to the your raspberry pi server 
-     1. ```ssh raspberrypi.local```
-  7. Update your installed packages
-     1. ```sudo apt update && sudo apt full-upgrade -y```
-  8. (Optional) Update your raspberry pi firmware
-     1. ```sudo rpi-update```
-     2. ```sudo reboot```
+1. Raspberry Pi 5
+   - Environment
+     - Raspberry Pi 5 (aarch64)
+   - Check the raspberry Pi 5's settings in [[Manual](https://github.com/heeyong-kwon/helper/blob/main/README.md)]
 
-
-
-
-
-
-
-
-
+2. Docker and docker compose
+   - Check the docker settings in [[Manual](https://github.com/heeyong-kwon/helper/blob/main/README.md)]
 
 
 ## Install oqs-provider (It includes the installation of the openssl and liboqs libraries)

@@ -1,7 +1,0 @@
-/socket/pqc/src/build/CMakeFiles/server.dir
-/socket/pqc/src/build/CMakeFiles/client.dir
-/socket/pqc/src/build/CMakeFiles/edit_cache.dir
-/socket/pqc/src/build/CMakeFiles/rebuild_cache.dir
-/socket/pqc/src/build/test/CMakeFiles/cert_test.dir
-/socket/pqc/src/build/test/CMakeFiles/edit_cache.dir
-/socket/pqc/src/build/test/CMakeFiles/rebuild_cache.dir

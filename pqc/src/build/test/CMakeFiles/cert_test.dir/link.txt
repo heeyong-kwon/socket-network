@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/cert_test.dir/cert_test.c.o CMakeFiles/cert_test.dir/cert_test_funcs.c.o -o cert_test  /usr/lib/aarch64-linux-gnu/libssl.so /usr/lib/aarch64-linux-gnu/libcrypto.so 

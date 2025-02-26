@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/server.dir/pq_server.c.o CMakeFiles/server.dir/pq_server_funcs.c.o CMakeFiles/server.dir/pq_openssl.c.o -o server  /usr/lib/aarch64-linux-gnu/libssl.so /usr/lib/aarch64-linux-gnu/libcrypto.so 
