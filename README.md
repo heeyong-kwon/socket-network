@@ -78,7 +78,11 @@ openssl s_client -groups mlkem512
 이거 s_client 실행할 때, "-CAfile falcon1024_CA.crt" 넣어주면, verification code:0 으로 통과 가능
 
 
+# TODO list:
 
+Exception handling for both server and client sides about identifying not numbered or invalid input data.
+   -> Only the server side for now.
+   -> Should I add it to the client side as well?
 
 
 <!-- c code로 실행하는 건 아직 검증 안 됨 -->

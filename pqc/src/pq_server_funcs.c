@@ -52,7 +52,10 @@ void *handle_client(void *arg) {
             #endif
             SSL_write(ssl, response, strlen(response));
         } else {
-            printf("Message received by Client is not number");
+            printf("Message received by Client is not number\n");
+            sprintf(response, "Message received by PQC-TLS Client is not number: %s", buffer);
+            SSL_write(ssl, response, strlen(response));
+            fflush(stdout);
         }
     }
 
@@ -85,7 +88,30 @@ void *handle_client(void *arg) {
     // SSL_free(ssl);
 }
 
+int is_valid_number(const char *str) {
+    int dot_count = 0;
+    
+    for (int i = 0; str[i] != '\0'; i++) {
+        // Continue if digit or '.'
+        if ((str[i] >= '0' && str[i] <= '9') || str[i] == '.') {
+            if (str[i] == '.') {
+                dot_count++;
+            }
+        } else {
+            return 0;  // return 0 if not a digit or '.'
+        }
+    }
+    
+    // str variable has to include only one or no dot
+    return dot_count == 1 || dot_count == 0;
+}
+
 int safe_strton(const char *str, data_t *out) {
+    // Check if the string is a valid number
+    if (0 == is_valid_number(str)){
+        return -1;  // return -1 if string is not a valid number or out of range of data type
+    }
+    
     char *endptr;
     errno = 0;
 
