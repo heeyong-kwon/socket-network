@@ -22,8 +22,8 @@ docker compose up -d
 4. If you get the error "no image", build image from Dockerfile
 ```bash
 (path: $(ROOT_DIR)/pqc/)
-docker build -t <image_name>
-(example) docker build -t mizzou-pqc
+docker build -t <image_name> .
+(example) docker build -t mizzou-pqc .
 docker compose up -d
 ```
 
