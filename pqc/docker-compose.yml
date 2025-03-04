@@ -1,0 +1,39 @@
+services:
+  # Server
+  pqc_server:
+    build:
+      context: .
+    image: mizzou-pqc
+    container_name: pqc_server
+    tty: true
+    stdin_open: true
+    restart: always
+    ports:
+      - 1316:1316
+    volumes:
+      - ..:/home/socket
+    command: bash
+    networks: 
+      - pqc_network
+  
+  # Client
+  pqc_client:
+    build:
+      context: .
+    image: mizzou-pqc
+    container_name: pqc_client
+    tty: true
+    stdin_open: true
+    restart: always
+    ports:
+      - 1317:1317
+    volumes:
+      - ..:/home/socket
+    command: bash
+    networks: 
+      - pqc_network
+
+networks:
+  pqc_network:
+    name: pqc_network
+    driver: bridge
