@@ -294,6 +294,7 @@ PQCLEAN_FALCON512K_AARCH64_crypto_sign_signature(
         return -1;
     }
     sig[0] = 0x30 + FALCON_LOGN;
+    // fprintf(stderr, "(1) here!!! %x, %x, %x, %x, \n", sig[0], sig[1], sig[2], sig[3]);
     *siglen = 1 + NONCELEN + vlen;
     return 0;
 }
