@@ -27,7 +27,6 @@ docker build -t <image_name> .
 docker compose up -d
 ```
 
-
 5. (Optional) Test the installation (in the server's docker environment)
 ```bash
 (path: $(ROOT_DIR)/pqc/)
@@ -41,12 +40,23 @@ docker exec -it pqc_server bash
     chmod 777 -R ../socket
 ```
 
+6. As well, you can also check the installation by a command `openssl list -providers`.
+   1. If the installation is successful, you will see `oqsprovider` in the output.
 
 
 
+<!--  -->
+<!--  -->
+<!--  -->
 
 
 
+# Instructions to add a new algorithm
+0. First of all, you should maintain all edited files to add a new algorithm into the `./pqc/add_new` directory.
+   1. Currently, there are two directories: `liboqs` and `oqs-provider`, now.
+1. Run `add_new.sh` in `./pqc/`.
+   1. This script will copy all edited files to the corresponding directories.
+   2. Then, it will recompile the `liboqs` and `oqs-provider`.
 
 
 
@@ -55,10 +65,10 @@ docker exec -it pqc_server bash
 ##### Example
 1. Generate a digital certificate
 ```bash
-openssl req -x509 -new -newkey falcon1024 -keyout falcon1024_CA.key -out falcon1024_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
-openssl genpkey -algorithm falcon1024 -out falcon1024_srv.key
-openssl req -new -newkey falcon1024 -keyout falcon1024_srv.key -out falcon1024_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
-openssl x509 -req -in falcon1024_srv.csr -out falcon1024_srv.crt -CA falcon1024_CA.crt -CAkey falcon1024_CA.key -CAcreateserial -days 365
+openssl req -x509 -new -newkey falcon512 -keyout falcon512_CA.key -out falcon512_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+openssl genpkey -algorithm falcon512 -out falcon512_srv.key
+openssl req -new -newkey falcon512 -keyout falcon512_srv.key -out falcon512_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+openssl x509 -req -in falcon512_srv.csr -out falcon512_srv.crt -CA falcon512_CA.crt -CAkey falcon512_CA.key -CAcreateserial -days 365
 ```
 2. Run server
 ```bash
@@ -68,6 +78,10 @@ openssl s_server -cert falcon1024_srv.crt -key falcon1024_srv.key -www -tls1_3 -
 ```bash
 openssl s_client -groups mlkem512
 ```
+
+
+# Command to check the certificate information in text
+- `openssl x509 -in p256_falcon512k_srv.crt -text`
 
 
 

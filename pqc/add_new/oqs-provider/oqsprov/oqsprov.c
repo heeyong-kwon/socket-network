@@ -1023,13 +1023,6 @@ int OQS_PROVIDER_ENTRYPOINT_NAME(const OSSL_CORE_HANDLE *handle,
 
     if (!oqs_patch_codepoints())
         goto end_init;
-
-        
-        for (size_t i = 0; i < 52; i++)
-        {
-            fprintf(stderr, "%s\t%s\n", oqs_oid_alg_list[2*i], oqs_oid_alg_list[2*i+1]);
-        }
-        fprintf(stderr, "\n");
     if (!oqs_patch_oids())
         goto end_init;
 
@@ -1069,13 +1062,6 @@ int OQS_PROVIDER_ENTRYPOINT_NAME(const OSSL_CORE_HANDLE *handle,
             OQS_PROV_PRINTF2("OQS PROV: Warning: No OID registered for %s\n",
                              oqs_oid_alg_list[i + 1]);
         } else {
-            fprintf(stderr, "(%d/%d)\t %s\t%s\t%s %d\n", \
-                i, OQS_OID_CNT, \
-                handle, \
-                oqs_oid_alg_list[i], \
-                oqs_oid_alg_list[i+1], \
-                !c_obj_create(handle, oqs_oid_alg_list[i],oqs_oid_alg_list[i + 1],oqs_oid_alg_list[i + 1])\
-            );
             if (!c_obj_create(handle, oqs_oid_alg_list[i],
                               oqs_oid_alg_list[i + 1],
                               oqs_oid_alg_list[i + 1])) {
