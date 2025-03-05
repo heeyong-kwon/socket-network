@@ -7,11 +7,11 @@ cp -r ./add_new/* ../../
 cd ../../liboqs/
 
 # Build liboqs
-mkdir build
-cd build
-cmake -GNinja ..
-ninja
-cd ..
+# mkdir _build
+# cd _build
+# cmake -GNinja ..
+# ninja
+# cd ..
 cmake -S . -B _build && cmake --build _build && cmake --install _build
 cd ..
 
