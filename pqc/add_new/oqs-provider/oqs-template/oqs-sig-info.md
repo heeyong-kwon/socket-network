@@ -32,14 +32,6 @@
 | dilithium5_aes **hybrid with** p521               | NIST Round 3 submission                          | 3            |                    5 | 0xfead       | 1.3.9999.2.11.4             |
 | falcon512                                         | 20211101                                         | 3            |                    1 | 0xfed7       | 1.3.9999.3.11               |
 | falcon512 **hybrid with** p256                    | 20211101                                         | 3            |                    1 | 0xfed8       | 1.3.9999.3.12               |
-
-
-
-| falcon512k                                        | 20211101                                         | 3            |                    1 | 0xfffe       | 1.3.9999.3.21               |
-| falcon512k **hybrid with** p256                   | 20211101                                         | 3            |                    1 | 0xffff       | 1.3.9999.3.22               |
-
-
-
 | falcon512 **hybrid with** rsa3072                 | 20211101                                         | 3            |                    1 | 0xfed9       | 1.3.9999.3.13               |
 | falcon512                                         | PQClean Round 3 version labelled 20211101        | 3            |                    1 | 0xfeae       | 1.3.9999.3.6                |
 | falcon512 **hybrid with** p256                    | PQClean Round 3 version labelled 20211101        | 3            |                    1 | 0xfeaf       | 1.3.9999.3.7                |
@@ -58,6 +50,20 @@
 | falcon1024 **hybrid with** p521                   | NIST Round 3 submission                          | 3            |                    5 | 0xfe0f       | 1.3.9999.3.5                |
 | falconpadded1024                                  | 20211101                                         | 3            |                    5 | 0xfedf       | 1.3.9999.3.19               |
 | falconpadded1024 **hybrid with** p521             | 20211101                                         | 3            |                    5 | 0xfee0       | 1.3.9999.3.20               |
+
+
+
+| kbl_falcon512                                     | 20250310                                         | 3            |                    1 | 0xf001       | 1.3.9999.3.50               |
+| kbl_falcon512 **hybrid with** p256                | 20250310                                         | 3            |                    1 | 0xf002       | 1.3.9999.3.51               |
+| kbl_falconpadded512                               | 20250310                                         | 3            |                    1 | 0xf003       | 1.3.9999.3.52               |
+| kbl_falconpadded512 **hybrid with** p256          | 20250310                                         | 3            |                    1 | 0xf004       | 1.3.9999.3.53               |
+| kbl_falcon1024                                    | 20250310                                         | 3            |                    5 | 0xf005       | 1.3.9999.3.54               |
+| kbl_falcon1024 **hybrid with** p521               | 20250310                                         | 3            |                    5 | 0xf006       | 1.3.9999.3.55               |
+| kbl_falconpadded1024                              | 20250310                                         | 3            |                    5 | 0xf007       | 1.3.9999.3.56               |
+| kbl_falconpadded1024 **hybrid with** p521         | 20250310                                         | 3            |                    5 | 0xf008       | 1.3.9999.3.57               |
+
+
+
 | mayo1                                             | https://doi.org/10.46586/tches.v2024.i2.252-275  | 1            |                    1 | 0xfeee       | 1.3.9999.8.1.1              |
 | mayo1 **hybrid with** p256                        | https://doi.org/10.46586/tches.v2024.i2.252-275  | 1            |                    1 | 0xfef2       | 1.3.9999.8.1.2              |
 | mayo2                                             | https://doi.org/10.46586/tches.v2024.i2.252-275  | 1            |                    1 | 0xfeef       | 1.3.9999.8.2.1              |

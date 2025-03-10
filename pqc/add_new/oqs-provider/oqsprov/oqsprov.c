@@ -51,9 +51,9 @@ extern OSSL_FUNC_provider_get_capabilities_fn oqs_provider_get_capabilities;
 ///// OQS_TEMPLATE_FRAGMENT_ASSIGN_SIG_OIDS_START
 
 #ifdef OQS_KEM_ENCODERS
-#define OQS_OID_CNT 190 // 186 originally
+#define OQS_OID_CNT 202 // 186 originally
 #else
-#define OQS_OID_CNT 104 // 100 originally
+#define OQS_OID_CNT 116 // 100 originally
 #endif
 const char *oqs_oid_alg_list[OQS_OID_CNT] = {
 
@@ -249,10 +249,22 @@ const char *oqs_oid_alg_list[OQS_OID_CNT] = {
     "CROSSrsdp128balanced",
 
 
-    "1.3.9999.3.21",
-    "falcon512k",
-    "1.3.9999.3.22",
-    "p256_falcon512k",
+    "1.3.9999.3.50",
+    "kbl_falcon512",
+    "1.3.9999.3.51",
+    "kbl_p256_falcon512",
+    "1.3.9999.3.52",
+    "kbl_falconpadded512",
+    "1.3.9999.3.53",
+    "kbl_p256_falconpadded512",
+    "1.3.9999.3.54",
+    "kbl_falcon1024",
+    "1.3.9999.3.55",
+    "kbl_p521_falcon1024",
+    "1.3.9999.3.56",
+    "kbl_falconpadded1024",
+    "1.3.9999.3.57",
+    "kbl_p521_falconpadded1024",
 
 
     ///// OQS_TEMPLATE_FRAGMENT_ASSIGN_SIG_OIDS_END
@@ -471,10 +483,27 @@ int oqs_patch_oids(void) {
             oqs_oid_alg_list[96 + OQS_KEMOID_CNT] = envval;
         if ((envval = getenv("OQS_OID_CROSSRSDP128BALANCED")))
             oqs_oid_alg_list[98 + OQS_KEMOID_CNT] = envval;
-        if ((envval = getenv("OQS_OID_FALCON512K")))
+
+
+
+        if ((envval = getenv("OQS_OID_KBL_FALCON512")))
             oqs_oid_alg_list[100 + OQS_KEMOID_CNT] = envval;
-        if ((envval = getenv("OQS_OID_P256_FALCON512K")))
+        if ((envval = getenv("OQS_OID_KBL_P256_FALCON512")))
             oqs_oid_alg_list[102 + OQS_KEMOID_CNT] = envval;
+
+
+        if ((envval = getenv("OQS_OID_KBL_FALCONPADDED512")))
+            oqs_oid_alg_list[104 + OQS_KEMOID_CNT] = envval;
+        if ((envval = getenv("OQS_OID_KBL_P256_FALCONPADDED512")))
+            oqs_oid_alg_list[106 + OQS_KEMOID_CNT] = envval;
+        if ((envval = getenv("OQS_OID_KBL_FALCON1024")))
+            oqs_oid_alg_list[108 + OQS_KEMOID_CNT] = envval;
+        if ((envval = getenv("OQS_OID_KBL_P521_FALCON1024")))
+            oqs_oid_alg_list[110 + OQS_KEMOID_CNT] = envval;
+        if ((envval = getenv("OQS_OID_KBL_FALCONPADDED1024")))
+            oqs_oid_alg_list[112 + OQS_KEMOID_CNT] = envval;
+        if ((envval = getenv("OQS_OID_KBL_P521_FALCONPADDED1024")))
+            oqs_oid_alg_list[114 + OQS_KEMOID_CNT] = envval;
             
         
         
@@ -603,10 +632,28 @@ static const OSSL_ALGORITHM oqsprovider_signatures[] = {
 #ifdef OQS_ENABLE_SIG_cross_rsdp_128_balanced
     SIGALG("CROSSrsdp128balanced", 128, oqs_signature_functions),
 #endif
-#ifdef OQS_ENABLE_SIG_falcon_512k
-    SIGALG("falcon512k", 128, oqs_signature_functions),
-    SIGALG("p256_falcon512k", 128, oqs_signature_functions),
+
+
+
+#ifdef OQS_ENABLE_SIG_kbl_falcon_512
+    SIGALG("kbl_falcon512", 128, oqs_signature_functions),
+    SIGALG("kbl_p256_falcon512", 128, oqs_signature_functions),
 #endif
+#ifdef OQS_ENABLE_SIG_kbl_falcon_padded_512
+    SIGALG("kbl_falconpadded512", 128, oqs_signature_functions),
+    SIGALG("kbl_p256_falconpadded512", 128, oqs_signature_functions),
+#endif
+#ifdef OQS_ENABLE_SIG_kbl_falcon_1024
+    SIGALG("kbl_falcon1024", 256, oqs_signature_functions),
+    SIGALG("kbl_p521_falcon1024", 256, oqs_signature_functions),
+#endif
+#ifdef OQS_ENABLE_SIG_kbl_falcon_padded_1024
+    SIGALG("kbl_falconpadded1024", 256, oqs_signature_functions),
+    SIGALG("kbl_p521_falconpadded1024", 256, oqs_signature_functions),
+#endif
+
+
+
     ///// OQS_TEMPLATE_FRAGMENT_SIG_FUNCTIONS_END
     {NULL, NULL, NULL}};
 
@@ -777,10 +824,27 @@ static const OSSL_ALGORITHM oqsprovider_keymgmt[] =
 #ifdef OQS_ENABLE_SIG_cross_rsdp_128_balanced
     SIGALG("CROSSrsdp128balanced", 128, oqs_CROSSrsdp128balanced_keymgmt_functions),
 #endif
-#ifdef OQS_ENABLE_SIG_falcon_512k
-    SIGALG("falcon512k", 128, oqs_falcon512k_keymgmt_functions),
-    SIGALG("p256_falcon512k", 128, oqs_p256_falcon512k_keymgmt_functions),
+
+
+
+#ifdef OQS_ENABLE_SIG_kbl_falcon_512
+    SIGALG("kbl_falcon512", 128, oqs_kbl_falcon512_keymgmt_functions),
+    SIGALG("kbl_p256_falcon512", 128, oqs_kbl_p256_falcon512_keymgmt_functions),
 #endif
+#ifdef OQS_ENABLE_SIG_kbl_falcon_padded_512
+    SIGALG("kbl_falconpadded512", 128, oqs_kbl_falconpadded512_keymgmt_functions),
+    SIGALG("kbl_p256_falconpadded512", 128, oqs_kbl_p256_falconpadded512_keymgmt_functions),
+#endif
+#ifdef OQS_ENABLE_SIG_kbl_falcon_1024
+    SIGALG("kbl_falcon1024", 256, oqs_kbl_falcon1024_keymgmt_functions),
+    SIGALG("kbl_p521_falcon1024", 256, oqs_kbl_p521_falcon1024_keymgmt_functions),
+#endif
+#ifdef OQS_ENABLE_SIG_kbl_falcon_padded_1024
+    SIGALG("kbl_falconpadded1024", 256, oqs_kbl_falconpadded1024_keymgmt_functions),
+    SIGALG("kbl_p521_falconpadded1024", 256, oqs_kbl_p521_falconpadded1024_keymgmt_functions),
+#endif
+
+
 
 #ifdef OQS_ENABLE_KEM_frodokem_640_aes
     KEMKMALG(frodo640aes, 128)

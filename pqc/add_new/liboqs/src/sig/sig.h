@@ -48,7 +48,12 @@ extern "C" {
 #define OQS_SIG_alg_falcon_512 "Falcon-512"
 
 
-#define OQS_SIG_alg_falcon_512k "Falcon-512k"
+
+/** New Algorithm identifiers for KBL method */
+#define OQS_SIG_alg_kbl_falcon_512 "KBL-Falcon-512"
+#define OQS_SIG_alg_kbl_falcon_1024 "KBL-Falcon-1024"
+#define OQS_SIG_alg_kbl_falcon_padded_512 "KBL-Falcon-padded-512"
+#define OQS_SIG_alg_kbl_falcon_padded_1024 "KBL-Falcon-padded-1024"
 
 
 /** Algorithm identifier for Falcon-1024 */
@@ -130,7 +135,8 @@ extern "C" {
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_START
 
 /** Number of algorithm identifiers above. */
-#define OQS_SIG_algs_length 45
+// Default: 44
+#define OQS_SIG_algs_length 48
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_END
 
 /**

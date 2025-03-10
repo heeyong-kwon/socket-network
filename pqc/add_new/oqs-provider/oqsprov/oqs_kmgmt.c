@@ -1187,22 +1187,22 @@ static void *CROSSrsdp128balanced_gen_init(void *provctx, int selection) {
                          "CROSSrsdp128balanced", 0, 128, 49, 0);
 }
 
-static void *falcon512k_new_key(void *provctx) {
-    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_512k,
-                        "falcon512k", KEY_TYPE_SIG, NULL, 128, 50, 0);
+static void *kbl_falcon512_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_kbl_falcon_512,
+                        "kbl_falcon512", KEY_TYPE_SIG, NULL, 128, 50, 0);
 }
 
-static void *falcon512k_gen_init(void *provctx, int selection) {
-    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_512k,
-                         "falcon512k", 0, 128, 50, 0);
+static void *kbl_falcon512_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_kbl_falcon_512,
+                         "kbl_falcon512", 0, 128, 50, 0);
 }
-static void *p256_falcon512k_new_key(void *provctx) {
-    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_512k,
-                        "p256_falcon512k", KEY_TYPE_HYB_SIG, NULL, 128, 51, 0);
+static void *kbl_p256_falcon512_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_kbl_falcon_512,
+                        "kbl_p256_falcon512", KEY_TYPE_HYB_SIG, NULL, 128, 51, 0);
 }
-static void *p256_falcon512k_gen_init(void *provctx, int selection) {
-    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_512k,
-                         "p256_falcon512k", KEY_TYPE_HYB_SIG, 128, 51, 0);
+static void *kbl_p256_falcon512_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_kbl_falcon_512,
+                         "kbl_p256_falcon512", KEY_TYPE_HYB_SIG, 128, 51, 0);
 }
 
 
@@ -1373,12 +1373,6 @@ MAKE_SIG_KEYMGMT_FUNCTIONS(mldsa87_bp384)
 MAKE_SIG_KEYMGMT_FUNCTIONS(mldsa87_ed448)
 MAKE_SIG_KEYMGMT_FUNCTIONS(falcon512)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p256_falcon512)
-
-
-MAKE_SIG_KEYMGMT_FUNCTIONS(falcon512k)
-MAKE_SIG_KEYMGMT_FUNCTIONS(p256_falcon512k)
-
-
 MAKE_SIG_KEYMGMT_FUNCTIONS(rsa3072_falcon512)
 MAKE_SIG_KEYMGMT_FUNCTIONS(falconpadded512)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p256_falconpadded512)
@@ -1387,6 +1381,20 @@ MAKE_SIG_KEYMGMT_FUNCTIONS(falcon1024)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p521_falcon1024)
 MAKE_SIG_KEYMGMT_FUNCTIONS(falconpadded1024)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p521_falconpadded1024)
+
+
+
+MAKE_SIG_KEYMGMT_FUNCTIONS(kbl_falcon512)
+MAKE_SIG_KEYMGMT_FUNCTIONS(kbl_p256_falcon512)
+MAKE_SIG_KEYMGMT_FUNCTIONS(kbl_falconpadded512)
+MAKE_SIG_KEYMGMT_FUNCTIONS(kbl_p256_falconpadded512)
+MAKE_SIG_KEYMGMT_FUNCTIONS(kbl_falcon1024)
+MAKE_SIG_KEYMGMT_FUNCTIONS(kbl_p521_falcon1024)
+MAKE_SIG_KEYMGMT_FUNCTIONS(kbl_falconpadded1024)
+MAKE_SIG_KEYMGMT_FUNCTIONS(kbl_p521_falconpadded1024)
+
+
+
 MAKE_SIG_KEYMGMT_FUNCTIONS(sphincssha2128fsimple)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p256_sphincssha2128fsimple)
 MAKE_SIG_KEYMGMT_FUNCTIONS(rsa3072_sphincssha2128fsimple)
