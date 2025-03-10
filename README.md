@@ -65,10 +65,10 @@ docker exec -it pqc_server bash
 ##### Example
 1. Generate a digital certificate
 ```bash
-openssl req -x509 -new -newkey falcon512 -keyout falcon512_CA.key -out falcon512_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
-openssl genpkey -algorithm falcon512 -out falcon512_srv.key
-openssl req -new -newkey falcon512 -keyout falcon512_srv.key -out falcon512_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
-openssl x509 -req -in falcon512_srv.csr -out falcon512_srv.crt -CA falcon512_CA.crt -CAkey falcon512_CA.key -CAcreateserial -days 365
+openssl req -x509 -new -newkey kbl_p256_falcon512 -keyout kbl_p256_falcon512_CA.key -out kbl_p256_falcon512_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+openssl genpkey -algorithm kbl_p256_falcon512 -out kbl_p256_falcon512_srv.key
+openssl req -new -newkey kbl_p256_falcon512 -keyout kbl_p256_falcon512_srv.key -out kbl_p256_falcon512_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+openssl x509 -req -in kbl_p256_falcon512_srv.csr -out kbl_p256_falcon512_srv.crt -CA kbl_p256_falcon512_CA.crt -CAkey kbl_p256_falcon512_CA.key -CAcreateserial -days 365
 ```
 2. Run server
 ```bash
@@ -81,7 +81,7 @@ openssl s_client -groups mlkem512
 
 
 # Command to check the certificate information in text
-- `openssl x509 -in p256_falcon512k_srv.crt -text`
+- `openssl x509 -in kbl_p256_falcon512_srv.crt -text`
 
 
 
