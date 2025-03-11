@@ -144,7 +144,6 @@ OQS_API OQS_STATUS OQS_SIG_falcon_512_verify_with_ctx_str(const uint8_t *message
 
 
 
-
 #if defined(OQS_ENABLE_SIG_falcon_512_kbl)
 OQS_SIG *OQS_SIG_falcon_512_kbl_new(void) {
 
