@@ -189,14 +189,14 @@ static oqs_nid_name_t nid_names[NID_TABLE_LEN] = {
 
 
 
-    {0, "kbl_falcon512", OQS_SIG_alg_kbl_falcon_512, KEY_TYPE_SIG, 128},
-    {0, "kbl_p256_falcon512", OQS_SIG_alg_kbl_falcon_512, KEY_TYPE_HYB_SIG, 128},
-    {0, "kbl_falconpadded512", OQS_SIG_alg_kbl_falcon_padded_512, KEY_TYPE_SIG, 128},
-    {0, "kbl_p256_falconpadded512", OQS_SIG_alg_kbl_falcon_padded_512, KEY_TYPE_HYB_SIG, 128},
-    {0, "kbl_falcon1024", OQS_SIG_alg_kbl_falcon_1024, KEY_TYPE_SIG, 256},
-    {0, "kbl_p521_falcon1024", OQS_SIG_alg_kbl_falcon_1024, KEY_TYPE_HYB_SIG, 256},
-    {0, "kbl_falconpadded1024", OQS_SIG_alg_kbl_falcon_padded_1024, KEY_TYPE_SIG, 256},
-    {0, "kbl_p521_falconpadded1024", OQS_SIG_alg_kbl_falcon_padded_1024, KEY_TYPE_HYB_SIG, 256},
+    {0, "falcon512_kbl", OQS_SIG_alg_falcon_512_kbl, KEY_TYPE_SIG, 128},
+    {0, "p256_falcon512_kbl", OQS_SIG_alg_falcon_512_kbl, KEY_TYPE_HYB_SIG, 128},
+    {0, "falconpadded512_kbl", OQS_SIG_alg_falcon_padded_512_kbl, KEY_TYPE_SIG, 128},
+    {0, "p256_falconpadded512_kbl", OQS_SIG_alg_falcon_padded_512_kbl, KEY_TYPE_HYB_SIG, 128},
+    {0, "falcon1024_kbl", OQS_SIG_alg_falcon_1024_kbl, KEY_TYPE_SIG, 256},
+    {0, "p521_falcon1024_kbl", OQS_SIG_alg_falcon_1024_kbl, KEY_TYPE_HYB_SIG, 256},
+    {0, "falconpadded1024_kbl", OQS_SIG_alg_falcon_padded_1024_kbl, KEY_TYPE_SIG, 256},
+    {0, "p521_falconpadded1024_kbl", OQS_SIG_alg_falcon_padded_1024_kbl, KEY_TYPE_HYB_SIG, 256},
 
     
  

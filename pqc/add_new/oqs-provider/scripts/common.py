@@ -20,10 +20,10 @@ signatures = [
     
     
     
-    'kbl_falcon512',
-    'kbl_falconpadded512',
-    'kbl_falcon1024',
-    'kbl_falconpadded1024',
+    'falcon512_kbl',
+    'falconpadded512_kbl',
+    'falcon1024_kbl',
+    'falconpadded1024_kbl',
     
     
     
@@ -33,10 +33,10 @@ signatures = [
     
     
     
-    'kbl_p256_falcon512',
-    'kbl_p256_falconpadded512',
-    'kbl_p521_falcon1024',
-    'kbl_p521_falconpadded1024',
+    'p256_falcon512_kbl',
+    'p256_falconpadded512_kbl',
+    'p521_falcon1024_kbl',
+    'p521_falconpadded1024_kbl',
     
     
     

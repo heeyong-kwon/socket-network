@@ -14,6 +14,8 @@
         "evp.h": "c",
         "cert_test_funcs.h": "c",
         "oqs_endecoder_local.h": "c",
-        "system_error": "c"
+        "system_error": "c",
+        "macrofx4.h": "c",
+        "macrous.h": "c"
     }
 }

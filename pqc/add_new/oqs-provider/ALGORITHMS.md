@@ -88,14 +88,14 @@ As standardization for these algorithms within TLS is not done, all TLS code poi
 
 
 
-| kbl_falcon512 | 0xf001 | Yes | OQS_CODEPOINT_KBL_FALCON512 |
-| kbl_p256_falcon512 | 0xf002 | Yes | OQS_CODEPOINT_KBL_P256_FALCON512 |
-| kbl_falconpadded512 | 0xf003 |Yes| OQS_CODEPOINT_KBL_FALCONPADDED512
-| kbl_p256_falconpadded512 | 0xf004 |Yes| OQS_CODEPOINT_KBL_P256_FALCONPADDED512
-| kbl_falcon1024 | 0xf005 |Yes| OQS_CODEPOINT_KBL_FALCON1024
-| kbl_p521_falcon1024 | 0xf006 |Yes| OQS_CODEPOINT_KBL_P521_FALCON1024
-| kbl_falconpadded1024 | 0xf007 |Yes| OQS_CODEPOINT_KBL_FALCONPADDED1024
-| kbl_p521_falconpadded1024 | 0xf008 |Yes| OQS_CODEPOINT_KBL_P521_FALCONPADDED1024
+| falcon512_kbl | 0xf001 | Yes | OQS_CODEPOINT_FALCON512_KBL |
+| p256_falcon512_kbl | 0xf002 | Yes | OQS_CODEPOINT_P256_FALCON512_KBL |
+| falconpadded512_kbl | 0xf003 |Yes| OQS_CODEPOINT_FALCONPADDED512_KBL
+| p256_falconpadded512_kbl | 0xf004 |Yes| OQS_CODEPOINT_P256_FALCONPADDED512_KBL
+| falcon1024_kbl | 0xf005 |Yes| OQS_CODEPOINT_FALCON1024_KBL
+| p521_falcon1024_kbl | 0xf006 |Yes| OQS_CODEPOINT_P521_FALCON1024_KBL
+| falconpadded1024_kbl | 0xf007 |Yes| OQS_CODEPOINT_FALCONPADDED1024_KBL
+| p521_falconpadded1024_kbl | 0xf008 |Yes| OQS_CODEPOINT_P521_FALCONPADDED1024_KBL
 
 
 
@@ -213,14 +213,14 @@ discussed in https://github.com/open-quantum-safe/oqs-provider/issues/351.
 
 
 
-| kbl_falcon512 | 1.3.9999.3.50 | Yes | OQS_OID_KBL_FALCON512 |
-| kbl_p256_falcon512 | 1.3.9999.3.51 | Yes | OQS_OID_KBL_P256_FALCON512 |
-| kbl_falconpadded512 | 1.3.9999.3.52 |Yes| OQS_OID_KBL_FALCONPADDED512
-| kbl_p256_falconpadded512 | 1.3.9999.3.53 |Yes| OQS_OID_KBL_P256_FALCONPADDED512
-| kbl_falcon1024 | 1.3.9999.3.54 |Yes| OQS_OID_KBL_FALCON1024
-| kbl_p521_falcon1024 | 1.3.9999.3.55 |Yes| OQS_OID_KBL_P521_FALCON1024
-| kbl_falconpadded1024 | 1.3.9999.3.56 |Yes| OQS_OID_KBL_FALCONPADDED1024
-| kbl_p521_falconpadded1024 | 1.3.9999.3.57 |Yes| OQS_OID_KBL_P521_FALCONPADDED1024
+| falcon512_kbl | 1.3.9999.3.50 | Yes | OQS_OID_FALCON512_KBL |
+| p256_falcon512_kbl | 1.3.9999.3.51 | Yes | OQS_OID_P256_FALCON512_KBL |
+| falconpadded512_kbl | 1.3.9999.3.52 |Yes| OQS_OID_FALCONPADDED512_KBL
+| p256_falconpadded512_kbl | 1.3.9999.3.53 |Yes| OQS_OID_P256_FALCONPADDED512_KBL
+| falcon1024_kbl | 1.3.9999.3.54 |Yes| OQS_OID_FALCON1024_KBL
+| p521_falcon1024_kbl | 1.3.9999.3.55 |Yes| OQS_OID_P521_FALCON1024_KBL
+| falconpadded1024_kbl | 1.3.9999.3.56 |Yes| OQS_OID_FALCONPADDED1024_KBL
+| p521_falconpadded1024_kbl | 1.3.9999.3.57 |Yes| OQS_OID_P521_FALCONPADDED1024_KBL
 
 
 

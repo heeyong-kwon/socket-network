@@ -50,10 +50,10 @@ extern "C" {
 
 
 /** New Algorithm identifiers for KBL method */
-#define OQS_SIG_alg_kbl_falcon_512 "KBL-Falcon-512"
-#define OQS_SIG_alg_kbl_falcon_1024 "KBL-Falcon-1024"
-#define OQS_SIG_alg_kbl_falcon_padded_512 "KBL-Falcon-padded-512"
-#define OQS_SIG_alg_kbl_falcon_padded_1024 "KBL-Falcon-padded-1024"
+#define OQS_SIG_alg_falcon_512_kbl "Falcon-512_kbl"
+#define OQS_SIG_alg_falcon_1024_kbl "Falcon-1024_kbl"
+#define OQS_SIG_alg_falcon_padded_512_kbl "Falcon-padded-512_kbl"
+#define OQS_SIG_alg_falcon_padded_1024_kbl "Falcon-padded-1024_kbl"
 
 
 /** Algorithm identifier for Falcon-1024 */

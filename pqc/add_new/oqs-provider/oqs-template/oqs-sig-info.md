@@ -53,14 +53,14 @@
 
 
 
-| kbl_falcon512                                     | 20250310                                         | 3            |                    1 | 0xf001       | 1.3.9999.3.50               |
-| kbl_falcon512 **hybrid with** p256                | 20250310                                         | 3            |                    1 | 0xf002       | 1.3.9999.3.51               |
-| kbl_falconpadded512                               | 20250310                                         | 3            |                    1 | 0xf003       | 1.3.9999.3.52               |
-| kbl_falconpadded512 **hybrid with** p256          | 20250310                                         | 3            |                    1 | 0xf004       | 1.3.9999.3.53               |
-| kbl_falcon1024                                    | 20250310                                         | 3            |                    5 | 0xf005       | 1.3.9999.3.54               |
-| kbl_falcon1024 **hybrid with** p521               | 20250310                                         | 3            |                    5 | 0xf006       | 1.3.9999.3.55               |
-| kbl_falconpadded1024                              | 20250310                                         | 3            |                    5 | 0xf007       | 1.3.9999.3.56               |
-| kbl_falconpadded1024 **hybrid with** p521         | 20250310                                         | 3            |                    5 | 0xf008       | 1.3.9999.3.57               |
+| falcon512_kbl                                     | 20250310                                         | 3            |                    1 | 0xf001       | 1.3.9999.3.50               |
+| falcon512_kbl **hybrid with** p256                | 20250310                                         | 3            |                    1 | 0xf002       | 1.3.9999.3.51               |
+| falconpadded512_kbl                               | 20250310                                         | 3            |                    1 | 0xf003       | 1.3.9999.3.52               |
+| falconpadded512_kbl **hybrid with** p256          | 20250310                                         | 3            |                    1 | 0xf004       | 1.3.9999.3.53               |
+| falcon1024_kbl                                    | 20250310                                         | 3            |                    5 | 0xf005       | 1.3.9999.3.54               |
+| falcon1024_kbl **hybrid with** p521               | 20250310                                         | 3            |                    5 | 0xf006       | 1.3.9999.3.55               |
+| falconpadded1024_kbl                              | 20250310                                         | 3            |                    5 | 0xf007       | 1.3.9999.3.56               |
+| falconpadded1024_kbl **hybrid with** p521         | 20250310                                         | 3            |                    5 | 0xf008       | 1.3.9999.3.57               |
 
 
 

@@ -177,18 +177,18 @@
 
 
 
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_512 1
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_512_avx2 1
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_512_aarch64 1
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_1024 1
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_1024_avx2 1
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_1024_aarch64 1
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_padded_512 1
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_padded_512_avx2 1
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_padded_512_aarch64 1
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_padded_1024 1
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_padded_1024_avx2 1
-#cmakedefine OQS_ENABLE_SIG_kbl_falcon_padded_1024_aarch64 1
+#cmakedefine OQS_ENABLE_SIG_falcon_512_kbl 1
+#cmakedefine OQS_ENABLE_SIG_falcon_512_kbl_avx2 1
+#cmakedefine OQS_ENABLE_SIG_falcon_512_kbl_aarch64 1
+#cmakedefine OQS_ENABLE_SIG_falcon_1024_kbl 1
+#cmakedefine OQS_ENABLE_SIG_falcon_1024_kbl_avx2 1
+#cmakedefine OQS_ENABLE_SIG_falcon_1024_kbl_aarch64 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_512_kbl 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_512_kbl_avx2 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_512_kbl_aarch64 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_1024_kbl 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_1024_kbl_avx2 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_1024_kbl_aarch64 1
 
 
 

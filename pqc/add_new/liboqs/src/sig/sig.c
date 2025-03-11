@@ -28,10 +28,10 @@ OQS_API const char *OQS_SIG_alg_identifier(size_t i) {
 		
 		
 		
-		OQS_SIG_alg_kbl_falcon_512,
-		OQS_SIG_alg_kbl_falcon_1024,
-		OQS_SIG_alg_kbl_falcon_padded_512,
-		OQS_SIG_alg_kbl_falcon_padded_1024,
+		OQS_SIG_alg_falcon_512_kbl,
+		OQS_SIG_alg_falcon_1024_kbl,
+		OQS_SIG_alg_falcon_padded_512_kbl,
+		OQS_SIG_alg_falcon_padded_1024_kbl,
 
 
 
@@ -159,29 +159,29 @@ OQS_API int OQS_SIG_alg_is_enabled(const char *method_name) {
 
 
 
-} else if (0 == strcasecmp(method_name, OQS_SIG_alg_kbl_falcon_512)) {
-#ifdef OQS_ENABLE_SIG_kbl_falcon_512
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_512_kbl)) {
+#ifdef OQS_ENABLE_SIG_falcon_512_kbl
 	return 1;
 #else
 	return 0;
 #endif
 
-} else if (0 == strcasecmp(method_name, OQS_SIG_alg_kbl_falcon_1024)) {
-#ifdef OQS_ENABLE_SIG_kbl_falcon_1024
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_1024_kbl)) {
+#ifdef OQS_ENABLE_SIG_falcon_1024_kbl
 	return 1;
 #else
 	return 0;
 #endif
 
-} else if (0 == strcasecmp(method_name, OQS_SIG_alg_kbl_falcon_padded_512)) {
-#ifdef OQS_ENABLE_SIG_kbl_falcon_padded_512
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_512_kbl)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_512_kbl
 	return 1;
 #else
 	return 0;
 #endif
 
-} else if (0 == strcasecmp(method_name, OQS_SIG_alg_kbl_falcon_padded_1024)) {
-#ifdef OQS_ENABLE_SIG_kbl_falcon_padded_1024
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_1024_kbl)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_1024_kbl
 	return 1;
 #else
 	return 0;
@@ -510,30 +510,30 @@ OQS_API OQS_SIG *OQS_SIG_new(const char *method_name) {
 
 
 
-} else if (0 == strcasecmp(method_name, OQS_SIG_alg_kbl_falcon_512)) {
-#ifdef OQS_ENABLE_SIG_kbl_falcon_512
-	return OQS_SIG_kbl_falcon_512_new();
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_512_kbl)) {
+#ifdef OQS_ENABLE_SIG_falcon_512_kbl
+	return OQS_SIG_falcon_512_kbl_new();
 #else
 	return NULL;
 #endif
 
-	} else if (0 == strcasecmp(method_name, OQS_SIG_alg_kbl_falcon_1024)) {
-#ifdef OQS_ENABLE_SIG_kbl_falcon_1024
-	return OQS_SIG_kbl_falcon_1024_new();
+	} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_1024_kbl)) {
+#ifdef OQS_ENABLE_SIG_falcon_1024_kbl
+	return OQS_SIG_falcon_1024_kbl_new();
 #else
 	return NULL;
 #endif
 
-} else if (0 == strcasecmp(method_name, OQS_SIG_alg_kbl_falcon_padded_512)) {
-#ifdef OQS_ENABLE_SIG_kbl_falcon_padded_512
-	return OQS_SIG_kbl_falcon_padded_512_new();
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_512_kbl)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_512_kbl
+	return OQS_SIG_falcon_padded_512_kbl_new();
 #else
 	return NULL;
 #endif
 
-} else if (0 == strcasecmp(method_name, OQS_SIG_alg_kbl_falcon_padded_1024)) {
-#ifdef OQS_ENABLE_SIG_kbl_falcon_padded_1024
-	return OQS_SIG_kbl_falcon_padded_1024_new();
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_1024_kbl)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_1024_kbl
+	return OQS_SIG_falcon_padded_1024_kbl_new();
 #else
 	return NULL;
 #endif

@@ -826,10 +826,13 @@ sigs:
                     'pretty_name': 'ECDSA p521',
                     'oid': '1.3.9999.3.20',
                     'code_point': '0xfee0'}]
+
+
+
       -
-        name: 'kbl_falcon512'
-        pretty_name: 'KBL-Falcon-512'
-        oqs_meth: 'OQS_SIG_alg_kbl_falcon_512'
+        name: 'falcon512_kbl'
+        pretty_name: 'Falcon-512_kbl'
+        oqs_meth: 'OQS_SIG_alg_falcon_512_kbl'
         oid: '1.3.9999.3.50'
         code_point: '0xf001'
         supported_encodings: ['draft-uni-qsckeys-falcon-00/sk-pk']
@@ -865,9 +868,9 @@ sigs:
         #                   'oid': '1.3.9999.3.3',
         #                   'code_point': '0xfe0d'}]
       -
-        name: 'kbl_falconpadded512'
-        pretty_name: 'KBL-Falcon-padded-512'
-        oqs_meth: 'OQS_SIG_alg_kbl_falcon_padded_512'
+        name: 'falconpadded512_kbl'
+        pretty_name: 'Falcon-padded-512_kbl'
+        oqs_meth: 'OQS_SIG_alg_falcon_padded_512_kbl'
         oid: '1.3.9999.3.52'
         code_point: '0xf003'
         supported_encodings: ['draft-uni-qsckeys-falcon-00/sk-pk']
@@ -877,9 +880,9 @@ sigs:
                     'oid': '1.3.9999.3.53',
                     'code_point': '0xf004'},]
       -
-        name: 'kbl_falcon1024'
-        pretty_name: 'KBL-Falcon-1024'
-        oqs_meth: 'OQS_SIG_alg_kbl_falcon_1024'
+        name: 'falcon1024_kbl'
+        pretty_name: 'Falcon-1024_kbl'
+        oqs_meth: 'OQS_SIG_alg_falcon_1024_kbl'
         oid: '1.3.9999.3.54'
         code_point: '0xf005'
         supported_encodings: ['draft-uni-qsckeys-falcon-00/sk-pk']
@@ -907,9 +910,9 @@ sigs:
         #                   'oid': '1.3.9999.3.5',
         #                   'code_point': '0xfe0f'}]
       -
-        name: 'kbl_falconpadded1024'
-        pretty_name: 'KBL-Falcon-padded-1024'
-        oqs_meth: 'OQS_SIG_alg_kbl_falcon_padded_1024'
+        name: 'falconpadded1024_kbl'
+        pretty_name: 'Falcon-padded-1024_kbl'
+        oqs_meth: 'OQS_SIG_alg_falcon_padded_1024_kbl'
         oid: '1.3.9999.3.56'
         code_point: '0xf007'
         supported_encodings: ['draft-uni-qsckeys-falcon-00/sk-pk']
@@ -918,6 +921,9 @@ sigs:
                     'pretty_name': 'ECDSA p521',
                     'oid': '1.3.9999.3.57',
                     'code_point': '0xf008'}]
+
+
+
   -
     family: 'SPHINCS-Haraka'
     variants:
