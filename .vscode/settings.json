@@ -17,6 +17,7 @@
         "system_error": "c",
         "macrofx4.h": "c",
         "macrous.h": "c",
-        "macrof.h": "c"
+        "macrof.h": "c",
+        "inner.h": "c"
     }
 }
