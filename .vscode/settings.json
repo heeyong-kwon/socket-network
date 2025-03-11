@@ -16,6 +16,7 @@
         "oqs_endecoder_local.h": "c",
         "system_error": "c",
         "macrofx4.h": "c",
-        "macrous.h": "c"
+        "macrous.h": "c",
+        "macrof.h": "c"
     }
 }
