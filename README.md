@@ -98,6 +98,8 @@ Exception handling for both server and client sides about identifying not number
    -> Only the server side for now.
    -> Should I add it to the client side as well?
 
+KBL algorithm is not applied to the rest falcon algorithms such as falcon-512_clean, falcon-1024_aarch64, *padded*...
+
 
 <!-- c code로 실행하는 건 아직 검증 안 됨 -->
 <!-- TODO: verify falcon512k works on c code -->
