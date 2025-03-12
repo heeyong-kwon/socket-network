@@ -2,10 +2,60 @@
 
 bash add_new.sh
 
-openssl req -x509 -new -newkey p256_falcon512_kbl -keyout p256_falcon512_kbl_CA.key -out p256_falcon512_kbl_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
-openssl genpkey -algorithm p256_falcon512_kbl -out p256_falcon512_kbl_srv.key
-openssl req -new -newkey p256_falcon512_kbl -keyout p256_falcon512_kbl_srv.key -out p256_falcon512_kbl_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
-openssl x509 -req -in p256_falcon512_kbl_srv.csr -out p256_falcon512_kbl_srv.crt -CA p256_falcon512_kbl_CA.crt -CAkey p256_falcon512_kbl_CA.key -CAcreateserial -days 365
+ALG=p256_falcon512_kbl
+openssl req -x509 -new -newkey ${ALG} -keyout ${ALG}_CA.key -out ${ALG}_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+openssl genpkey -algorithm ${ALG} -out ${ALG}_srv.key
+openssl req -new -newkey ${ALG} -keyout ${ALG}_srv.key -out ${ALG}_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+openssl x509 -req -in ${ALG}_srv.csr -out ${ALG}_srv.crt -CA ${ALG}_CA.crt -CAkey ${ALG}_CA.key -CAcreateserial -days 365
+# rm ${ALG}_*
 
-# rm p256_falcon512_kbl_*
+ALG=p521_falcon1024_kbl
+openssl req -x509 -new -newkey ${ALG} -keyout ${ALG}_CA.key -out ${ALG}_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+openssl genpkey -algorithm ${ALG} -out ${ALG}_srv.key
+openssl req -new -newkey ${ALG} -keyout ${ALG}_srv.key -out ${ALG}_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+openssl x509 -req -in ${ALG}_srv.csr -out ${ALG}_srv.crt -CA ${ALG}_CA.crt -CAkey ${ALG}_CA.key -CAcreateserial -days 365
+# rm ${ALG}_*
 
+ALG=p256_falconpadded512_kbl
+openssl req -x509 -new -newkey ${ALG} -keyout ${ALG}_CA.key -out ${ALG}_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+openssl genpkey -algorithm ${ALG} -out ${ALG}_srv.key
+openssl req -new -newkey ${ALG} -keyout ${ALG}_srv.key -out ${ALG}_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+openssl x509 -req -in ${ALG}_srv.csr -out ${ALG}_srv.crt -CA ${ALG}_CA.crt -CAkey ${ALG}_CA.key -CAcreateserial -days 365
+# rm ${ALG}_*
+
+ALG=p521_falconpadded1024_kbl
+openssl req -x509 -new -newkey ${ALG} -keyout ${ALG}_CA.key -out ${ALG}_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+openssl genpkey -algorithm ${ALG} -out ${ALG}_srv.key
+openssl req -new -newkey ${ALG} -keyout ${ALG}_srv.key -out ${ALG}_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+openssl x509 -req -in ${ALG}_srv.csr -out ${ALG}_srv.crt -CA ${ALG}_CA.crt -CAkey ${ALG}_CA.key -CAcreateserial -days 365
+# rm ${ALG}_*
+
+
+# Original hybrid algorithms provided by liboqs
+ALG=p256_falcon512
+openssl req -x509 -new -newkey ${ALG} -keyout ${ALG}_CA.key -out ${ALG}_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+openssl genpkey -algorithm ${ALG} -out ${ALG}_srv.key
+openssl req -new -newkey ${ALG} -keyout ${ALG}_srv.key -out ${ALG}_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+openssl x509 -req -in ${ALG}_srv.csr -out ${ALG}_srv.crt -CA ${ALG}_CA.crt -CAkey ${ALG}_CA.key -CAcreateserial -days 365
+# rm ${ALG}_*
+
+ALG=p521_falcon1024
+openssl req -x509 -new -newkey ${ALG} -keyout ${ALG}_CA.key -out ${ALG}_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+openssl genpkey -algorithm ${ALG} -out ${ALG}_srv.key
+openssl req -new -newkey ${ALG} -keyout ${ALG}_srv.key -out ${ALG}_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+openssl x509 -req -in ${ALG}_srv.csr -out ${ALG}_srv.crt -CA ${ALG}_CA.crt -CAkey ${ALG}_CA.key -CAcreateserial -days 365
+# rm ${ALG}_*
+
+ALG=p256_falconpadded512
+openssl req -x509 -new -newkey ${ALG} -keyout ${ALG}_CA.key -out ${ALG}_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+openssl genpkey -algorithm ${ALG} -out ${ALG}_srv.key
+openssl req -new -newkey ${ALG} -keyout ${ALG}_srv.key -out ${ALG}_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+openssl x509 -req -in ${ALG}_srv.csr -out ${ALG}_srv.crt -CA ${ALG}_CA.crt -CAkey ${ALG}_CA.key -CAcreateserial -days 365
+# rm ${ALG}_*
+
+ALG=p521_falconpadded1024
+openssl req -x509 -new -newkey ${ALG} -keyout ${ALG}_CA.key -out ${ALG}_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+openssl genpkey -algorithm ${ALG} -out ${ALG}_srv.key
+openssl req -new -newkey ${ALG} -keyout ${ALG}_srv.key -out ${ALG}_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+openssl x509 -req -in ${ALG}_srv.csr -out ${ALG}_srv.crt -CA ${ALG}_CA.crt -CAkey ${ALG}_CA.key -CAcreateserial -days 365
+# rm ${ALG}_*

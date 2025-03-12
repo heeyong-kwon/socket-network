@@ -176,8 +176,7 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
      */
     // (Mizzou, 2025) revised
     // Kwon et al. hybrid signature scheme (2024)
-    uint8_t *r_ecdsa        = nonce;
-    r_ecdsa                 -= 1;
+    uint8_t *r_ecdsa        = nonce - 1;
     uint8_t size_r_ecdsa    = 32;
     
     if (*(r_ecdsa - size_r_ecdsa) & 0x80)
@@ -187,8 +186,8 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
 
     uint8_t *new_nonce = malloc(NONCELEN);
     memcpy(new_nonce, r_ecdsa, size_r_ecdsa);
-    randombytes(new_nonce + 32, NONCELEN - size_r_ecdsa);
-    memcpy(nonce, new_nonce + 32, NONCELEN - size_r_ecdsa);
+    randombytes(new_nonce + size_r_ecdsa, NONCELEN - size_r_ecdsa);
+    memcpy(nonce, new_nonce + size_r_ecdsa, NONCELEN - size_r_ecdsa);
     // Original code copied from liboqs
     // randombytes(nonce, NONCELEN);
 
@@ -197,6 +196,7 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
      */
     inner_shake256_init(&sc);
     inner_shake256_inject(&sc, new_nonce, NONCELEN);
+    // inner_shake256_inject(&sc, nonce, NONCELEN);
     inner_shake256_inject(&sc, m, mlen);
     inner_shake256_flip(&sc);
     PQCLEAN_FALCON512_KBL_AARCH64_hash_to_point_ct(&sc, r.hm, FALCON_LOGN, tmp.b);
@@ -297,8 +297,7 @@ do_verify(
     // (Mizzou, 2025) revised
     // Kwon et al. hybrid signature scheme (2024)
     // Restore the nonce
-    uint8_t *r_ecdsa        = nonce;
-    r_ecdsa                 -= 1;
+    uint8_t *r_ecdsa        = nonce - 1;
     uint8_t size_r_ecdsa    = 32;
     
     if (*(r_ecdsa - size_r_ecdsa) & 0x80)
@@ -308,10 +307,11 @@ do_verify(
 
     uint8_t *new_nonce = malloc(NONCELEN);
     memcpy(new_nonce, r_ecdsa, size_r_ecdsa);
-    memcpy(new_nonce + 32, nonce, NONCELEN - size_r_ecdsa);
+    memcpy(new_nonce + size_r_ecdsa, nonce, NONCELEN - size_r_ecdsa);
 
     inner_shake256_init(&sc);
     inner_shake256_inject(&sc, new_nonce, NONCELEN);
+    // inner_shake256_inject(&sc, nonce, NONCELEN);
     inner_shake256_inject(&sc, m, mlen);
     inner_shake256_flip(&sc);
     PQCLEAN_FALCON512_KBL_AARCH64_hash_to_point_ct(&sc, (uint16_t *) hm, FALCON_LOGN, tmp.b);
@@ -337,13 +337,10 @@ PQCLEAN_FALCON512_KBL_AARCH64_crypto_sign_signature(
     size_t vlen;
     
     vlen = PQCLEAN_FALCON512_KBL_AARCH64_CRYPTO_BYTES - NONCELEN - 1;
-    fprintf(stderr, "vlen!!! %ld \n", vlen);
     if (do_sign(sig + 1, sig + 1 + NONCELEN, &vlen, m, mlen, sk) < 0) {
         return -1;
     }
-    fprintf(stderr, "(012) here!!! %x, %x, %x, %x \n", (sig - 32)[0], (sig - 32)[1], (sig - 32)[2], (sig - 32)[3]);
     sig[0] = 0x30 + FALCON_LOGN;
-    // fprintf(stderr, "(1) here!!! %x, %x, %x, %x, \n", sig[0], sig[1], sig[2], sig[3]);
     
     // (Mizzou, 2025) revised (32: the size of r in ECDSA)
     *siglen = 1 + NONCELEN - 32 + vlen;
