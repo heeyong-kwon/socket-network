@@ -53,9 +53,9 @@ static int oqsx_key_recreate_classickey(OQSX_KEY *key, oqsx_key_op_t op);
 ///// OQS_TEMPLATE_FRAGMENT_OQSNAMES_START
 
 #ifdef OQS_KEM_ENCODERS
-#define NID_TABLE_LEN 95    // Originally 93
+#define NID_TABLE_LEN 101   // Originally 93
 #else
-#define NID_TABLE_LEN 52    // Originally 50
+#define NID_TABLE_LEN 58    // Originally 50
 #endif
 
 static oqs_nid_name_t nid_names[NID_TABLE_LEN] = {
@@ -188,9 +188,17 @@ static oqs_nid_name_t nid_names[NID_TABLE_LEN] = {
      KEY_TYPE_SIG, 128},
 
 
-    {0, "falcon512k", OQS_SIG_alg_falcon_512k, KEY_TYPE_SIG, 128},
-    {0, "p256_falcon512k", OQS_SIG_alg_falcon_512k, KEY_TYPE_HYB_SIG, 128},
- 
+
+    {0, "falcon512_kbl", OQS_SIG_alg_falcon_512_kbl, KEY_TYPE_SIG, 128},
+    {0, "p256_falcon512_kbl", OQS_SIG_alg_falcon_512_kbl, KEY_TYPE_HYB_SIG, 128},
+    {0, "falconpadded512_kbl", OQS_SIG_alg_falcon_padded_512_kbl, KEY_TYPE_SIG, 128},
+    {0, "p256_falconpadded512_kbl", OQS_SIG_alg_falcon_padded_512_kbl, KEY_TYPE_HYB_SIG, 128},
+    {0, "falcon1024_kbl", OQS_SIG_alg_falcon_1024_kbl, KEY_TYPE_SIG, 256},
+    {0, "p521_falcon1024_kbl", OQS_SIG_alg_falcon_1024_kbl, KEY_TYPE_HYB_SIG, 256},
+    {0, "falconpadded1024_kbl", OQS_SIG_alg_falcon_padded_1024_kbl, KEY_TYPE_SIG, 256},
+    {0, "p521_falconpadded1024_kbl", OQS_SIG_alg_falcon_padded_1024_kbl, KEY_TYPE_HYB_SIG, 256},
+
+    
  
     ///// OQS_TEMPLATE_FRAGMENT_OQSNAMES_END
 };

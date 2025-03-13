@@ -14,16 +14,21 @@ const char *kHybridSignatureAlgorithms[] = {
     "p384_mldsa65",
     "p521_mldsa87",
     "p256_falcon512",
-
-    
-    "p256_falcon512k", 
-
-    
     "rsa3072_falcon512",
     "p256_falconpadded512",
     "rsa3072_falconpadded512",
     "p521_falcon1024",
     "p521_falconpadded1024",
+
+
+    
+    "p256_falcon512_kbl",
+    "p256_falconpadded512_kbl",
+    "p521_falcon1024_kbl",
+    "p521_falconpadded1024_kbl",
+
+
+
     "p256_sphincssha2128fsimple",
     "rsa3072_sphincssha2128fsimple",
     "p256_sphincssha2128ssimple",

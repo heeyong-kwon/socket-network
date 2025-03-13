@@ -1,11 +1,26 @@
 #!/bin/bash
 
-bash add_new.sh
+#!/bin/bash
 
-openssl req -x509 -new -newkey p256_falcon512k -keyout p256_falcon512k_CA.key -out p256_falcon512k_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
-openssl genpkey -algorithm p256_falcon512k -out p256_falcon512k_srv.key
-openssl req -new -newkey p256_falcon512k -keyout p256_falcon512k_srv.key -out p256_falcon512k_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
-openssl x509 -req -in p256_falcon512k_srv.csr -out p256_falcon512k_srv.crt -CA p256_falcon512k_CA.crt -CAkey p256_falcon512k_CA.key -CAcreateserial -days 365
+# bash add_new.sh
 
-# rm p256_falcon512k_*
+generate_certificates() {
+  local ALG=$1
+  openssl req -x509 -new -newkey ${ALG} -keyout ${ALG}_CA.key -out ${ALG}_CA.crt -nodes -subj "/CN=test CA" -days 365 -config /usr/local/ssl/openssl.cnf
+  openssl genpkey -algorithm ${ALG} -out ${ALG}_srv.key
+  openssl req -new -newkey ${ALG} -keyout ${ALG}_srv.key -out ${ALG}_srv.csr -nodes -subj "/CN=test server" -config /usr/local/ssl/openssl.cnf
+  openssl x509 -req -in ${ALG}_srv.csr -out ${ALG}_srv.crt -CA ${ALG}_CA.crt -CAkey ${ALG}_CA.key -CAcreateserial -days 365
+  # rm ${ALG}_*
+}
 
+# Hybrid algorithms with KBL
+generate_certificates "p256_falcon512_kbl"
+generate_certificates "p521_falcon1024_kbl"
+generate_certificates "p256_falconpadded512_kbl"
+generate_certificates "p521_falconpadded1024_kbl"
+
+# Original hybrid algorithms provided by liboqs
+generate_certificates "p256_falcon512"
+generate_certificates "p521_falcon1024"
+generate_certificates "p256_falconpadded512"
+generate_certificates "p521_falconpadded1024"

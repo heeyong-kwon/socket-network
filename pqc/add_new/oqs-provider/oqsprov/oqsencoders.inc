@@ -578,24 +578,6 @@ ENCODER_w_structure("p256_falcon512", p256_falcon512, pem, EncryptedPrivateKeyIn
 ENCODER_w_structure("p256_falcon512", p256_falcon512, der, SubjectPublicKeyInfo),
 ENCODER_w_structure("p256_falcon512", p256_falcon512, pem, SubjectPublicKeyInfo),
 ENCODER_TEXT("p256_falcon512", p256_falcon512),
-
-
-ENCODER_w_structure("falcon512k", falcon512k, der, PrivateKeyInfo),
-ENCODER_w_structure("falcon512k", falcon512k, pem, PrivateKeyInfo),
-ENCODER_w_structure("falcon512k", falcon512k, der, EncryptedPrivateKeyInfo),
-ENCODER_w_structure("falcon512k", falcon512k, pem, EncryptedPrivateKeyInfo),
-ENCODER_w_structure("falcon512k", falcon512k, der, SubjectPublicKeyInfo),
-ENCODER_w_structure("falcon512k", falcon512k, pem, SubjectPublicKeyInfo),
-ENCODER_TEXT("falcon512k", falcon512k),
-ENCODER_w_structure("p256_falcon512k", p256_falcon512k, der, PrivateKeyInfo),
-ENCODER_w_structure("p256_falcon512k", p256_falcon512k, pem, PrivateKeyInfo),
-ENCODER_w_structure("p256_falcon512k", p256_falcon512k, der, EncryptedPrivateKeyInfo),
-ENCODER_w_structure("p256_falcon512k", p256_falcon512k, pem, EncryptedPrivateKeyInfo),
-ENCODER_w_structure("p256_falcon512k", p256_falcon512k, der, SubjectPublicKeyInfo),
-ENCODER_w_structure("p256_falcon512k", p256_falcon512k, pem, SubjectPublicKeyInfo),
-ENCODER_TEXT("p256_falcon512k", p256_falcon512k),
-
-
 ENCODER_w_structure("rsa3072_falcon512", rsa3072_falcon512, der, PrivateKeyInfo),
 ENCODER_w_structure("rsa3072_falcon512", rsa3072_falcon512, pem, PrivateKeyInfo),
 ENCODER_w_structure("rsa3072_falcon512", rsa3072_falcon512, der, EncryptedPrivateKeyInfo),
@@ -659,6 +641,76 @@ ENCODER_w_structure("p521_falconpadded1024", p521_falconpadded1024, der, Subject
 ENCODER_w_structure("p521_falconpadded1024", p521_falconpadded1024, pem, SubjectPublicKeyInfo),
 ENCODER_TEXT("p521_falconpadded1024", p521_falconpadded1024),
 #endif
+
+
+
+#ifdef OQS_ENABLE_SIG_falcon_512_kbl
+ENCODER_w_structure("falcon512_kbl", falcon512_kbl, der, PrivateKeyInfo),
+ENCODER_w_structure("falcon512_kbl", falcon512_kbl, pem, PrivateKeyInfo),
+ENCODER_w_structure("falcon512_kbl", falcon512_kbl, der, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("falcon512_kbl", falcon512_kbl, pem, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("falcon512_kbl", falcon512_kbl, der, SubjectPublicKeyInfo),
+ENCODER_w_structure("falcon512_kbl", falcon512_kbl, pem, SubjectPublicKeyInfo),
+ENCODER_TEXT("falcon512_kbl", falcon512_kbl),
+ENCODER_w_structure("p256_falcon512_kbl", p256_falcon512_kbl, der, PrivateKeyInfo),
+ENCODER_w_structure("p256_falcon512_kbl", p256_falcon512_kbl, pem, PrivateKeyInfo),
+ENCODER_w_structure("p256_falcon512_kbl", p256_falcon512_kbl, der, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("p256_falcon512_kbl", p256_falcon512_kbl, pem, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("p256_falcon512_kbl", p256_falcon512_kbl, der, SubjectPublicKeyInfo),
+ENCODER_w_structure("p256_falcon512_kbl", p256_falcon512_kbl, pem, SubjectPublicKeyInfo),
+ENCODER_TEXT("p256_falcon512_kbl", p256_falcon512_kbl),
+#endif
+#ifdef OQS_ENABLE_SIG_falcon_padded_512_kbl
+ENCODER_w_structure("falconpadded512_kbl", falconpadded512_kbl, der, PrivateKeyInfo),
+ENCODER_w_structure("falconpadded512_kbl", falconpadded512_kbl, pem, PrivateKeyInfo),
+ENCODER_w_structure("falconpadded512_kbl", falconpadded512_kbl, der, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("falconpadded512_kbl", falconpadded512_kbl, pem, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("falconpadded512_kbl", falconpadded512_kbl, der, SubjectPublicKeyInfo),
+ENCODER_w_structure("falconpadded512_kbl", falconpadded512_kbl, pem, SubjectPublicKeyInfo),
+ENCODER_TEXT("falconpadded512_kbl", falconpadded512_kbl),
+ENCODER_w_structure("p256_falconpadded512_kbl", p256_falconpadded512_kbl, der, PrivateKeyInfo),
+ENCODER_w_structure("p256_falconpadded512_kbl", p256_falconpadded512_kbl, pem, PrivateKeyInfo),
+ENCODER_w_structure("p256_falconpadded512_kbl", p256_falconpadded512_kbl, der, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("p256_falconpadded512_kbl", p256_falconpadded512_kbl, pem, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("p256_falconpadded512_kbl", p256_falconpadded512_kbl, der, SubjectPublicKeyInfo),
+ENCODER_w_structure("p256_falconpadded512_kbl", p256_falconpadded512_kbl, pem, SubjectPublicKeyInfo),
+ENCODER_TEXT("p256_falconpadded512_kbl", p256_falconpadded512_kbl),
+#endif
+#ifdef OQS_ENABLE_SIG_falcon_1024_kbl
+ENCODER_w_structure("falcon1024_kbl", falcon1024_kbl, der, PrivateKeyInfo),
+ENCODER_w_structure("falcon1024_kbl", falcon1024_kbl, pem, PrivateKeyInfo),
+ENCODER_w_structure("falcon1024_kbl", falcon1024_kbl, der, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("falcon1024_kbl", falcon1024_kbl, pem, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("falcon1024_kbl", falcon1024_kbl, der, SubjectPublicKeyInfo),
+ENCODER_w_structure("falcon1024_kbl", falcon1024_kbl, pem, SubjectPublicKeyInfo),
+ENCODER_TEXT("falcon1024_kbl", falcon1024_kbl),
+ENCODER_w_structure("p521_falcon1024_kbl", p521_falcon1024_kbl, der, PrivateKeyInfo),
+ENCODER_w_structure("p521_falcon1024_kbl", p521_falcon1024_kbl, pem, PrivateKeyInfo),
+ENCODER_w_structure("p521_falcon1024_kbl", p521_falcon1024_kbl, der, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("p521_falcon1024_kbl", p521_falcon1024_kbl, pem, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("p521_falcon1024_kbl", p521_falcon1024_kbl, der, SubjectPublicKeyInfo),
+ENCODER_w_structure("p521_falcon1024_kbl", p521_falcon1024_kbl, pem, SubjectPublicKeyInfo),
+ENCODER_TEXT("p521_falcon1024_kbl", p521_falcon1024_kbl),
+#endif
+#ifdef OQS_ENABLE_SIG_falcon_padded_1024_kbl
+ENCODER_w_structure("falconpadded1024_kbl", falconpadded1024_kbl, der, PrivateKeyInfo),
+ENCODER_w_structure("falconpadded1024_kbl", falconpadded1024_kbl, pem, PrivateKeyInfo),
+ENCODER_w_structure("falconpadded1024_kbl", falconpadded1024_kbl, der, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("falconpadded1024_kbl", falconpadded1024_kbl, pem, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("falconpadded1024_kbl", falconpadded1024_kbl, der, SubjectPublicKeyInfo),
+ENCODER_w_structure("falconpadded1024_kbl", falconpadded1024_kbl, pem, SubjectPublicKeyInfo),
+ENCODER_TEXT("falconpadded1024_kbl", falconpadded1024_kbl),
+ENCODER_w_structure("p521_falconpadded1024_kbl", p521_falconpadded1024_kbl, der, PrivateKeyInfo),
+ENCODER_w_structure("p521_falconpadded1024_kbl", p521_falconpadded1024_kbl, pem, PrivateKeyInfo),
+ENCODER_w_structure("p521_falconpadded1024_kbl", p521_falconpadded1024_kbl, der, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("p521_falconpadded1024_kbl", p521_falconpadded1024_kbl, pem, EncryptedPrivateKeyInfo),
+ENCODER_w_structure("p521_falconpadded1024_kbl", p521_falconpadded1024_kbl, der, SubjectPublicKeyInfo),
+ENCODER_w_structure("p521_falconpadded1024_kbl", p521_falconpadded1024_kbl, pem, SubjectPublicKeyInfo),
+ENCODER_TEXT("p521_falconpadded1024_kbl", p521_falconpadded1024_kbl),
+#endif
+
+
+
 #ifdef OQS_ENABLE_SIG_sphincs_sha2_128f_simple
 ENCODER_w_structure("sphincssha2128fsimple", sphincssha2128fsimple, der, PrivateKeyInfo),
 ENCODER_w_structure("sphincssha2128fsimple", sphincssha2128fsimple, pem, PrivateKeyInfo),

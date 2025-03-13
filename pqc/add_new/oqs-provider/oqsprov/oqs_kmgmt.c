@@ -1187,22 +1187,75 @@ static void *CROSSrsdp128balanced_gen_init(void *provctx, int selection) {
                          "CROSSrsdp128balanced", 0, 128, 49, 0);
 }
 
-static void *falcon512k_new_key(void *provctx) {
-    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_512k,
-                        "falcon512k", KEY_TYPE_SIG, NULL, 128, 50, 0);
-}
 
-static void *falcon512k_gen_init(void *provctx, int selection) {
-    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_512k,
-                         "falcon512k", 0, 128, 50, 0);
+
+static void *falcon512_kbl_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_512_kbl,
+                        "falcon512_kbl", KEY_TYPE_SIG, NULL, 128, 50, 0);
 }
-static void *p256_falcon512k_new_key(void *provctx) {
-    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_512k,
-                        "p256_falcon512k", KEY_TYPE_HYB_SIG, NULL, 128, 51, 0);
+static void *falcon512_kbl_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_512_kbl,
+                         "falcon512_kbl", 0, 128, 50, 0);
 }
-static void *p256_falcon512k_gen_init(void *provctx, int selection) {
-    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_512k,
-                         "p256_falcon512k", KEY_TYPE_HYB_SIG, 128, 51, 0);
+static void *p256_falcon512_kbl_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_512_kbl,
+                        "p256_falcon512_kbl", KEY_TYPE_HYB_SIG, NULL, 128, 51, 0);
+}
+static void *p256_falcon512_kbl_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_512_kbl,
+                         "p256_falcon512_kbl", KEY_TYPE_HYB_SIG, 128, 51, 0);
+}
+static void *falconpadded512_kbl_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx),
+                        OQS_SIG_alg_falcon_padded_512_kbl, "falconpadded512_kbl",
+                        KEY_TYPE_SIG, NULL, 128, 23, 0);
+}
+static void *falconpadded512_kbl_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_padded_512_kbl,
+                         "falconpadded512_kbl", 0, 128, 23, 0);
+}
+static void *p256_falconpadded512_kbl_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx),
+                        OQS_SIG_alg_falcon_padded_512_kbl, "p256_falconpadded512_kbl",
+                        KEY_TYPE_HYB_SIG, NULL, 128, 24, 0);
+}
+static void *p256_falconpadded512_kbl_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_padded_512_kbl,
+                         "p256_falconpadded512_kbl", KEY_TYPE_HYB_SIG, 128, 24, 0);
+}
+static void *falcon1024_kbl_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_1024_kbl,
+                        "falcon1024_kbl", KEY_TYPE_SIG, NULL, 256, 26, 0);
+}
+static void *falcon1024_kbl_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_1024_kbl,
+                         "falcon1024_kbl", 0, 256, 26, 0);
+}
+static void *p521_falcon1024_kbl_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_1024_kbl,
+                        "p521_falcon1024_kbl", KEY_TYPE_HYB_SIG, NULL, 256, 27, 0);
+}
+static void *p521_falcon1024_kbl_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_1024_kbl,
+                         "p521_falcon1024_kbl", KEY_TYPE_HYB_SIG, 256, 27, 0);
+}
+static void *falconpadded1024_kbl_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx),
+                        OQS_SIG_alg_falcon_padded_1024_kbl, "falconpadded1024_kbl",
+                        KEY_TYPE_SIG, NULL, 256, 28, 0);
+}
+static void *falconpadded1024_kbl_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_padded_1024_kbl,
+                         "falconpadded1024_kbl", 0, 256, 28, 0);
+}
+static void *p521_falconpadded1024_kbl_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx),
+                        OQS_SIG_alg_falcon_padded_1024_kbl, "p521_falconpadded1024_kbl",
+                        KEY_TYPE_HYB_SIG, NULL, 256, 29, 0);
+}
+static void *p521_falconpadded1024_kbl_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_padded_1024_kbl,
+                         "p521_falconpadded1024_kbl", KEY_TYPE_HYB_SIG, 256, 29, 0);
 }
 
 
@@ -1373,12 +1426,6 @@ MAKE_SIG_KEYMGMT_FUNCTIONS(mldsa87_bp384)
 MAKE_SIG_KEYMGMT_FUNCTIONS(mldsa87_ed448)
 MAKE_SIG_KEYMGMT_FUNCTIONS(falcon512)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p256_falcon512)
-
-
-MAKE_SIG_KEYMGMT_FUNCTIONS(falcon512k)
-MAKE_SIG_KEYMGMT_FUNCTIONS(p256_falcon512k)
-
-
 MAKE_SIG_KEYMGMT_FUNCTIONS(rsa3072_falcon512)
 MAKE_SIG_KEYMGMT_FUNCTIONS(falconpadded512)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p256_falconpadded512)
@@ -1387,6 +1434,20 @@ MAKE_SIG_KEYMGMT_FUNCTIONS(falcon1024)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p521_falcon1024)
 MAKE_SIG_KEYMGMT_FUNCTIONS(falconpadded1024)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p521_falconpadded1024)
+
+
+
+MAKE_SIG_KEYMGMT_FUNCTIONS(falcon512_kbl)
+MAKE_SIG_KEYMGMT_FUNCTIONS(p256_falcon512_kbl)
+MAKE_SIG_KEYMGMT_FUNCTIONS(falconpadded512_kbl)
+MAKE_SIG_KEYMGMT_FUNCTIONS(p256_falconpadded512_kbl)
+MAKE_SIG_KEYMGMT_FUNCTIONS(falcon1024_kbl)
+MAKE_SIG_KEYMGMT_FUNCTIONS(p521_falcon1024_kbl)
+MAKE_SIG_KEYMGMT_FUNCTIONS(falconpadded1024_kbl)
+MAKE_SIG_KEYMGMT_FUNCTIONS(p521_falconpadded1024_kbl)
+
+
+
 MAKE_SIG_KEYMGMT_FUNCTIONS(sphincssha2128fsimple)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p256_sphincssha2128fsimple)
 MAKE_SIG_KEYMGMT_FUNCTIONS(rsa3072_sphincssha2128fsimple)

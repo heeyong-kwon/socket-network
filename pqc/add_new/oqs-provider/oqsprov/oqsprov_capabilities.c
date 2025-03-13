@@ -266,7 +266,10 @@ static OQS_SIGALG_CONSTANTS oqs_sigalg_list[] = {
     {0xfef4, 192, TLS1_3_VERSION, 0}, {0xfef1, 256, TLS1_3_VERSION, 0},
     {0xfef5, 256, TLS1_3_VERSION, 0}, {0xfef6, 128, TLS1_3_VERSION, 0},
 
-    {0xfffe, 128, TLS1_3_VERSION, 0}, {0xffff, 128, TLS1_3_VERSION, 0}, 
+    {0xf001, 128, TLS1_3_VERSION, 0}, {0xf002, 128, TLS1_3_VERSION, 0}, 
+    {0xf003, 128, TLS1_3_VERSION, 0}, {0xf004, 128, TLS1_3_VERSION, 0},
+    {0xf005, 256, TLS1_3_VERSION, 0}, {0xf006, 256, TLS1_3_VERSION, 0},
+    {0xf007, 256, TLS1_3_VERSION, 0}, {0xf008, 256, TLS1_3_VERSION, 0},
     ///// OQS_TEMPLATE_FRAGMENT_SIGALG_ASSIGNMENTS_END
 };
 
@@ -446,16 +449,6 @@ int oqs_patch_codepoints() {
     if (getenv("OQS_CODEPOINT_P256_FALCON512"))
         oqs_sigalg_list[21].code_point =
             atoi(getenv("OQS_CODEPOINT_P256_FALCON512"));
-    
-
-    if (getenv("OQS_CODEPOINT_FALCON512K"))
-        oqs_sigalg_list[50].code_point =
-            atoi(getenv("OQS_CODEPOINT_FALCON512K"));
-    if (getenv("OQS_CODEPOINT_P256_FALCON512K"))
-        oqs_sigalg_list[51].code_point =
-            atoi(getenv("OQS_CODEPOINT_P256_FALCON512K"));
-
-        
     if (getenv("OQS_CODEPOINT_RSA3072_FALCON512"))
         oqs_sigalg_list[22].code_point =
             atoi(getenv("OQS_CODEPOINT_RSA3072_FALCON512"));
@@ -536,6 +529,27 @@ int oqs_patch_codepoints() {
     if (getenv("OQS_CODEPOINT_CROSSRSDP128BALANCED"))
         oqs_sigalg_list[49].code_point =
             atoi(getenv("OQS_CODEPOINT_CROSSRSDP128BALANCED"));
+    
+
+
+    if (getenv("OQS_CODEPOINT_FALCON512_KBL"))
+        oqs_sigalg_list[50].code_point = atoi(getenv("OQS_CODEPOINT_FALCON512_KBL"));
+    if (getenv("OQS_CODEPOINT_P256_FALCON512_KBL"))
+        oqs_sigalg_list[51].code_point = atoi(getenv("OQS_CODEPOINT_P256_FALCON512_KBL"));
+    if (getenv("OQS_CODEPOINT_FALCONPADDED512_KBL"))
+        oqs_sigalg_list[52].code_point = atoi(getenv("OQS_CODEPOINT_FALCONPADDED512_KBL"));
+    if (getenv("OQS_CODEPOINT_P256_FALCONPADDED512_KBL"))
+        oqs_sigalg_list[53].code_point = atoi(getenv("OQS_CODEPOINT_P256_FALCONPADDED512_KBL"));
+    if (getenv("OQS_CODEPOINT_FALCON1024_KBL"))
+        oqs_sigalg_list[54].code_point = atoi(getenv("OQS_CODEPOINT_FALCON1024_KBL"));
+    if (getenv("OQS_CODEPOINT_P521_FALCON1024_KBL"))
+        oqs_sigalg_list[55].code_point = atoi(getenv("OQS_CODEPOINT_P521_FALCON1024_KBL"));
+    if (getenv("OQS_CODEPOINT_FALCONPADDED1024_KBL"))
+        oqs_sigalg_list[56].code_point = atoi(getenv("OQS_CODEPOINT_FALCONPADDED1024_KBL"));
+    if (getenv("OQS_CODEPOINT_P521_FALCONPADDED1024_KBL"))
+        oqs_sigalg_list[57].code_point = atoi(getenv("OQS_CODEPOINT_P521_FALCONPADDED1024_KBL"));
+
+
     ///// OQS_TEMPLATE_FRAGMENT_CODEPOINT_PATCHING_END
     return 1;
 }
@@ -695,11 +709,28 @@ static const OSSL_PARAM oqs_param_sigalg_list[][12] = {
     OQS_SIGALG_ENTRY(CROSSrsdp128balanced, CROSSrsdp128balanced,
                      CROSSrsdp128balanced, "1.3.6.1.4.1.62245.2.1.1", 49),
 #endif
-#ifdef OQS_ENABLE_SIG_falcon_512k
-    OQS_SIGALG_ENTRY(falcon512k, falcon512k, falcon512k, "1.3.9999.3.21", 50),
-    OQS_SIGALG_ENTRY(p256_falcon512k, p256_falcon512k, p256_falcon512k, "1.3.9999.3.22",
-                    51),
+
+
+
+#ifdef OQS_ENABLE_SIG_falcon_512_kbl
+    OQS_SIGALG_ENTRY(falcon512_kbl, falcon512_kbl, falcon512_kbl, "1.3.9999.3.50", 50),
+    OQS_SIGALG_ENTRY(p256_falcon512_kbl, p256_falcon512_kbl, p256_falcon512_kbl, "1.3.9999.3.51", 51),
 #endif
+#ifdef OQS_ENABLE_SIG_falcon_padded_512_kbl
+    OQS_SIGALG_ENTRY(falconpadded512_kbl, falconpadded512_kbl, falconpadded512_kbl, "1.3.9999.3.52", 52),
+    OQS_SIGALG_ENTRY(p256_falconpadded512_kbl, p256_falconpadded512_kbl, p256_falconpadded512_kbl, "1.3.9999.3.53", 53),
+#endif
+#ifdef OQS_ENABLE_SIG_falcon_1024_kbl
+    OQS_SIGALG_ENTRY(falcon1024_kbl, falcon1024_kbl, falcon1024_kbl, "1.3.9999.3.54",546),
+    OQS_SIGALG_ENTRY(p521_falcon1024_kbl, p521_falcon1024_kbl, p521_falcon1024_kbl, "1.3.9999.3.55", 55),
+#endif
+#ifdef OQS_ENABLE_SIG_falcon_padded_1024_kbl
+    OQS_SIGALG_ENTRY(falconpadded1024_kbl, falconpadded1024_kbl, falconpadded1024_kbl, "1.3.9999.3.56", 56),
+    OQS_SIGALG_ENTRY(p521_falconpadded1024_kbl, p521_falconpadded1024_kbl, p521_falconpadded1024_kbl, "1.3.9999.3.57", 57),
+#endif
+
+
+
     ///// OQS_TEMPLATE_FRAGMENT_SIGALG_NAMES_END
 };
 
