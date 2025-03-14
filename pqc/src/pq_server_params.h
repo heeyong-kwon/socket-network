@@ -5,8 +5,8 @@
 
 #include "pq_openssl.h"
 
-#define SERVER_CERT "/home/socket/pqc/src/build/falcon1024_srv.crt"
-#define SERVER_KEY "/home/socket/pqc/src/build/falcon1024_srv.key"
+#define SERVER_CERT "/home/socket/pqc/src/build/hybrid_cert.pem"
+#define SERVER_KEY "/home/socket/pqc/src/build/p256_falcon512_key.pem"
 #define PORT 1316
 
 #define BUFFER_SIZE 1024
