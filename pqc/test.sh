@@ -1,8 +1,6 @@
 #!/bin/bash
 
-#!/bin/bash
-
-# bash add_new.sh
+bash add_new.sh
 
 generate_certificates() {
   local ALG=$1
