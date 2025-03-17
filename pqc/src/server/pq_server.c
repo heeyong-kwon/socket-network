@@ -59,8 +59,6 @@ void run_server() {
         pthread_t thread;
         if (pthread_create(&thread, NULL, handle_client, (void *)ssl) != 0) {
             perror("Failed to create thread");
-            // SSL_shutdown(ssl);
-            // SSL_free(ssl);
             close(client_fd);
         }
 
@@ -69,38 +67,6 @@ void run_server() {
 
     close(server_fd);
     SSL_CTX_free(ctx);
-    // int sock;
-    // struct sockaddr_in addr;
-    
-    // init_openssl();
-    // SSL_CTX *ctx = create_server_context();
-
-    // sock = socket(AF_INET, SOCK_STREAM, 0);
-    // addr.sin_family = AF_INET;
-    // addr.sin_port = htons(PORT);
-    // addr.sin_addr.s_addr = INADDR_ANY;
-
-    // bind(sock, (struct sockaddr*)&addr, sizeof(addr));
-    // listen(sock, 5);
-
-    // while (1) {
-    //     struct sockaddr_in client_addr;
-    //     socklen_t client_len = sizeof(client_addr);
-    //     int client_sock = accept(sock, (struct sockaddr*)&client_addr, &client_len);
-
-    //     SSL *ssl = SSL_new(ctx);
-    //     SSL_set_fd(ssl, client_sock);
-    //     if (SSL_accept(ssl) <= 0) {
-    //         ERR_print_errors_fp(stderr);
-    //     } else {
-    //         handle_client(ssl);
-    //     }
-    //     close(client_sock);
-    // }
-
-    // close(sock);
-    // SSL_CTX_free(ctx);
-    // cleanup_openssl();
 }
 
 int main() {

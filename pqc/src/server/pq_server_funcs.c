@@ -26,7 +26,7 @@ void handle_client_message(data_t *parsed_message) {
 void *handle_client(void *arg) {
     SSL *ssl = (SSL *)arg;
     char buffer[BUFFER_SIZE];
-    char response[BUFFER_SIZE];
+    char response[BUFFER_SIZE * 2];
 
     data_t parsed_message;
 
@@ -66,30 +66,6 @@ void *handle_client(void *arg) {
     SSL_shutdown(ssl);
     SSL_free(ssl);
     pthread_exit(NULL);
-    // char buffer[1024] = {0};
-    // // for (int i = 0; i < 256; i++){
-    // while(1){
-    //     int bytes = SSL_read(ssl, buffer, sizeof(buffer) - 1);
-    //     if (bytes <= 0) {
-    //         printf("Client disconnected or error occurred.\n");
-    //         break;
-    //     }
-    //     buffer[bytes] = '\0';   // 문자열 긑 처리
-    //     printf("Client message: %s\n", buffer);
-
-    //     // "exit" 입력 시 클라이언트 연결 종료
-    //     if (strncmp(buffer, "exit", 4) == 0) {
-    //         printf("Client requested termination.\n");
-    //         break;
-    //     }
-
-    //     // 서버 응답 메시지
-    //     char response[] = "Message received by PQC-TLS Server";
-    //     SSL_write(ssl, response, strlen(response));
-    // }
-    // // }
-    // SSL_shutdown(ssl);
-    // SSL_free(ssl);
 }
 
 int is_valid_number(const char *str) {

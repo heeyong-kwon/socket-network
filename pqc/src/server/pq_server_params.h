@@ -3,9 +3,9 @@
 
 
 
-#include "pq_openssl.h"
+#include "../pq_openssl.h"
 
-#define SERVER_CERT "/home/socket/pqc/src/build/hybrid_cert.pem"
+#define SERVER_CERT "/home/socket/pqc/src/build/p256_falcon512_cert.pem"
 #define SERVER_KEY "/home/socket/pqc/src/build/p256_falcon512_key.pem"
 #define PORT 1316
 

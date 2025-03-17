@@ -1,9 +1,8 @@
-#include <openssl/evp.h>
-#include <openssl/pem.h>
-#include <openssl/x509.h>
-#include <openssl/x509v3.h>
-#include <openssl/ec.h>
-#include <openssl/err.h>
+
+#include "pq_certificate_funcs.h"
+
+
+
 
 // ✅ OpenSSL 3.x 호환 Serial Number 생성
 // ✅ 160-bit 난수로 Serial Number 생성 (20 bytes)
@@ -31,8 +30,6 @@ ASN1_INTEGER *generate_serial_number() {
 
     return serial;
 }
-
-
 
 EVP_PKEY *generate_ecdsa_key() {
     EVP_PKEY *pkey = NULL;
@@ -93,8 +90,6 @@ EVP_PKEY *generate_falcon_key() {
     return pkey;
 }
 
-
-
 EVP_PKEY *generate_hybrid_key() {
     EVP_PKEY *pkey = NULL;
     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, "p256_falcon512", NULL);
@@ -119,7 +114,6 @@ EVP_PKEY *generate_hybrid_key() {
     EVP_PKEY_CTX_free(ctx);
     return pkey;
 }
-
 
 X509 *generate_hybrid_x509_certificate(EVP_PKEY *pkey) {
     X509 *x509 = X509_new();
@@ -205,13 +199,9 @@ X509 *generate_hybrid_x509_certificate(EVP_PKEY *pkey) {
     return x509;
 }
 
-
-
-
-
 void save_hybrid_key_and_cert(EVP_PKEY *pkey, X509 *x509) {
     FILE *key_file = fopen("p256_falcon512_key.pem", "wb");
-    FILE *cert_file = fopen("hybrid_cert.pem", "wb");
+    FILE *cert_file = fopen("p256_falcon512_cert.pem", "wb");
 
     if (key_file && PEM_write_PrivateKey(key_file, pkey, NULL, NULL, 0, NULL, NULL))
         printf("✅ Hybrid Private Key (P-256 + Falcon-512) saved.\n");
@@ -220,37 +210,5 @@ void save_hybrid_key_and_cert(EVP_PKEY *pkey, X509 *x509) {
 
     if (key_file) fclose(key_file);
     if (cert_file) fclose(cert_file);
-}
-
-
-
-
-int main() {
-    OpenSSL_add_all_algorithms();
-    ERR_load_crypto_strings();
-
-    printf("🔹 Generating P-256_Falcon-512 Hybrid Key...\n");
-    EVP_PKEY *pkey = generate_hybrid_key();
-    if (!pkey) {
-        fprintf(stderr, "❌ Failed to generate hybrid key\n");
-        return -1;
-    }
-
-    printf("🔹 Generating X.509 v3 Hybrid Certificate...\n");
-    X509 *x509 = generate_hybrid_x509_certificate(pkey);
-    if (!x509) {
-        fprintf(stderr, "❌ Failed to generate hybrid certificate\n");
-        EVP_PKEY_free(pkey);
-        return -1;
-    }
-
-    save_hybrid_key_and_cert(pkey, x509);
-
-    EVP_PKEY_free(pkey);
-    X509_free(x509);
-
-    printf("✅ Hybrid X.509 v3 Certificate generated successfully!\n");
-
-    return 0;
 }
 
