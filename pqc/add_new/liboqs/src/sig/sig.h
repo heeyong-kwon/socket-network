@@ -56,6 +56,14 @@ extern "C" {
 #define OQS_SIG_alg_falcon_padded_1024_kbl "Falcon-padded-1024_kbl"
 
 
+
+/** New Algorithm identifiers for BH method */
+#define OQS_SIG_alg_falcon_512_bh "Falcon-512_bh"
+#define OQS_SIG_alg_falcon_1024_bh "Falcon-1024_bh"
+#define OQS_SIG_alg_falcon_padded_512_bh "Falcon-padded-512_bh"
+#define OQS_SIG_alg_falcon_padded_1024_bh "Falcon-padded-1024_bh"
+
+
 /** Algorithm identifier for Falcon-1024 */
 #define OQS_SIG_alg_falcon_1024 "Falcon-1024"
 /** Algorithm identifier for Falcon-padded-512 */
@@ -136,7 +144,7 @@ extern "C" {
 
 /** Number of algorithm identifiers above. */
 // Default: 44
-#define OQS_SIG_algs_length 48
+#define OQS_SIG_algs_length 52
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_END
 
 /**

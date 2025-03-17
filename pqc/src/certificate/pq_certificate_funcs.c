@@ -31,64 +31,64 @@ ASN1_INTEGER *generate_serial_number() {
     return serial;
 }
 
-EVP_PKEY *generate_ecdsa_key() {
-    EVP_PKEY *pkey = NULL;
-    EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
+// EVP_PKEY *generate_ecdsa_key() {
+//     EVP_PKEY *pkey = NULL;
+//     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
     
-    if (!ctx) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_name failed for EC\n");
-        return NULL;
-    }
+//     if (!ctx) {
+//         fprintf(stderr, "EVP_PKEY_CTX_new_from_name failed for EC\n");
+//         return NULL;
+//     }
 
-    // 키 생성 초기화
-    if (EVP_PKEY_keygen_init(ctx) <= 0) {
-        fprintf(stderr, "EVP_PKEY_keygen_init failed for EC\n");
-        EVP_PKEY_CTX_free(ctx);
-        return NULL;
-    }
+//     // 키 생성 초기화
+//     if (EVP_PKEY_keygen_init(ctx) <= 0) {
+//         fprintf(stderr, "EVP_PKEY_keygen_init failed for EC\n");
+//         EVP_PKEY_CTX_free(ctx);
+//         return NULL;
+//     }
 
-    // ✅ 커브 이름 명시적으로 설정 (P-256)
-    if (EVP_PKEY_CTX_set_group_name(ctx, "P-256") <= 0) {
-        fprintf(stderr, "EVP_PKEY_CTX_set_group_name failed for P-256\n");
-        EVP_PKEY_CTX_free(ctx);
-        return NULL;
-    }
+//     // ✅ 커브 이름 명시적으로 설정 (P-256)
+//     if (EVP_PKEY_CTX_set_group_name(ctx, "P-256") <= 0) {
+//         fprintf(stderr, "EVP_PKEY_CTX_set_group_name failed for P-256\n");
+//         EVP_PKEY_CTX_free(ctx);
+//         return NULL;
+//     }
 
-    // 키 생성 수행
-    if (EVP_PKEY_generate(ctx, &pkey) <= 0) {
-        fprintf(stderr, "ECDSA key generation failed\n");
-        EVP_PKEY_free(pkey);
-        pkey = NULL;
-    }
+//     // 키 생성 수행
+//     if (EVP_PKEY_generate(ctx, &pkey) <= 0) {
+//         fprintf(stderr, "ECDSA key generation failed\n");
+//         EVP_PKEY_free(pkey);
+//         pkey = NULL;
+//     }
 
-    EVP_PKEY_CTX_free(ctx);
-    return pkey;
-}
+//     EVP_PKEY_CTX_free(ctx);
+//     return pkey;
+// }
 
-EVP_PKEY *generate_falcon_key() {
-    EVP_PKEY *pkey = NULL;
-    EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, "falcon512", NULL);
+// EVP_PKEY *generate_falcon_key() {
+//     EVP_PKEY *pkey = NULL;
+//     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, "falcon512", NULL);
 
-    if (!ctx) {
-        fprintf(stderr, "EVP_PKEY_CTX_new_from_name failed for Falcon-512\n");
-        return NULL;
-    }
+//     if (!ctx) {
+//         fprintf(stderr, "EVP_PKEY_CTX_new_from_name failed for Falcon-512\n");
+//         return NULL;
+//     }
 
-    if (EVP_PKEY_keygen_init(ctx) <= 0) {
-        fprintf(stderr, "EVP_PKEY_keygen_init failed for Falcon-512\n");
-        EVP_PKEY_CTX_free(ctx);
-        return NULL;
-    }
+//     if (EVP_PKEY_keygen_init(ctx) <= 0) {
+//         fprintf(stderr, "EVP_PKEY_keygen_init failed for Falcon-512\n");
+//         EVP_PKEY_CTX_free(ctx);
+//         return NULL;
+//     }
 
-    if (EVP_PKEY_generate(ctx, &pkey) <= 0) {
-        fprintf(stderr, "Falcon-512 key generation failed\n");
-        EVP_PKEY_free(pkey);
-        pkey = NULL;
-    }
+//     if (EVP_PKEY_generate(ctx, &pkey) <= 0) {
+//         fprintf(stderr, "Falcon-512 key generation failed\n");
+//         EVP_PKEY_free(pkey);
+//         pkey = NULL;
+//     }
 
-    EVP_PKEY_CTX_free(ctx);
-    return pkey;
-}
+//     EVP_PKEY_CTX_free(ctx);
+//     return pkey;
+// }
 
 EVP_PKEY *generate_hybrid_key() {
     EVP_PKEY *pkey = NULL;

@@ -27,6 +27,13 @@ signatures = [
     
     
     
+    'falcon512_bh',
+    'falconpadded512_bh',
+    'falcon1024_bh',
+    'falconpadded1024_bh',
+    
+    
+    
     'sphincssha2128fsimple','sphincssha2128ssimple','sphincssha2192fsimple','sphincsshake128fsimple','mayo1','mayo2','mayo3','mayo5','CROSSrsdp128balanced',
     # post-quantum + classical signatures
     'p256_mldsa44','rsa3072_mldsa44','p384_mldsa65','p521_mldsa87','p256_falcon512','rsa3072_falcon512','p256_falconpadded512','rsa3072_falconpadded512','p521_falcon1024','p521_falconpadded1024',
@@ -37,6 +44,13 @@ signatures = [
     'p256_falconpadded512_kbl',
     'p521_falcon1024_kbl',
     'p521_falconpadded1024_kbl',
+    
+    
+    
+    'p256_falcon512_bh',
+    'p256_falconpadded512_bh',
+    'p521_falcon1024_bh',
+    'p521_falconpadded1024_bh',
     
     
     

@@ -192,6 +192,21 @@
 
 
 
+#cmakedefine OQS_ENABLE_SIG_falcon_512_bh 1
+#cmakedefine OQS_ENABLE_SIG_falcon_512_bh_avx2 1
+#cmakedefine OQS_ENABLE_SIG_falcon_512_bh_aarch64 1
+#cmakedefine OQS_ENABLE_SIG_falcon_1024_bh 1
+#cmakedefine OQS_ENABLE_SIG_falcon_1024_bh_avx2 1
+#cmakedefine OQS_ENABLE_SIG_falcon_1024_bh_aarch64 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_512_bh 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_512_bh_avx2 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_512_bh_aarch64 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_1024_bh 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_1024_bh_avx2 1
+#cmakedefine OQS_ENABLE_SIG_falcon_padded_1024_bh_aarch64 1
+
+
+
 #cmakedefine OQS_ENABLE_SIG_SPHINCS 1
 #cmakedefine OQS_ENABLE_SIG_sphincs_sha2_128f_simple 1
 #cmakedefine OQS_ENABLE_SIG_sphincs_sha2_128f_simple_avx2 1

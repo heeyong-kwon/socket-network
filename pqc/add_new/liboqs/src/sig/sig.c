@@ -32,6 +32,13 @@ OQS_API const char *OQS_SIG_alg_identifier(size_t i) {
 		OQS_SIG_alg_falcon_1024_kbl,
 		OQS_SIG_alg_falcon_padded_512_kbl,
 		OQS_SIG_alg_falcon_padded_1024_kbl,
+		
+		
+		
+		OQS_SIG_alg_falcon_512_bh,
+		OQS_SIG_alg_falcon_1024_bh,
+		OQS_SIG_alg_falcon_padded_512_bh,
+		OQS_SIG_alg_falcon_padded_1024_bh,
 
 
 
@@ -182,6 +189,36 @@ OQS_API int OQS_SIG_alg_is_enabled(const char *method_name) {
 
 } else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_1024_kbl)) {
 #ifdef OQS_ENABLE_SIG_falcon_padded_1024_kbl
+	return 1;
+#else
+	return 0;
+#endif
+
+
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_512_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_512_bh
+	return 1;
+#else
+	return 0;
+#endif
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_1024_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_1024_bh
+	return 1;
+#else
+	return 0;
+#endif
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_512_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_512_bh
+	return 1;
+#else
+	return 0;
+#endif
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_1024_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_1024_bh
 	return 1;
 #else
 	return 0;
@@ -534,6 +571,36 @@ OQS_API OQS_SIG *OQS_SIG_new(const char *method_name) {
 } else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_1024_kbl)) {
 #ifdef OQS_ENABLE_SIG_falcon_padded_1024_kbl
 	return OQS_SIG_falcon_padded_1024_kbl_new();
+#else
+	return NULL;
+#endif
+
+
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_512_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_512_bh
+	return OQS_SIG_falcon_512_bh_new();
+#else
+	return NULL;
+#endif
+
+	} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_1024_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_1024_bh
+	return OQS_SIG_falcon_1024_bh_new();
+#else
+	return NULL;
+#endif
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_512_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_512_bh
+	return OQS_SIG_falcon_padded_512_bh_new();
+#else
+	return NULL;
+#endif
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_1024_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_1024_bh
+	return OQS_SIG_falcon_padded_1024_bh_new();
 #else
 	return NULL;
 #endif

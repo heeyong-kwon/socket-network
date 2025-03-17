@@ -220,7 +220,7 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t sigbuflen,
         PQCLEAN_FALCONPADDED512_KBL_AARCH64_sign_dyn(r.sig, &sc, f, g, F, G, r.hm, tmp.b);
     
         // (Mizzou, 2025) revised
-        v = PQCLEAN_FALCONPADDED512_KBL_AARCH64_comp_encode(sigbuf - size_r_ecdsa, *sigbuflen, r.sig);
+        v = PQCLEAN_FALCONPADDED512_KBL_AARCH64_comp_encode(sigbuf - size_r_ecdsa, sigbuflen, r.sig);
         // Original code copied from liboqs
         // v = PQCLEAN_FALCONPADDED512_KBL_AARCH64_comp_encode(sigbuf, sigbuflen, r.sig);
         if (v != 0) {
