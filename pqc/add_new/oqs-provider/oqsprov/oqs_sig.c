@@ -126,6 +126,27 @@ ASN1_NDEF_SEQUENCE(CompositeSignature) =
     int operation;
 } PROV_OQSSIG_CTX;
 
+// (2025, Mizzou)
+const char *OQS_NEW_SIG_ALGS[] = {
+    // "p256_falcon512_kbl", 
+    // "p521_falcon1024_kbl", 
+    // "p256_falconpadded512_kbl", 
+    // "p521_falconpadded1024_kbl", 
+    "p256_falcon512_bh",
+    "p521_falcon1024_bh",
+    "p256_falconpadded512_bh",
+    "p521_falconpadded1024_bh",
+    NULL  // 마지막 요소를 NULL로 설정하여 길이 없이 사용 가능
+};
+bool OQS_NEW_SIG_chk(const char *alg_name) {
+    for (int i = 0; OQS_NEW_SIG_ALGS[i] != NULL; i++) {
+        if (strcmp(alg_name, OQS_NEW_SIG_ALGS[i]) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 static void *oqs_sig_newctx(void *provctx, const char *propq) {
     PROV_OQSSIG_CTX *poqs_sigctx;
 
@@ -706,15 +727,94 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
     (OQS_VERSION_MAJOR == 0 && OQS_VERSION_MINOR < 12)
     } else if (OQS_SIG_sign(oqs_key, sig + index, &oqs_sig_len, tbs, tbslen,
 #else
-    } else if (OQS_SIG_sign_with_ctx_str(
-                   oqs_key, sig + index, &oqs_sig_len, tbs, tbslen,
-                   poqs_sigctx->context_string,
-                   poqs_sigctx->context_string_length,
+    } else {
+        if (OQS_NEW_SIG_chk(poqs_sigctx->sig->tls_name)) {
+            // TODO: 
+            // TODO: 
+            // TODO: 
+            // TODO: 
+            // TODO: 
+            // TODO: Add the Bindel's algorithm here.
+            ;
+            // printf("5This OSSL_PKEY does not contain a public key. %s\n", poqs_sigctx->sig->tls_name);
+            classical_ctx_sign = EVP_PKEY_CTX_new_from_pkey(libctx, evpkey, NULL);
+            EVP_PKEY_sign_init(classical_ctx_sign);
+
+            const EVP_MD *classical_md;
+            int digest_len;
+            unsigned char digest[SHA512_DIGEST_LENGTH]; /* init with max length */
+            switch (oqs_key->claimed_nist_level) {
+                case 1:
+                    classical_md = EVP_sha256();
+                    digest_len = SHA256_DIGEST_LENGTH;
+                    SHA256(tbs, tbslen, (unsigned char *)&digest);
+                    break;
+                case 2:
+                case 3:
+                    classical_md = EVP_sha384();
+                    digest_len = SHA384_DIGEST_LENGTH;
+                    SHA384(tbs, tbslen, (unsigned char *)&digest);
+                    break;
+                case 4:
+                case 5:
+                default:
+                    classical_md = EVP_sha512();
+                    digest_len = SHA512_DIGEST_LENGTH;
+                    SHA512(tbs, tbslen, (unsigned char *)&digest);
+                    break;
+            }
+            EVP_PKEY_CTX_set_signature_md(classical_ctx_sign, classical_md);
+
+            if (OQS_SIG_sign_with_ctx_str_bh(
+                oqs_key, sig + SIZE_OF_UINT32, &oqs_sig_len, tbs, tbslen,
+                poqs_sigctx->context_string,
+                poqs_sigctx->context_string_length,
+                oqsxkey->comp_privkey[oqsxkey->numkeys - 1], 
+                classical_ctx_sign, &actual_classical_sig_len, 
+                digest, digest_len) != OQS_SUCCESS) {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_SIGNING_FAILED);
+                goto endsign;
+            }
+
+
+
+
+
+
+
+            // It has to be in OQS_SIG_sign_with_ctx_str
+            EVP_PKEY_sign(classical_ctx_sign, sig + SIZE_OF_UINT32,
+                &actual_classical_sig_len, digest,
+                digest_len);
+
+
+            if (actual_classical_sig_len > oqsxkey->evp_info->length_signature) {
+                /* sig is bigger than expected */
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_BUFFER_LENGTH_WRONG);
+                goto endsign;
+            }
+            ENCODE_UINT32(sig, actual_classical_sig_len);
+            classical_sig_len = SIZE_OF_UINT32 + actual_classical_sig_len;
+            index += classical_sig_len;
+
+
+
+            
+
+        }
+        else {
+            if (OQS_SIG_sign_with_ctx_str(
+                       oqs_key, sig + index, &oqs_sig_len, tbs, tbslen,
+                       poqs_sigctx->context_string,
+                       poqs_sigctx->context_string_length,
 #endif
-                            oqsxkey->comp_privkey[oqsxkey->numkeys - 1]) !=
-               OQS_SUCCESS) {
-        ERR_raise(ERR_LIB_USER, OQSPROV_R_SIGNING_FAILED);
-        goto endsign;
+                                oqsxkey->comp_privkey[oqsxkey->numkeys - 1]) !=
+                   OQS_SUCCESS) {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_SIGNING_FAILED);
+                goto endsign;
+            }
+
+        }
     }
 
     *siglen = classical_sig_len + oqs_sig_len;
