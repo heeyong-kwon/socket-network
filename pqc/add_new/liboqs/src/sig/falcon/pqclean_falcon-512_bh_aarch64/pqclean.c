@@ -12,6 +12,14 @@
 
 #include "randombytes.h"
 
+#include <stdio.h>
+#include <openssl/ecdsa.h>
+#include <openssl/obj_mac.h>
+#include <openssl/sha.h>
+#include <openssl/bn.h>
+#include <openssl/evp.h>
+// #include <openssl/types.h>
+
 /*
  * Encoding formats (nnnn = log of degree, 9 for Falcon-512, 10 for Falcon-1024)
  *
@@ -138,9 +146,6 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
     inner_shake256_context sc;
     size_t u, v;
 
-    printf("\n\nHEREHERE\n\n");
-
-
     /*
      * Decode the private key.
      */
@@ -176,39 +181,120 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
         return -1;
     }
 
+
+
+    // (Mizzou, 2025)
+    // Algorithm 20 in "A Note on Hybrid Signature Schemes", Bindel and Britta Hale
+
+    /* 
+     * Prepare for ECDSA
+     */
+    EVP_PKEY *pkey = EVP_PKEY_CTX_get0_pkey((EVP_PKEY_CTX *) ctx_classical);
+    const EC_KEY *ec_key = EVP_PKEY_get0_EC_KEY(pkey);
+    if (!ec_key) return 0;
+    const EC_GROUP *group = EC_KEY_get0_group(ec_key);
+    BN_CTX *ctx = BN_CTX_new();
+
     /*
+     * Line 1, r_2 <- 0, s <- 0 ((r_2, s) : the signature of ECDSA)
+     */
+    BIGNUM *r2	= BN_new();
+    BIGNUM *s	= BN_new();
+
+    /*
+     * Line 2, k <- Z^*_q
+     */
+    BIGNUM *k	= BN_new();
+    BN_rand_range(k, EC_GROUP_get0_order(group));
+
+    /*
+     * Line 3, r_1 (nonce) <- Rand (r_1 : A part of Falcon signature)
+     */
+    /* Original comment
      * Create a random nonce (40 bytes).
      */
-    // (Mizzou, 2025) revised
-    // Kwon et al. hybrid signature scheme (2024)
-    uint8_t *r_ecdsa        = nonce - 1;
-    uint8_t size_r_ecdsa    = 32;
-    
-    if (*(r_ecdsa - size_r_ecdsa) & 0x80)
-        r_ecdsa = r_ecdsa - (2 * size_r_ecdsa) - 2;
-    else
-        r_ecdsa = r_ecdsa - (2 * size_r_ecdsa) - 1;
-
-    uint8_t *new_nonce = malloc(NONCELEN);
-    memcpy(new_nonce, r_ecdsa, size_r_ecdsa);
-    randombytes(new_nonce + size_r_ecdsa, NONCELEN - size_r_ecdsa);
-    memcpy(nonce, new_nonce + size_r_ecdsa, NONCELEN - size_r_ecdsa);
-    // Original code copied from liboqs
-    // randombytes(nonce, NONCELEN);
+    randombytes(nonce, NONCELEN);
 
     /*
-     * Hash message nonce + message into a vector.
+     * Line 4, while r_2 = 0 or s = 0 do
      */
-    inner_shake256_init(&sc);
-    inner_shake256_inject(&sc, new_nonce, NONCELEN);
-    // inner_shake256_inject(&sc, nonce, NONCELEN);
-    inner_shake256_inject(&sc, m, mlen);
-    inner_shake256_flip(&sc);
-    PQCLEAN_FALCON512_BH_AARCH64_hash_to_point_ct(&sc, r.hm, FALCON_LOGN, tmp.b);
-    inner_shake256_ctx_release(&sc);
+	do {
+		/*
+		 * Line 5, r_2 <- ( f_2(g^k) mod p ) mod q
+		 * In ECDSA, r = (kG).x mod n
+		 */
+        EC_POINT *kp = EC_POINT_new(group);
+        EC_POINT_mul(group, kp, k, NULL, NULL, ctx);
+        EC_POINT_get_affine_coordinates(group, kp, r2, NULL, ctx);
+        BN_mod(r2, r2, EC_GROUP_get0_order(group), ctx);
 
-    // (Mizzou, 2025) revised
-    free(new_nonce);
+		/*
+		 * Line 6, c <- F( (r_2, r_1) || m )
+		 */
+		/* Original comment
+		 * Hash message nonce + message into a vector.
+		 */
+		inner_shake256_init(&sc);
+
+		int r2_size = BN_num_bytes(r2);
+		uint8_t *ec_buf = malloc(r2_size);
+		BN_bn2bin(r2, ec_buf);
+		inner_shake256_inject(&sc, ec_buf, r2_size);
+		inner_shake256_inject(&sc, nonce, NONCELEN);
+		inner_shake256_inject(&sc, m, mlen);
+		inner_shake256_flip(&sc);
+		PQCLEAN_FALCON512_BH_AARCH64_hash_to_point_ct(&sc, r.hm, FALCON_LOGN, tmp.b);
+		inner_shake256_ctx_release(&sc);
+
+
+
+
+
+		free(ec_buf);
+        EC_POINT_free(kp);
+	} while (BN_is_zero(r2) || BN_is_zero(s));
+
+
+
+
+
+
+
+    do {
+        // s = k^(-1) * (hash + d*r) mod n
+        BIGNUM *ec_d    = (BIGNUM *)EC_KEY_get0_private_key(ec_key);
+        BIGNUM *hash_bn = BN_bin2bn(tbs_classical, tbslen_classical, NULL);
+        BN_mod_mul(s, ec_d, r2, EC_GROUP_get0_order(group), ctx);
+        BN_mod_add(s, s, hash_bn, EC_GROUP_get0_order(group), ctx);
+        BN_mod_inverse(k, k, EC_GROUP_get0_order(group), ctx);
+        BN_mod_mul(s, s, k, EC_GROUP_get0_order(group), ctx);
+
+        BN_free(hash_bn);
+    } while ();
+
+    // 4. ECDSA_SIG 객체 생성 및 값 설정
+    ECDSA_SIG *sig = ECDSA_SIG_new();
+    ECDSA_SIG_set0(sig, r2, s);
+
+    // 5. 메모리 정리 (heeyong: 이거 메모리 정리가 덜 된 거 같은데 파악해서 다 free 해 줘)
+    BN_free(k);
+    BN_CTX_free(ctx);
+
+    printf("\n\nHEREHERE\n\n");
+
+    
+    return sig;
+
+
+
+
+
+
+    
+
+
+
+    
 
     /*
      * Initialize a RNG.
@@ -222,11 +308,7 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
      * Compute and return the signature.
      */
     PQCLEAN_FALCON512_BH_AARCH64_sign_dyn(r.sig, &sc, f, g, F, G, r.hm, tmp.b);
-    
-    // (Mizzou, 2025) revised
-    v = PQCLEAN_FALCON512_BH_AARCH64_comp_encode(sigbuf - size_r_ecdsa, *sigbuflen, r.sig);
-    // Original code copied from liboqs
-    // v = PQCLEAN_FALCON512_AARCH64_comp_encode(sigbuf, *sigbuflen, r.sig);
+    v = PQCLEAN_FALCON512_AARCH64_comp_encode(sigbuf, *sigbuflen, r.sig);
     if (v != 0) {
         inner_shake256_ctx_release(&sc);
         *sigbuflen = v;
@@ -345,6 +427,7 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_signature(
     
     vlen = PQCLEAN_FALCON512_BH_AARCH64_CRYPTO_BYTES - NONCELEN - 1;
     if (do_sign(sig + 1, sig + 1 + NONCELEN, &vlen, m, mlen, sk, 
+        //
         ctx_classical, signature_len_classical, tbs_classical, tbslen_classical) < 0) {
         return -1;
     }
@@ -391,6 +474,7 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign(
     sigbuf = pm + 1 + mlen;
     sigbuflen = PQCLEAN_FALCON512_BH_AARCH64_CRYPTO_BYTES - NONCELEN - 3;
     if (do_sign(sm + 2, sigbuf, &sigbuflen, pm, mlen, sk,
+        //
         ctx_classical, signature_len_classical, tbs_classical, tbslen_classical) < 0) {
         return -1;
     }
