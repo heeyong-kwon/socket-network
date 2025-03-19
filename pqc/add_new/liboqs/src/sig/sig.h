@@ -236,6 +236,7 @@ typedef struct OQS_SIG {
 	 * @return OQS_SUCCESS or OQS_ERROR
 	 */
 	OQS_STATUS (*sign)(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *secret_key);
+	OQS_STATUS (*sign_bh)(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *secret_key, void *ctx_classical, size_t *signature_len_classical, const unsigned char *tbs_classical, size_t tbslen_classical);
 
 	/**
 	 * Signature generation algorithm, with custom context string.
@@ -254,7 +255,7 @@ typedef struct OQS_SIG {
 	 * @return OQS_SUCCESS or OQS_ERROR
 	 */
 	OQS_STATUS (*sign_with_ctx_str)(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key);
-	OQS_STATUS (*sign_with_ctx_str_bh)(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key, void *ctx, size_t *siglen, const unsigned char *tbs, size_t tbslen);
+	OQS_STATUS (*sign_with_ctx_str_bh)(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key, void *ctx_classical, size_t *signature_len_classical, const unsigned char *tbs_classical, size_t tbslen_classical);
 
 	/**
 	 * Signature verification algorithm.

@@ -11,20 +11,20 @@ generate_certificates() {
   # rm ${ALG}_*
 }
 
-# Hybrid algorithms with KBL
-generate_certificates "p256_falcon512_kbl"
-generate_certificates "p521_falcon1024_kbl"
-generate_certificates "p256_falconpadded512_kbl"
-generate_certificates "p521_falconpadded1024_kbl"
+# # Hybrid algorithms with KBL
+# generate_certificates "p256_falcon512_kbl"
+# generate_certificates "p521_falcon1024_kbl"
+# generate_certificates "p256_falconpadded512_kbl"
+# generate_certificates "p521_falconpadded1024_kbl"
 
-# Original hybrid algorithms provided by liboqs
+# # Original hybrid algorithms provided by liboqs
 generate_certificates "p256_falcon512"
-generate_certificates "p521_falcon1024"
-generate_certificates "p256_falconpadded512"
-generate_certificates "p521_falconpadded1024"
+# generate_certificates "p521_falcon1024"
+# generate_certificates "p256_falconpadded512"
+# generate_certificates "p521_falconpadded1024"
 
 # Hybrid algorithms with BH (Nina Bindel and Britta Hale)
 generate_certificates "p256_falcon512_bh"
-generate_certificates "p521_falcon1024_bh"
-generate_certificates "p256_falconpadded512_bh"
-generate_certificates "p521_falconpadded1024_bh"
+# generate_certificates "p521_falcon1024_bh"
+# generate_certificates "p256_falconpadded512_bh"
+# generate_certificates "p521_falconpadded1024_bh"
