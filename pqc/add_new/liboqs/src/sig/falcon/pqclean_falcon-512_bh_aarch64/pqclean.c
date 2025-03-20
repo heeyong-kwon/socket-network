@@ -270,31 +270,35 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
 
 		/*
 		 * Line 8, s <- k^-1 (c + (sk_2) r_2) mod q
+         * s = k^(-1) * (hash + sk2*r2) mod n
 		 */
-
-
-
-        // s = k^(-1) * (hash + d*r) mod n
-        BIGNUM *ec_d    = (BIGNUM *)EC_KEY_get0_private_key(ec_key);
-        BIGNUM *hash_bn = BN_bin2bn(tbs_classical, tbslen_classical, NULL);
-        BN_mod_mul(s, ec_d, r2, EC_GROUP_get0_order(group), ctx);
+        BIGNUM *sk2     = (BIGNUM *)EC_KEY_get0_private_key(ec_key);
+        BN_mod_mul(s, sk2, r2, EC_GROUP_get0_order(group), ctx);
+        BIGNUM *hash_bn = BN_bin2bn((unsigned char *) (&(r.hm)), FALCON_N, NULL);
         BN_mod_add(s, s, hash_bn, EC_GROUP_get0_order(group), ctx);
         BN_mod_inverse(k, k, EC_GROUP_get0_order(group), ctx);
         BN_mod_mul(s, s, k, EC_GROUP_get0_order(group), ctx);
 
-        BN_free(hash_bn);
 
+
+        
 
 
 
         // TODO: Length 관련 챙겨야 함
+        // Mb, tbs_classical and tbslen_classical are not required in this function.
+        // 현재 서명은 대충 만들었고, Certificate form에 맞춘 다음에,
+        // Verify까지 구현해야 끝날듯
+
+        // signature
+        // 4 bytes (length of ECDSA) + r (32 bytes + optional 1 byte) + s (32 bytes + optional 1byte)
+        // + 1 byte + nonce r + falcon signature
 
 
 
 
 
-
-         
+        BN_free(hash_bn);
 		free(ec_buf);
         EC_POINT_free(kp);
 	} while (BN_is_zero(r2) || BN_is_zero(s));
@@ -304,16 +308,16 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
 
 
 
-
-    do {
-    } while ();
-
     // 4. ECDSA_SIG 객체 생성 및 값 설정
     ECDSA_SIG *sig = ECDSA_SIG_new();
     ECDSA_SIG_set0(sig, r2, s);
 
+
+
     // 5. 메모리 정리 (heeyong: 이거 메모리 정리가 덜 된 거 같은데 파악해서 다 free 해 줘)
     BN_free(k);
+    BN_free(s);
+    BN_free(r2);
     BN_CTX_free(ctx);
 
     printf("\n\nHEREHERE\n\n");
