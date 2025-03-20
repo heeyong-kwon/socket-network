@@ -240,16 +240,61 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
 		uint8_t *ec_buf = malloc(r2_size);
 		BN_bn2bin(r2, ec_buf);
 		inner_shake256_inject(&sc, ec_buf, r2_size);
+
 		inner_shake256_inject(&sc, nonce, NONCELEN);
 		inner_shake256_inject(&sc, m, mlen);
 		inner_shake256_flip(&sc);
 		PQCLEAN_FALCON512_BH_AARCH64_hash_to_point_ct(&sc, r.hm, FALCON_LOGN, tmp.b);
 		inner_shake256_ctx_release(&sc);
 
+		/*
+		 * Line 7, (z_1, z_2) <- f_1(c, sk_1) such that z_1 + z_2h = c mod q
+		 */
+        /* Original comment
+         * Initialize a RNG.
+         */
+        randombytes(seed, sizeof seed);
+        inner_shake256_init(&sc);
+        inner_shake256_inject(&sc, seed, sizeof seed);
+        inner_shake256_flip(&sc);
+        /* Original comment
+         * Compute and return the signature.
+         */
+        PQCLEAN_FALCON512_BH_AARCH64_sign_dyn(r.sig, &sc, f, g, F, G, r.hm, tmp.b);
+        v = PQCLEAN_FALCON512_AARCH64_comp_encode(sigbuf, *sigbuflen, r.sig);
+        if (v != 0) {
+            inner_shake256_ctx_release(&sc);
+            *sigbuflen = v;
+            return 0;
+        }
+
+		/*
+		 * Line 8, s <- k^-1 (c + (sk_2) r_2) mod q
+		 */
+
+
+
+        // s = k^(-1) * (hash + d*r) mod n
+        BIGNUM *ec_d    = (BIGNUM *)EC_KEY_get0_private_key(ec_key);
+        BIGNUM *hash_bn = BN_bin2bn(tbs_classical, tbslen_classical, NULL);
+        BN_mod_mul(s, ec_d, r2, EC_GROUP_get0_order(group), ctx);
+        BN_mod_add(s, s, hash_bn, EC_GROUP_get0_order(group), ctx);
+        BN_mod_inverse(k, k, EC_GROUP_get0_order(group), ctx);
+        BN_mod_mul(s, s, k, EC_GROUP_get0_order(group), ctx);
+
+        BN_free(hash_bn);
 
 
 
 
+        // TODO: Length 관련 챙겨야 함
+
+
+
+
+
+
+         
 		free(ec_buf);
         EC_POINT_free(kp);
 	} while (BN_is_zero(r2) || BN_is_zero(s));
@@ -261,15 +306,6 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
 
 
     do {
-        // s = k^(-1) * (hash + d*r) mod n
-        BIGNUM *ec_d    = (BIGNUM *)EC_KEY_get0_private_key(ec_key);
-        BIGNUM *hash_bn = BN_bin2bn(tbs_classical, tbslen_classical, NULL);
-        BN_mod_mul(s, ec_d, r2, EC_GROUP_get0_order(group), ctx);
-        BN_mod_add(s, s, hash_bn, EC_GROUP_get0_order(group), ctx);
-        BN_mod_inverse(k, k, EC_GROUP_get0_order(group), ctx);
-        BN_mod_mul(s, s, k, EC_GROUP_get0_order(group), ctx);
-
-        BN_free(hash_bn);
     } while ();
 
     // 4. ECDSA_SIG 객체 생성 및 값 설정
@@ -296,24 +332,9 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
 
     
 
-    /*
-     * Initialize a RNG.
-     */
-    randombytes(seed, sizeof seed);
-    inner_shake256_init(&sc);
-    inner_shake256_inject(&sc, seed, sizeof seed);
-    inner_shake256_flip(&sc);
+    
 
-    /*
-     * Compute and return the signature.
-     */
-    PQCLEAN_FALCON512_BH_AARCH64_sign_dyn(r.sig, &sc, f, g, F, G, r.hm, tmp.b);
-    v = PQCLEAN_FALCON512_AARCH64_comp_encode(sigbuf, *sigbuflen, r.sig);
-    if (v != 0) {
-        inner_shake256_ctx_release(&sc);
-        *sigbuflen = v;
-        return 0;
-    }
+    
     return -1;
 }
 
