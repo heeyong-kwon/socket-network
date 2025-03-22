@@ -218,6 +218,11 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
     /*
      * Line 4, while r_2 = 0 or s = 0 do
      */
+    uint8_t r2_size;
+    uint8_t size_classical;
+    uint8_t size_new_sig_r2;
+    uint8_t size_new_sig_s;
+    uint8_t new_sig_r2[100];
 	do {
 		/*
 		 * Line 5, r_2 <- ( f_2(g^k) mod p ) mod q
@@ -236,10 +241,11 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
 		 */
 		inner_shake256_init(&sc);
 
-		int r2_size = BN_num_bytes(r2);
-		uint8_t *ec_buf = malloc(r2_size);
-		BN_bn2bin(r2, ec_buf);
-		inner_shake256_inject(&sc, ec_buf, r2_size);
+		r2_size         = BN_num_bytes(r2);
+		uint8_t *tmp_r2 = malloc(r2_size);
+		BN_bn2bin(r2, tmp_r2);
+        memcpy(new_sig_r2, tmp_r2, r2_size);
+		inner_shake256_inject(&sc, tmp_r2, r2_size);
 
 		inner_shake256_inject(&sc, nonce, NONCELEN);
 		inner_shake256_inject(&sc, m, mlen);
@@ -261,12 +267,7 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
          * Compute and return the signature.
          */
         PQCLEAN_FALCON512_BH_AARCH64_sign_dyn(r.sig, &sc, f, g, F, G, r.hm, tmp.b);
-        v = PQCLEAN_FALCON512_AARCH64_comp_encode(sigbuf, *sigbuflen, r.sig);
-        if (v != 0) {
-            inner_shake256_ctx_release(&sc);
-            *sigbuflen = v;
-            return 0;
-        }
+        v = PQCLEAN_FALCON512_BH_AARCH64_comp_encode(sigbuf, *sigbuflen, r.sig);
 
 		/*
 		 * Line 8, s <- k^-1 (c + (sk_2) r_2) mod q
@@ -281,30 +282,98 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
 
 
 
+		uint8_t s_size          = BN_num_bytes(s);
+		uint8_t *new_sig_s      = malloc(s_size);
+		BN_bn2bin(s, new_sig_s);
+        
+        size_new_sig_r2 = r2_size;
+        if (tmp_r2[0] & 0x80) {
+            size_new_sig_r2 += 1;
+        }
+        size_new_sig_s  = s_size;
+        if (new_sig_s[0] & 0x80) {
+            s_size += 1;
+        }
+        size_classical  = size_new_sig_r2 + size_new_sig_s + 6;
+
         
 
 
 
         // TODO: Length 관련 챙겨야 함
+        // 변수들도 정리를 좀 해야겠는데
         // Mb, tbs_classical and tbslen_classical are not required in this function.
         // 현재 서명은 대충 만들었고, Certificate form에 맞춘 다음에,
         // Verify까지 구현해야 끝날듯
+        // PQCLEAN_FALCON512_AARCH64_comp_encode -> 이 함수, KBL, BH 적용 안 됨
 
         // signature
-        // 4 bytes (length of ECDSA) + r (32 bytes + optional 1 byte) + s (32 bytes + optional 1byte)
+        // 4 bytes (length of ECDSA) + 2 bytes (for length) + 2 bytes (for length of r) + 2 bytes (for length of s)
+        // r (32 bytes + optional 1 byte) + s (32 bytes + optional 1byte)
         // + 1 byte + nonce r + falcon signature
+        // 이거 sig, siglen 파라미터로 넘겨 받는데, 크기가 부족하지는 않나? 일단 해보고.. siglen에 따라 동작하는 걸 수도 있으니까
 
 
 
 
 
+		free(new_sig_s);
         BN_free(hash_bn);
-		free(ec_buf);
+		free(new_sig_r2);
         EC_POINT_free(kp);
 	} while (BN_is_zero(r2) || BN_is_zero(s));
 
+    uint8_t new_sig_idx = 0;
+    for(int i=0; i < 3; i++){
+        sigbuf[new_sig_idx++]   = 0x00;
+    }
+    sigbuf[new_sig_idx++]   = (uint8_t) size_classical;
+    sigbuf[new_sig_idx++]   = 0x30;
+    sigbuf[new_sig_idx++]   = (uint8_t) (size_classical - 2);
+
+    //^ r_2 : ECDSA r
+    sigbuf[new_sig_idx++]   = 0x02;
+    sigbuf[new_sig_idx++]   = (uint8_t) size_new_sig_r2;
+    if(r2_size == size_new_sig_r2) {
+        // 바로 다 복사
+        memcpy(sigbuf + new_sig_idx, new_sig_r2, r2_size);
+    } else {
+        // 0 넣고 복사
+        sigbuf[new_sig_idx++]   = 0x00;
+        memcpy(sigbuf + new_sig_idx, new_sig_r2, r2_size);
+    }
+    new_sig_idx += r2_size;
+
+    //^ s : ECDSA s
 
 
+
+
+
+
+
+
+
+    sigbuf[new_sig_idx++]   = 0x02;
+    sigbuf[new_sig_idx++]   = (uint8_t) size_new_sig_s;
+    if(s_size == size_new_sig_s) {
+        // 바로 다 복사
+        memcpy(sigbuf + new_sig_idx, new_sig_s, r2_size);
+    } else {
+        // 0 넣고 복사
+        sigbuf[new_sig_idx++]   = 0x00;
+        memcpy(sigbuf + new_sig_idx, new_sig_r2, r2_size);
+    }
+    new_sig_idx += r2_size;
+
+
+
+    // Falcon 정리 루틴
+    if (v != 0) {
+        inner_shake256_ctx_release(&sc);
+        *sigbuflen = v;
+        return 0;
+    }
 
 
 
@@ -451,7 +520,7 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_signature(
     size_t vlen;
     
     vlen = PQCLEAN_FALCON512_BH_AARCH64_CRYPTO_BYTES - NONCELEN - 1;
-    if (do_sign(sig + 1, sig + 1 + NONCELEN, &vlen, m, mlen, sk, 
+    if (do_sign(sig + 1, sig - signature_len_classical - 4, &vlen, m, mlen, sk, 
         //
         ctx_classical, signature_len_classical, tbs_classical, tbslen_classical) < 0) {
         return -1;
