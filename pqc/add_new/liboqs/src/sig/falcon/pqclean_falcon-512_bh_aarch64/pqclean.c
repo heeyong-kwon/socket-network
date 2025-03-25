@@ -128,10 +128,13 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_keypair(
  * Return value: 0 on success, -1 on error.
  */
 static int
-do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
+do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
         const uint8_t *m, size_t mlen, const uint8_t *sk, 
         //
-        void *ctx_classical, size_t *signature_len_classical, const unsigned char *tbs_classical, size_t tbslen_classical) {
+        void *ctx_classical, size_t *signature_len_classical) {
+
+            printf("3\n");
+            fflush(stdout);
     union {
         uint8_t b[72 * FALCON_N];
         uint64_t dummy_u64;
@@ -187,13 +190,27 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
     // Algorithm 20 in "A Note on Hybrid Signature Schemes", Bindel and Britta Hale
 
     /* 
+     * Prepare for Falcon
+     */
+    uint8_t nonce[NONCELEN];
+
+    /* 
      * Prepare for ECDSA
      */
-    EVP_PKEY *pkey = EVP_PKEY_CTX_get0_pkey((EVP_PKEY_CTX *) ctx_classical);
-    const EC_KEY *ec_key = EVP_PKEY_get0_EC_KEY(pkey);
+    EVP_PKEY_CTX *ctx_ecdsa = (EVP_PKEY_CTX *) ctx_classical;
+    const EVP_PKEY *pkey    = EVP_PKEY_CTX_get0_pkey(ctx_ecdsa);
+    const EC_KEY *ec_key    = EVP_PKEY_get0_EC_KEY(pkey);
     if (!ec_key) return 0;
     const EC_GROUP *group = EC_KEY_get0_group(ec_key);
-    BN_CTX *ctx = BN_CTX_new();
+    // BN_CTX *ctx = BN_CTX_new_ex(ctx_ecdsa->libctx);
+    BN_CTX *ctx = BN_CTX_new_ex(NULL);
+
+    uint8_t size_r2;
+    uint8_t size_s;
+    uint8_t *tmp_sig    = malloc(sigbuflen);
+    // uint8_t size_classical;
+    // uint8_t size_new_sig_r2;
+    // uint8_t size_new_sig_s;
 
     /*
      * Line 1, r_2 <- 0, s <- 0 ((r_2, s) : the signature of ECDSA)
@@ -218,11 +235,6 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
     /*
      * Line 4, while r_2 = 0 or s = 0 do
      */
-    uint8_t r2_size;
-    uint8_t size_classical;
-    uint8_t size_new_sig_r2;
-    uint8_t size_new_sig_s;
-    uint8_t new_sig_r2[100];
 	do {
 		/*
 		 * Line 5, r_2 <- ( f_2(g^k) mod p ) mod q
@@ -241,11 +253,10 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
 		 */
 		inner_shake256_init(&sc);
 
-		r2_size         = BN_num_bytes(r2);
-		uint8_t *tmp_r2 = malloc(r2_size);
-		BN_bn2bin(r2, tmp_r2);
-        memcpy(new_sig_r2, tmp_r2, r2_size);
-		inner_shake256_inject(&sc, tmp_r2, r2_size);
+		size_r2         = BN_num_bytes(r2);
+        uint8_t *bin_r2 = malloc(size_r2);
+		BN_bn2bin(r2, bin_r2);
+		inner_shake256_inject(&sc, bin_r2, size_r2);
 
 		inner_shake256_inject(&sc, nonce, NONCELEN);
 		inner_shake256_inject(&sc, m, mlen);
@@ -267,7 +278,7 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
          * Compute and return the signature.
          */
         PQCLEAN_FALCON512_BH_AARCH64_sign_dyn(r.sig, &sc, f, g, F, G, r.hm, tmp.b);
-        v = PQCLEAN_FALCON512_BH_AARCH64_comp_encode(sigbuf, *sigbuflen, r.sig);
+        v = PQCLEAN_FALCON512_BH_AARCH64_comp_encode(tmp_sig, *sigbuflen, r.sig);
 
 		/*
 		 * Line 8, s <- k^-1 (c + (sk_2) r_2) mod q
@@ -280,135 +291,109 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
         BN_mod_inverse(k, k, EC_GROUP_get0_order(group), ctx);
         BN_mod_mul(s, s, k, EC_GROUP_get0_order(group), ctx);
 
-
-
-		uint8_t s_size          = BN_num_bytes(s);
-		uint8_t *new_sig_s      = malloc(s_size);
-		BN_bn2bin(s, new_sig_s);
-        
-        size_new_sig_r2 = r2_size;
-        if (tmp_r2[0] & 0x80) {
-            size_new_sig_r2 += 1;
-        }
-        size_new_sig_s  = s_size;
-        if (new_sig_s[0] & 0x80) {
-            s_size += 1;
-        }
-        size_classical  = size_new_sig_r2 + size_new_sig_s + 6;
-
-        
-
-
-
-        // TODO: Length 관련 챙겨야 함
-        // 변수들도 정리를 좀 해야겠는데
-        // Mb, tbs_classical and tbslen_classical are not required in this function.
-        // 현재 서명은 대충 만들었고, Certificate form에 맞춘 다음에,
-        // Verify까지 구현해야 끝날듯
-        // PQCLEAN_FALCON512_AARCH64_comp_encode -> 이 함수, KBL, BH 적용 안 됨
-
-        // signature
-        // 4 bytes (length of ECDSA) + 2 bytes (for length) + 2 bytes (for length of r) + 2 bytes (for length of s)
-        // r (32 bytes + optional 1 byte) + s (32 bytes + optional 1byte)
-        // + 1 byte + nonce r + falcon signature
-        // 이거 sig, siglen 파라미터로 넘겨 받는데, 크기가 부족하지는 않나? 일단 해보고.. siglen에 따라 동작하는 걸 수도 있으니까
-
-
-
-
-
-		free(new_sig_s);
         BN_free(hash_bn);
-		free(new_sig_r2);
+        EC_POINT_free(sk2);
+        free(bin_r2);
         EC_POINT_free(kp);
-	} while (BN_is_zero(r2) || BN_is_zero(s));
+    } while (BN_is_zero(r2) || BN_is_zero(s));
 
+
+    // Make a hybrid signature (r_1, z_2, r_2, s)
+    uint8_t size_ecdsa  = 0;
+    size_s          = BN_num_bytes(s);
+    uint8_t *bin_s  = malloc(size_s);
+    uint8_t *bin_r2 = malloc(size_r2);
+    BN_bn2bin(s, bin_s);
+    bool flag_r2 = 0, flag_s = 0;
+    if (bin_r2[0] & 0x80) {
+        size_r2 += 1;
+        flag_r2 = true;
+    }
+    if (bin_s[0] & 0x80){
+        size_s  += 1;
+        flag_s  = true;
+    }
+    size_ecdsa      = size_r2 + size_s + 6;
+
+    // Copy the calculated signature to the hybrid signature pointer
+
+    // ^ ECDSA
+    // First 4 bytes (The total length of the ECDSA signature)
     uint8_t new_sig_idx = 0;
     for(int i=0; i < 3; i++){
         sigbuf[new_sig_idx++]   = 0x00;
     }
-    sigbuf[new_sig_idx++]   = (uint8_t) size_classical;
-    sigbuf[new_sig_idx++]   = 0x30;
-    sigbuf[new_sig_idx++]   = (uint8_t) (size_classical - 2);
+    sigbuf[new_sig_idx++]   = size_ecdsa;
 
-    //^ r_2 : ECDSA r
+    // 2 bytes (The length of the ECDSA r and s)
+    sigbuf[new_sig_idx++]   = 0x30;
+    sigbuf[new_sig_idx++]   = (size_ecdsa - 2);
+
+    // ^ r : ECDSA r
+    // 2 bytes (The length of the ECDSA r)
     sigbuf[new_sig_idx++]   = 0x02;
-    sigbuf[new_sig_idx++]   = (uint8_t) size_new_sig_r2;
-    if(r2_size == size_new_sig_r2) {
-        // 바로 다 복사
-        memcpy(sigbuf + new_sig_idx, new_sig_r2, r2_size);
-    } else {
-        // 0 넣고 복사
+    sigbuf[new_sig_idx++]   = size_r2;
+
+    // size(r) + optional 1 bytes (the part of the ECDSA signature r)
+    if (flag_r2) {
         sigbuf[new_sig_idx++]   = 0x00;
-        memcpy(sigbuf + new_sig_idx, new_sig_r2, r2_size);
+        memcpy(sigbuf + new_sig_idx, bin_r2, size_r2 - 1);
+    } else {
+        memcpy(sigbuf + new_sig_idx, bin_r2, size_r2);
     }
-    new_sig_idx += r2_size;
+    new_sig_idx += size_r2;
 
     //^ s : ECDSA s
-
-
-
-
-
-
-
-
-
+    // 2 bytes (The length of the ECDSA s)
     sigbuf[new_sig_idx++]   = 0x02;
-    sigbuf[new_sig_idx++]   = (uint8_t) size_new_sig_s;
-    if(s_size == size_new_sig_s) {
-        // 바로 다 복사
-        memcpy(sigbuf + new_sig_idx, new_sig_s, r2_size);
-    } else {
-        // 0 넣고 복사
+    sigbuf[new_sig_idx++]   = size_r2;
+    if (flag_s) {
         sigbuf[new_sig_idx++]   = 0x00;
-        memcpy(sigbuf + new_sig_idx, new_sig_r2, r2_size);
+        memcpy(sigbuf + new_sig_idx, bin_s, size_s - 1);
+    } else {
+        memcpy(sigbuf + new_sig_idx, bin_s, size_s);
     }
-    new_sig_idx += r2_size;
+    new_sig_idx += size_s;
 
+    // ^ Falcon
+    // First 1 byte
+    sigbuf[new_sig_idx++] = 0x30 + FALCON_LOGN;
 
+    // Nonce bytes
+    memcpy(sigbuf + new_sig_idx, nonce, NONCELEN);
+    new_sig_idx += NONCELEN;
 
-    // Falcon 정리 루틴
-    if (v != 0) {
-        inner_shake256_ctx_release(&sc);
-        *sigbuflen = v;
-        return 0;
-    }
+    // Falcon signature bytes
+    memcpy(sigbuf + new_sig_idx, tmp_sig, v);
+    new_sig_idx += v;
 
-
-
-    // 4. ECDSA_SIG 객체 생성 및 값 설정
-    ECDSA_SIG *sig = ECDSA_SIG_new();
-    ECDSA_SIG_set0(sig, r2, s);
-
-
-
-    // 5. 메모리 정리 (heeyong: 이거 메모리 정리가 덜 된 거 같은데 파악해서 다 free 해 줘)
+    // Memory free
     BN_free(k);
     BN_free(s);
     BN_free(r2);
     BN_CTX_free(ctx);
+    free(tmp_sig);
+    free(bin_s);
+    free(bin_r2);
+
+    // Falcon finalize routine
+    if (v != 0) {
+        inner_shake256_ctx_release(&sc);
+        // ^ ecdsa 도 길이 줘야 되는거 아닌가? -> signature에 들어 있으니 상관 없을듯
+
+        
+        *sigbuflen = v;
+        return 0;
+    }
 
     printf("\n\nHEREHERE\n\n");
-
-    
-    return sig;
-
-
-
-
-
-
-    
-
-
-
-    
-
-    
-
     
     return -1;
+
+    // TODO: Length 관련 챙겨야 함
+    // 현재 서명은 대충 만들었고, Certificate form에 맞춘 다음에,
+    // Verify까지 구현해야 끝날듯
+    // 이거 sig, siglen 파라미터로 넘겨 받는데, 크기가 부족하지는 않나? 일단 해보고.. siglen에 따라 동작하는 걸 수도 있으니까
 }
 
 /*
@@ -516,16 +501,19 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_signature(
     uint8_t *sig, size_t *siglen,
     const uint8_t *m, size_t mlen, const uint8_t *sk, 
     //
-    void *ctx_classical, size_t *signature_len_classical, const unsigned char *tbs_classical, size_t tbslen_classical) {
+    void *ctx_classical, size_t *signature_len_classical) {
     size_t vlen;
     
+
+    printf("2\n");
+    fflush(stdout);
     vlen = PQCLEAN_FALCON512_BH_AARCH64_CRYPTO_BYTES - NONCELEN - 1;
-    if (do_sign(sig + 1, sig - signature_len_classical - 4, &vlen, m, mlen, sk, 
+    if (do_sign(sig, NULL, &vlen, m, mlen, sk, 
         //
-        ctx_classical, signature_len_classical, tbs_classical, tbslen_classical) < 0) {
+        ctx_classical, signature_len_classical) < 0) {
         return -1;
     }
-    sig[0] = 0x30 + FALCON_LOGN;
+    // sig[0] = 0x30 + FALCON_LOGN;
     
     // (Mizzou, 2025) revised (32: the size of r in ECDSA)
     *siglen = 1 + NONCELEN - 32 + vlen;
@@ -555,7 +543,7 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign(
     uint8_t *sm, size_t *smlen,
     const uint8_t *m, size_t mlen, const uint8_t *sk, 
     //
-    void *ctx_classical, size_t *signature_len_classical, const unsigned char *tbs_classical, size_t tbslen_classical) {
+    void *ctx_classical, size_t *signature_len_classical) {
     uint8_t *pm, *sigbuf;
     size_t sigbuflen;
 
@@ -569,7 +557,7 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign(
     sigbuflen = PQCLEAN_FALCON512_BH_AARCH64_CRYPTO_BYTES - NONCELEN - 3;
     if (do_sign(sm + 2, sigbuf, &sigbuflen, pm, mlen, sk,
         //
-        ctx_classical, signature_len_classical, tbs_classical, tbslen_classical) < 0) {
+        ctx_classical, signature_len_classical) < 0) {
         return -1;
     }
     pm[mlen] = 0x20 + FALCON_LOGN;

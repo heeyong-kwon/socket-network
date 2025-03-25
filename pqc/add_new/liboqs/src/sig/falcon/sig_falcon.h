@@ -120,9 +120,9 @@ OQS_API OQS_STATUS OQS_SIG_falcon_padded_1024_kbl_verify_with_ctx_str(const uint
 
 OQS_SIG *OQS_SIG_falcon_512_bh_new(void);
 OQS_API OQS_STATUS OQS_SIG_falcon_512_bh_keypair(uint8_t *public_key, uint8_t *secret_key);
-OQS_API OQS_STATUS OQS_SIG_falcon_512_bh_sign(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *secret_key, void *ctx_classical, size_t *signature_len_classical, const unsigned char *tbs_classical, size_t tbslen_classical);
+OQS_API OQS_STATUS OQS_SIG_falcon_512_bh_sign(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *secret_key, void *ctx_classical, size_t *signature_len_classical);
 OQS_API OQS_STATUS OQS_SIG_falcon_512_bh_verify(const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *public_key);
-OQS_API OQS_STATUS OQS_SIG_falcon_512_bh_sign_with_ctx_str(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx, size_t ctxlen, const uint8_t *secret_key, void *ctx_classical, size_t *signature_len_classical, const unsigned char *tbs_classical, size_t tbslen_classical);
+OQS_API OQS_STATUS OQS_SIG_falcon_512_bh_sign_with_ctx_str(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx, size_t ctxlen, const uint8_t *secret_key, void *ctx_classical, size_t *signature_len_classical);
 OQS_API OQS_STATUS OQS_SIG_falcon_512_bh_verify_with_ctx_str(const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *ctx, size_t ctxlen, const uint8_t *public_key);
 #endif
 

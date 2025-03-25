@@ -123,7 +123,7 @@ static int
 do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
         const uint8_t *m, size_t mlen, const uint8_t *sk, 
         //
-        void *ctx_classical, size_t *signature_len_classical, const unsigned char *tbs_classical, size_t tbslen_classical) {
+        void *ctx_classical, size_t *signature_len_classical) {
     union {
         uint8_t b[72 * 512];
         uint64_t dummy_u64;
@@ -289,12 +289,12 @@ PQCLEAN_FALCON512_BH_CLEAN_crypto_sign_signature(
     uint8_t *sig, size_t *siglen,
     const uint8_t *m, size_t mlen, const uint8_t *sk, 
     //
-    void *ctx_classical, size_t *signature_len_classical, const unsigned char *tbs_classical, size_t tbslen_classical) {
+    void *ctx_classical, size_t *signature_len_classical) {
     size_t vlen;
 
     vlen = PQCLEAN_FALCON512_BH_CLEAN_CRYPTO_BYTES - NONCELEN - 1;
     if (do_sign(sig + 1, sig + 1 + NONCELEN, &vlen, m, mlen, sk,
-        ctx_classical, signature_len_classical, tbs_classical, tbslen_classical) < 0) {
+        ctx_classical, signature_len_classical) < 0) {
         return -1;
     }
     sig[0] = 0x30 + 9;
@@ -323,7 +323,7 @@ PQCLEAN_FALCON512_BH_CLEAN_crypto_sign(
     uint8_t *sm, size_t *smlen,
     const uint8_t *m, size_t mlen, const uint8_t *sk, 
     //
-    void *ctx_classical, size_t *signature_len_classical, const unsigned char *tbs_classical, size_t tbslen_classical) {
+    void *ctx_classical, size_t *signature_len_classical) {
     uint8_t *pm, *sigbuf;
     size_t sigbuflen;
 
@@ -336,7 +336,7 @@ PQCLEAN_FALCON512_BH_CLEAN_crypto_sign(
     sigbuf = pm + 1 + mlen;
     sigbuflen = PQCLEAN_FALCON512_BH_CLEAN_CRYPTO_BYTES - NONCELEN - 3;
     if (do_sign(sm + 2, sigbuf, &sigbuflen, pm, mlen, sk,
-        ctx_classical, signature_len_classical, tbs_classical, tbslen_classical) < 0) {
+        ctx_classical, signature_len_classical) < 0) {
         return -1;
     }
     pm[mlen] = 0x20 + 9;

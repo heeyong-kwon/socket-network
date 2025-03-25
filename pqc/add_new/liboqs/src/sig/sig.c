@@ -876,8 +876,11 @@ OQS_API OQS_STATUS OQS_SIG_sign_with_ctx_str(const OQS_SIG *sig, uint8_t *signat
 	}
 }
 
-OQS_API OQS_STATUS OQS_SIG_sign_with_ctx_str_bh(const OQS_SIG *sig, uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key, void *ctx, size_t *siglen, const unsigned char *tbs, size_t tbslen) {
-	if (sig == NULL || sig->sign_with_ctx_str_bh(signature, signature_len, message, message_len, ctx_str, ctx_str_len, secret_key, ctx, siglen, tbs, tbslen) != OQS_SUCCESS) {
+OQS_API OQS_STATUS OQS_SIG_sign_with_ctx_str_bh(const OQS_SIG *sig, uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key, void *ctx, size_t *siglen) {
+
+    printf("12\n");
+    fflush(stdout);
+	if (sig == NULL || sig->sign_with_ctx_str_bh(signature, signature_len, message, message_len, ctx_str, ctx_str_len, secret_key, ctx, siglen) != OQS_SUCCESS) {
 		return OQS_ERROR;
 	} else {
 		return OQS_SUCCESS;
