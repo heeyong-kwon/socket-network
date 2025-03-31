@@ -18,6 +18,8 @@
 #include <openssl/sha.h>
 #include <openssl/bn.h>
 #include <openssl/evp.h>
+#include <openssl/core_names.h>
+#include <openssl/ec.h>
 // #include <openssl/types.h>
 
 /*
@@ -133,8 +135,6 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
         //
         void *ctx_classical, size_t *signature_len_classical) {
 
-            printf("3\n");
-            fflush(stdout);
     union {
         uint8_t b[72 * FALCON_N];
         uint64_t dummy_u64;
@@ -199,15 +199,34 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
      */
     EVP_PKEY_CTX *ctx_ecdsa = (EVP_PKEY_CTX *) ctx_classical;
     const EVP_PKEY *pkey    = EVP_PKEY_CTX_get0_pkey(ctx_ecdsa);
-    const EC_KEY *ec_key    = EVP_PKEY_get0_EC_KEY(pkey);
-    if (!ec_key) return 0;
-    const EC_GROUP *group = EC_KEY_get0_group(ec_key);
+    // const EC_KEY *ec_key    = EVP_PKEY_get1_EC_KEY(pkey);
+    // if (!ec_key) return 0;
+    // const EC_GROUP *group = EC_KEY_get0_group(ec_key);
+    // const EC_GROUP *group = EVP_PKEY_get_params(pkey, NULL);
+    BIGNUM *order = NULL;
+    EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_EC_ORDER, &order);
+    EC_GROUP *group = NULL;
+    char curve_name[80];
+    OSSL_PARAM params[] = {
+        OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME, curve_name, sizeof(curve_name)),
+        OSSL_PARAM_construct_end()
+    };
+    if (EVP_PKEY_get_params(pkey, params)) {
+        int nid = OBJ_sn2nid(curve_name);
+        if (nid != NID_undef) {
+            group = EC_GROUP_new_by_curve_name(nid);
+        }
+    }
+    if (!group) {
+        printf("Failed to retrieve EC_GROUP\n");
+        return 0;
+    }
     // BN_CTX *ctx = BN_CTX_new_ex(ctx_ecdsa->libctx);
     BN_CTX *ctx = BN_CTX_new_ex(NULL);
 
     uint8_t size_r2;
     uint8_t size_s;
-    uint8_t *tmp_sig    = malloc(sigbuflen);
+    uint8_t *tmp_sig    = malloc(*sigbuflen);
     // uint8_t size_classical;
     // uint8_t size_new_sig_r2;
     // uint8_t size_new_sig_s;
@@ -222,7 +241,8 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
      * Line 2, k <- Z^*_q
      */
     BIGNUM *k	= BN_new();
-    BN_rand_range(k, EC_GROUP_get0_order(group));
+    // BN_rand_range(k, EC_GROUP_get0_order(group));
+    BN_rand_range(k, order);
 
     /*
      * Line 3, r_1 (nonce) <- Rand (r_1 : A part of Falcon signature)
@@ -243,7 +263,8 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
         EC_POINT *kp = EC_POINT_new(group);
         EC_POINT_mul(group, kp, k, NULL, NULL, ctx);
         EC_POINT_get_affine_coordinates(group, kp, r2, NULL, ctx);
-        BN_mod(r2, r2, EC_GROUP_get0_order(group), ctx);
+        // BN_mod(r2, r2, EC_GROUP_get0_order(group), ctx);
+        BN_mod(r2, r2, order, ctx);
 
 		/*
 		 * Line 6, c <- F( (r_2, r_1) || m )
@@ -284,15 +305,17 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
 		 * Line 8, s <- k^-1 (c + (sk_2) r_2) mod q
          * s = k^(-1) * (hash + sk2*r2) mod n
 		 */
-        BIGNUM *sk2     = (BIGNUM *)EC_KEY_get0_private_key(ec_key);
-        BN_mod_mul(s, sk2, r2, EC_GROUP_get0_order(group), ctx);
+        BIGNUM *sk2     = NULL;
+        EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_PRIV_KEY, &sk2);
+        // EC_KEY_get0_private_key(ec_key);
+        BN_mod_mul(s, sk2, r2, order, ctx);
         BIGNUM *hash_bn = BN_bin2bn((unsigned char *) (&(r.hm)), FALCON_N, NULL);
-        BN_mod_add(s, s, hash_bn, EC_GROUP_get0_order(group), ctx);
-        BN_mod_inverse(k, k, EC_GROUP_get0_order(group), ctx);
-        BN_mod_mul(s, s, k, EC_GROUP_get0_order(group), ctx);
+        BN_mod_add(s, s, hash_bn, order, ctx);
+        BN_mod_inverse(k, k, order, ctx);
+        BN_mod_mul(s, s, k, order, ctx);
 
         BN_free(hash_bn);
-        EC_POINT_free(sk2);
+    BN_free(sk2);
         free(bin_r2);
         EC_POINT_free(kp);
     } while (BN_is_zero(r2) || BN_is_zero(s));
@@ -375,22 +398,21 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
     free(tmp_sig);
     free(bin_s);
     free(bin_r2);
+    // EC_KEY_free(ec_key);
+    EC_GROUP_free(group);
 
     // Falcon finalize routine
     if (v != 0) {
         inner_shake256_ctx_release(&sc);
-        // ^ ecdsa 도 길이 줘야 되는거 아닌가? -> signature에 들어 있으니 상관 없을듯
-
-        
-        *sigbuflen = v;
+        *sigbuflen                  = v;
+        // ^ ecdsa 도 길이 줘야 되는거 아닌가? -> signature에 들어 있으니 상관 없을듯 -> Anyway, I gave the classical signature length to signature_len_classical
+        *signature_len_classical    = size_ecdsa;
         return 0;
     }
-
-    printf("\n\nHEREHERE\n\n");
-    
     return -1;
 
     // TODO: Length 관련 챙겨야 함
+    // e.g., classical length -> This information in the signature
     // 현재 서명은 대충 만들었고, Certificate form에 맞춘 다음에,
     // Verify까지 구현해야 끝날듯
     // 이거 sig, siglen 파라미터로 넘겨 받는데, 크기가 부족하지는 않나? 일단 해보고.. siglen에 따라 동작하는 걸 수도 있으니까
@@ -504,9 +526,6 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_signature(
     void *ctx_classical, size_t *signature_len_classical) {
     size_t vlen;
     
-
-    printf("2\n");
-    fflush(stdout);
     vlen = PQCLEAN_FALCON512_BH_AARCH64_CRYPTO_BYTES - NONCELEN - 1;
     if (do_sign(sig, NULL, &vlen, m, mlen, sk, 
         //
@@ -515,8 +534,8 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_signature(
     }
     // sig[0] = 0x30 + FALCON_LOGN;
     
-    // (Mizzou, 2025) revised (32: the size of r in ECDSA)
-    *siglen = 1 + NONCELEN - 32 + vlen;
+    // (Mizzou, 2025) revised
+    *siglen = 1 + NONCELEN + vlen;
     // Original code copied from liboqs
     // *siglen = 1 + NONCELEN + vlen;
     return 0;

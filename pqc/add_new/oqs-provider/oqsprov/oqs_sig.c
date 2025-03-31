@@ -378,14 +378,11 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
 
 
 
-
-    fflush(stdout);
     // (Mizzou, 2025)
     // For new sig algorithm here.
     int sig_alg = OQS_NEW_SIG_chk(poqs_sigctx->sig->tls_name);
-    printf("-3\n");
     if (sig_alg != SIG_EXISTING) {
-        if(sig_alg == SIG_KBL) {
+        if (sig_alg == SIG_KBL) {
             OQS_SIG_PRINTF2("OQS SIG provider: sign called for %ld bytes\n", tbslen);
 
             if (!oqsxkey || !(oqs_key || oqs_key_classic) || !oqsxkey->privkey) {
@@ -567,15 +564,16 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
             (OQS_VERSION_MAJOR == 0 && OQS_VERSION_MINOR < 12)
                         if (OQS_SIG_sign(oqs_key, buf, &oqs_sig_len,
                                         (const unsigned char *)final_tbs, final_tbslen,
-                                        oqsxkey->comp_privkey[i]) != OQS_SUCCESS) {
+                                        oqsxkey->comp_privkey[i]) != OQS_SUCCESS)
         #else
                         if (OQS_SIG_sign_with_ctx_str(
                                 oqs_key, buf, &oqs_sig_len,
                                 (const unsigned char *)final_tbs, final_tbslen,
                                 poqs_sigctx->context_string,
                                 poqs_sigctx->context_string_length,
-                                oqsxkey->comp_privkey[i]) != OQS_SUCCESS) {
+                                oqsxkey->comp_privkey[i]) != OQS_SUCCESS)
         #endif
+                        {
                             ERR_raise(ERR_LIB_USER, OQSPROV_R_SIGNING_FAILED);
                             CompositeSignature_free(compsig);
                             OPENSSL_free(final_tbs);
@@ -741,16 +739,11 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
             }
 
             *siglen = classical_sig_len + oqs_sig_len;
-            printf("4This OSSL_PKEY does not contain a public key %d.\n", oqsxkey->numkeys);
             OQS_SIG_PRINTF2("OQS SIG provider: signing completes with size %ld\n",
                             *siglen);
             rv = 1; /* success */
         }
         else if (sig_alg == SIG_BH) {
-            // TODO: Add the Bindel's algorithm here.
-
-    printf("-2\n");
-    fflush(stdout);
             OQS_SIG_PRINTF2("OQS SIG provider: sign called for %ld bytes\n", tbslen);
 
             if (!oqsxkey || !(oqs_key || oqs_key_classic) || !oqsxkey->privkey) {
@@ -780,15 +773,8 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
                 return rv;
             }
             classical_ctx_sign = EVP_PKEY_CTX_new_from_pkey(libctx, evpkey, NULL);
-            
-
-    printf("-1\n");
-    fflush(stdout);
+     
             EVP_PKEY_sign_init(classical_ctx_sign);
-
-
-            printf("0\n");
-            fflush(stdout);
             // const EVP_MD *classical_md;
             // int digest_len;
             // unsigned char digest[SHA512_DIGEST_LENGTH]; /* init with max length */
@@ -818,8 +804,6 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
             // }
 
 
-            printf("11\n");
-            fflush(stdout);
             if (OQS_SIG_sign_with_ctx_str_bh(
                 oqs_key, sig, &oqs_sig_len, tbs, tbslen,
                 poqs_sigctx->context_string,
@@ -828,45 +812,33 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
                 (void *) classical_ctx_sign, &actual_classical_sig_len) != OQS_SUCCESS) {
                 ERR_raise(ERR_LIB_USER, OQSPROV_R_SIGNING_FAILED);
                 goto endsign;
+            }            
+            printf("Complete to sign of BH scheme\n");
+    
+            // // It has to be in OQS_SIG_sign_with_ctx_str
+            // EVP_PKEY_sign(classical_ctx_sign, sig + SIZE_OF_UINT32,
+            //     &actual_classical_sig_len, digest,
+            //     digest_len);
+    
+    
+            if (actual_classical_sig_len > oqsxkey->evp_info->length_signature) {
+                /* sig is bigger than expected */
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_BUFFER_LENGTH_WRONG);
+                goto endsign;
             }
-
-
-            
+            // ENCODE_UINT32(sig, actual_classical_sig_len);
+            classical_sig_len = SIZE_OF_UINT32 + actual_classical_sig_len;
+            // index += classical_sig_len;
+    
+            *siglen = classical_sig_len + oqs_sig_len;
+            OQS_SIG_PRINTF2("OQS SIG provider: signing completes with size %ld\n",
+                            *siglen);
+            rv = 1; /* success */
         }
-
-
-
-
-
-
-
-
-        // // It has to be in OQS_SIG_sign_with_ctx_str
-        // EVP_PKEY_sign(classical_ctx_sign, sig + SIZE_OF_UINT32,
-        //     &actual_classical_sig_len, digest,
-        //     digest_len);
-
-
-        // if (actual_classical_sig_len > oqsxkey->evp_info->length_signature) {
-        //     /* sig is bigger than expected */
-        //     ERR_raise(ERR_LIB_USER, OQSPROV_R_BUFFER_LENGTH_WRONG);
-        //     goto endsign;
-        // }
-        // ENCODE_UINT32(sig, actual_classical_sig_len);
-        // classical_sig_len = SIZE_OF_UINT32 + actual_classical_sig_len;
-        // index += classical_sig_len;
-
-
-
-
-
-
-
-
-
-
-
     }
+
+
+
     // Original signature algorithms here.
     else {
         OQS_SIG_PRINTF2("OQS SIG provider: sign called for %ld bytes\n", tbslen);
@@ -1224,7 +1196,6 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
         }
 
         *siglen = classical_sig_len + oqs_sig_len;
-        printf("4This OSSL_PKEY does not contain a public key %d.\n", oqsxkey->numkeys);
         OQS_SIG_PRINTF2("OQS SIG provider: signing completes with size %ld\n",
                         *siglen);
         rv = 1; /* success */
@@ -1254,246 +1225,300 @@ static int oqs_sig_verify(void *vpoqs_sigctx, const unsigned char *sig,
     int rv = 0;
     ASN1_BIT_STRING *comp_sig;
 
-    OQS_SIG_PRINTF3("OQS SIG provider: verify called with siglen %ld bytes and "
-                    "tbslen %ld\n",
-                    siglen, tbslen);
 
-    if (!oqsxkey || !oqs_key || !oqsxkey->pubkey || sig == NULL ||
-        (tbs == NULL && tbslen > 0)) {
-        ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
-        goto endverify;
-    }
 
-    if (is_hybrid) {
-        const EVP_MD *classical_md;
-        uint32_t actual_classical_sig_len = 0;
-        int digest_len;
-        unsigned char digest[SHA512_DIGEST_LENGTH]; /* init with max length */
-        size_t max_pq_sig_len =
-            oqsxkey->oqsx_provider_ctx.oqsx_qs_ctx.sig->length_signature;
-        size_t max_classical_sig_len =
-            oqsxkey->oqsx_provider_ctx.oqsx_evp_ctx->evp_info->length_signature;
+    // (Mizzou, 2025)
+    // For new sig algorithm here.
+    int sig_alg = OQS_NEW_SIG_chk(poqs_sigctx->sig->tls_name);
+    if (sig_alg != SIG_EXISTING) {
+        if (sig_alg == SIG_KBL) {
+            OQS_SIG_PRINTF3("OQS SIG provider: verify called with siglen %ld bytes and "
+                "tbslen %ld\n",
+                siglen, tbslen);
 
-        if ((ctx_verify = EVP_PKEY_CTX_new_from_pkey(
-                 libctx, oqsxkey->classical_pkey, NULL)) == NULL ||
-            EVP_PKEY_verify_init(ctx_verify) <= 0) {
-            ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
-            goto endverify;
-        }
-        if (oqsxkey->evp_info->keytype == EVP_PKEY_RSA) {
-            if (EVP_PKEY_CTX_set_rsa_padding(ctx_verify, RSA_PKCS1_PADDING) <=
-                0) {
+            if (!oqsxkey || !oqs_key || !oqsxkey->pubkey || sig == NULL ||
+                (tbs == NULL && tbslen > 0)) {
                 ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
                 goto endverify;
             }
-        }
-        if (siglen > SIZE_OF_UINT32) {
-            size_t actual_pq_sig_len = 0;
-            DECODE_UINT32(actual_classical_sig_len, sig);
-            actual_pq_sig_len =
-                siglen - SIZE_OF_UINT32 - actual_classical_sig_len;
-            if (siglen <= (SIZE_OF_UINT32 + actual_classical_sig_len) ||
-                actual_classical_sig_len > max_classical_sig_len ||
-                actual_pq_sig_len > max_pq_sig_len) {
-                ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
-                goto endverify;
-            }
-        } else {
-            ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
-            goto endverify;
-        }
 
-        /* same as with sign: activate if pre-existing hashing to be used:
-         *  if (poqs_sigctx->mdctx == NULL) { // hashing not yet done
-         */
-        switch (oqs_key->claimed_nist_level) {
-        case 1:
-            classical_md = EVP_sha256();
-            digest_len = SHA256_DIGEST_LENGTH;
-            SHA256(tbs, tbslen, (unsigned char *)&digest);
-            break;
-        case 2:
-        case 3:
-            classical_md = EVP_sha384();
-            digest_len = SHA384_DIGEST_LENGTH;
-            SHA384(tbs, tbslen, (unsigned char *)&digest);
-            break;
-        case 4:
-        case 5:
-        default:
-            classical_md = EVP_sha512();
-            digest_len = SHA512_DIGEST_LENGTH;
-            SHA512(tbs, tbslen, (unsigned char *)&digest);
-            break;
-        }
-        if ((EVP_PKEY_CTX_set_signature_md(ctx_verify, classical_md) <= 0) ||
-            (EVP_PKEY_verify(ctx_verify, sig + SIZE_OF_UINT32,
-                             actual_classical_sig_len, digest,
-                             digest_len) <= 0)) {
-            ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
-            goto endverify;
-        } else {
-            OQS_SIG_PRINTF("OQS SIG: classic verification OK\n");
-        }
-        /* activate for using pre-existing digest:
-         * }
-         *  else { // hashing already done:
-         *     if (EVP_PKEY_verify(ctx_verify, sig + SIZE_OF_UINT32,
-         * actual_classical_sig_len, tbs, tbslen) <= 0) {
-         *       ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
-         *       goto endverify;
-         *     }
-         *  }
-         */
-        classical_sig_len = SIZE_OF_UINT32 + actual_classical_sig_len;
-        index += classical_sig_len;
-    }
-    if (is_composite) {
-        CompositeSignature *compsig;
-        int i;
-        int nid = OBJ_sn2nid(oqsxkey->tls_name);
-        int comp_idx = get_composite_idx(oqsxkey->tls_name);
-        if (comp_idx == -1)
-            goto endverify;
-        unsigned char *buf;
-        size_t buf_len;
-        const unsigned char *oid_prefix = composite_OID_prefix[comp_idx - 1];
-        char *final_tbs;
-        size_t final_tbslen = COMPOSITE_OID_PREFIX_LEN / 2;
-        int aux = 0;
-        unsigned char *tbs_hash;
+            if (is_hybrid) {
+                const EVP_MD *classical_md;
+                uint32_t actual_classical_sig_len = 0;
+                int digest_len;
+                unsigned char digest[SHA512_DIGEST_LENGTH]; /* init with max length */
+                size_t max_pq_sig_len =
+                    oqsxkey->oqsx_provider_ctx.oqsx_qs_ctx.sig->length_signature;
+                size_t max_classical_sig_len =
+                    oqsxkey->oqsx_provider_ctx.oqsx_evp_ctx->evp_info->length_signature;
 
-        if ((compsig = d2i_CompositeSignature(NULL, &sig, siglen)) == NULL) {
-            ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
-            CompositeSignature_free(compsig);
-            goto endverify;
-        }
-
-        // prepare the pre hash
-        for (i = 0; i < oqsxkey->numkeys; i++) {
-            char *name;
-            char *upcase_name;
-            if ((name = get_cmpname(nid, i)) == NULL) {
-                ERR_raise(ERR_LIB_USER, ERR_R_FATAL);
-                CompositeSignature_free(compsig);
-                goto endverify;
-            }
-            upcase_name = get_oqsname_fromtls(name);
-
-            if ((upcase_name != 0) &&
-                    ((!strcmp(upcase_name, OQS_SIG_alg_ml_dsa_65)) ||
-                     (!strcmp(upcase_name, OQS_SIG_alg_ml_dsa_87))) ||
-                (name[0] == 'e')) {
-                aux = 1;
-                OPENSSL_free(name);
-                break;
-            }
-            OPENSSL_free(name);
-        }
-        switch (aux) {
-        case 0:
-            tbs_hash = OPENSSL_malloc(SHA256_DIGEST_LENGTH);
-            SHA256(tbs, tbslen, tbs_hash);
-            final_tbslen += SHA256_DIGEST_LENGTH;
-            break;
-        case 1:
-            tbs_hash = OPENSSL_malloc(SHA512_DIGEST_LENGTH);
-            SHA512(tbs, tbslen, tbs_hash);
-            final_tbslen += SHA512_DIGEST_LENGTH;
-            break;
-        default:
-            ERR_raise(ERR_LIB_USER, ERR_R_FATAL);
-            CompositeSignature_free(compsig);
-            goto endverify;
-        }
-        final_tbs = OPENSSL_malloc(final_tbslen);
-        composite_prefix_conversion(final_tbs, oid_prefix);
-        memcpy(final_tbs + COMPOSITE_OID_PREFIX_LEN / 2, tbs_hash,
-               final_tbslen - COMPOSITE_OID_PREFIX_LEN / 2);
-        OPENSSL_free(tbs_hash);
-
-        // verify
-        for (i = 0; i < oqsxkey->numkeys; i++) {
-            if (i == 0) {
-                buf = compsig->sig1->data;
-                buf_len = compsig->sig1->length;
-            } else {
-                buf = compsig->sig2->data;
-                buf_len = compsig->sig2->length;
-            }
-
-            char *name;
-            if ((name = get_cmpname(nid, i)) == NULL) {
-                ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
-                CompositeSignature_free(compsig);
-                OPENSSL_free(final_tbs);
-                goto endverify;
-            }
-
-            if (get_oqsname_fromtls(name)) {
-#if !defined OQS_VERSION_MINOR ||                                              \
-    (OQS_VERSION_MAJOR == 0 && OQS_VERSION_MINOR < 12)
-                if (OQS_SIG_verify(oqs_key, (const unsigned char *)final_tbs,
-                                   final_tbslen, buf, buf_len,
-                                   oqsxkey->comp_pubkey[i]) != OQS_SUCCESS) {
-#else
-                if (OQS_SIG_verify_with_ctx_str(
-                        oqs_key, (const unsigned char *)final_tbs, final_tbslen,
-                        buf, buf_len, poqs_sigctx->context_string,
-                        poqs_sigctx->context_string_length,
-                        oqsxkey->comp_pubkey[i]) != OQS_SUCCESS) {
-#endif
+                if ((ctx_verify = EVP_PKEY_CTX_new_from_pkey(
+                        libctx, oqsxkey->classical_pkey, NULL)) == NULL ||
+                    EVP_PKEY_verify_init(ctx_verify) <= 0) {
                     ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
-                    OPENSSL_free(name);
-                    CompositeSignature_free(compsig);
-                    OPENSSL_free(final_tbs);
                     goto endverify;
                 }
-            } else {
-                const EVP_MD *classical_md;
-                int digest_len;
-                int aux;
-                unsigned char digest[SHA512_DIGEST_LENGTH]; /* init with max
-                                                               length */
-
-                if (name[0] == 'e') { // ed25519 or ed448
-                    EVP_MD_CTX *evp_ctx = EVP_MD_CTX_new();
-                    if ((EVP_DigestVerifyInit_ex(evp_ctx, NULL, NULL, libctx,
-                                                 NULL, oqsxkey->classical_pkey,
-                                                 NULL) <= 0) ||
-                        (EVP_DigestVerify(evp_ctx, buf, buf_len,
-                                          (const unsigned char *)final_tbs,
-                                          final_tbslen) <= 0)) {
-                        ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
-                        OPENSSL_free(name);
-                        EVP_MD_CTX_free(evp_ctx);
-                        CompositeSignature_free(compsig);
-                        OPENSSL_free(final_tbs);
+                if (oqsxkey->evp_info->keytype == EVP_PKEY_RSA) {
+                    if (EVP_PKEY_CTX_set_rsa_padding(ctx_verify, RSA_PKCS1_PADDING) <=
+                        0) {
+                        ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
                         goto endverify;
                     }
-                    EVP_MD_CTX_free(evp_ctx);
+                }
+                if (siglen > SIZE_OF_UINT32) {
+                    size_t actual_pq_sig_len = 0;
+                    DECODE_UINT32(actual_classical_sig_len, sig);
+                    actual_pq_sig_len =
+                        siglen - SIZE_OF_UINT32 - actual_classical_sig_len;
+                    if (siglen <= (SIZE_OF_UINT32 + actual_classical_sig_len) ||
+                        actual_classical_sig_len > max_classical_sig_len ||
+                        actual_pq_sig_len > max_pq_sig_len) {
+                        ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
+                        goto endverify;
+                    }
                 } else {
-                    if (((ctx_verify = EVP_PKEY_CTX_new_from_pkey(
-                              libctx, oqsxkey->classical_pkey, NULL)) ==
-                         NULL) ||
-                        (EVP_PKEY_verify_init(ctx_verify) <= 0)) {
-                        ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                    ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
+                    goto endverify;
+                }
+
+                /* same as with sign: activate if pre-existing hashing to be used:
+                *  if (poqs_sigctx->mdctx == NULL) { // hashing not yet done
+                */
+                switch (oqs_key->claimed_nist_level) {
+                case 1:
+                    classical_md = EVP_sha256();
+                    digest_len = SHA256_DIGEST_LENGTH;
+                    SHA256(tbs, tbslen, (unsigned char *)&digest);
+                    break;
+                case 2:
+                case 3:
+                    classical_md = EVP_sha384();
+                    digest_len = SHA384_DIGEST_LENGTH;
+                    SHA384(tbs, tbslen, (unsigned char *)&digest);
+                    break;
+                case 4:
+                case 5:
+                default:
+                    classical_md = EVP_sha512();
+                    digest_len = SHA512_DIGEST_LENGTH;
+                    SHA512(tbs, tbslen, (unsigned char *)&digest);
+                    break;
+                }
+                if ((EVP_PKEY_CTX_set_signature_md(ctx_verify, classical_md) <= 0) ||
+                    (EVP_PKEY_verify(ctx_verify, sig + SIZE_OF_UINT32,
+                                    actual_classical_sig_len, digest,
+                                    digest_len) <= 0)) {
+                    ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                    goto endverify;
+                } else {
+                    OQS_SIG_PRINTF("OQS SIG: classic verification OK\n");
+                }
+                /* activate for using pre-existing digest:
+                * }
+                *  else { // hashing already done:
+                *     if (EVP_PKEY_verify(ctx_verify, sig + SIZE_OF_UINT32,
+                * actual_classical_sig_len, tbs, tbslen) <= 0) {
+                *       ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                *       goto endverify;
+                *     }
+                *  }
+                */
+                classical_sig_len = SIZE_OF_UINT32 + actual_classical_sig_len;
+                index += classical_sig_len;
+            }
+            if (is_composite) {
+                CompositeSignature *compsig;
+                int i;
+                int nid = OBJ_sn2nid(oqsxkey->tls_name);
+                int comp_idx = get_composite_idx(oqsxkey->tls_name);
+                if (comp_idx == -1)
+                    goto endverify;
+                unsigned char *buf;
+                size_t buf_len;
+                const unsigned char *oid_prefix = composite_OID_prefix[comp_idx - 1];
+                char *final_tbs;
+                size_t final_tbslen = COMPOSITE_OID_PREFIX_LEN / 2;
+                int aux = 0;
+                unsigned char *tbs_hash;
+
+                if ((compsig = d2i_CompositeSignature(NULL, &sig, siglen)) == NULL) {
+                    ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                    CompositeSignature_free(compsig);
+                    goto endverify;
+                }
+
+                // prepare the pre hash
+                for (i = 0; i < oqsxkey->numkeys; i++) {
+                    char *name;
+                    char *upcase_name;
+                    if ((name = get_cmpname(nid, i)) == NULL) {
+                        ERR_raise(ERR_LIB_USER, ERR_R_FATAL);
+                        CompositeSignature_free(compsig);
+                        goto endverify;
+                    }
+                    upcase_name = get_oqsname_fromtls(name);
+
+                    if ((upcase_name != 0) &&
+                            ((!strcmp(upcase_name, OQS_SIG_alg_ml_dsa_65)) ||
+                            (!strcmp(upcase_name, OQS_SIG_alg_ml_dsa_87))) ||
+                        (name[0] == 'e')) {
+                        aux = 1;
                         OPENSSL_free(name);
+                        break;
+                    }
+                    OPENSSL_free(name);
+                }
+                switch (aux) {
+                case 0:
+                    tbs_hash = OPENSSL_malloc(SHA256_DIGEST_LENGTH);
+                    SHA256(tbs, tbslen, tbs_hash);
+                    final_tbslen += SHA256_DIGEST_LENGTH;
+                    break;
+                case 1:
+                    tbs_hash = OPENSSL_malloc(SHA512_DIGEST_LENGTH);
+                    SHA512(tbs, tbslen, tbs_hash);
+                    final_tbslen += SHA512_DIGEST_LENGTH;
+                    break;
+                default:
+                    ERR_raise(ERR_LIB_USER, ERR_R_FATAL);
+                    CompositeSignature_free(compsig);
+                    goto endverify;
+                }
+                final_tbs = OPENSSL_malloc(final_tbslen);
+                composite_prefix_conversion(final_tbs, oid_prefix);
+                memcpy(final_tbs + COMPOSITE_OID_PREFIX_LEN / 2, tbs_hash,
+                    final_tbslen - COMPOSITE_OID_PREFIX_LEN / 2);
+                OPENSSL_free(tbs_hash);
+
+                // verify
+                for (i = 0; i < oqsxkey->numkeys; i++) {
+                    if (i == 0) {
+                        buf = compsig->sig1->data;
+                        buf_len = compsig->sig1->length;
+                    } else {
+                        buf = compsig->sig2->data;
+                        buf_len = compsig->sig2->length;
+                    }
+
+                    char *name;
+                    if ((name = get_cmpname(nid, i)) == NULL) {
+                        ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
                         CompositeSignature_free(compsig);
                         OPENSSL_free(final_tbs);
                         goto endverify;
                     }
-                    if (!strncmp(name, "pss", 3)) {
-                        int salt;
-                        const EVP_MD *pss_mgf1;
-                        if (!strncmp(name, "pss3072", 7)) {
-                            salt = 64;
-                            pss_mgf1 = EVP_sha512();
+
+                    if (get_oqsname_fromtls(name)) {
+            #if !defined OQS_VERSION_MINOR ||                                              \
+            (OQS_VERSION_MAJOR == 0 && OQS_VERSION_MINOR < 12)
+                        if (OQS_SIG_verify(oqs_key, (const unsigned char *)final_tbs,
+                                        final_tbslen, buf, buf_len,
+                                        oqsxkey->comp_pubkey[i]) != OQS_SUCCESS) 
+            #else
+                        if (OQS_SIG_verify_with_ctx_str(
+                                oqs_key, (const unsigned char *)final_tbs, final_tbslen,
+                                buf, buf_len, poqs_sigctx->context_string,
+                                poqs_sigctx->context_string_length,
+                                oqsxkey->comp_pubkey[i]) != OQS_SUCCESS) 
+            #endif
+                        {
+                            ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                            OPENSSL_free(name);
+                            CompositeSignature_free(compsig);
+                            OPENSSL_free(final_tbs);
+                            goto endverify;
+                        }
+                    } else {
+                        const EVP_MD *classical_md;
+                        int digest_len;
+                        int aux;
+                        unsigned char digest[SHA512_DIGEST_LENGTH]; /* init with max
+                                                                    length */
+
+                        if (name[0] == 'e') { // ed25519 or ed448
+                            EVP_MD_CTX *evp_ctx = EVP_MD_CTX_new();
+                            if ((EVP_DigestVerifyInit_ex(evp_ctx, NULL, NULL, libctx,
+                                                        NULL, oqsxkey->classical_pkey,
+                                                        NULL) <= 0) ||
+                                (EVP_DigestVerify(evp_ctx, buf, buf_len,
+                                                (const unsigned char *)final_tbs,
+                                                final_tbslen) <= 0)) {
+                                ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                                OPENSSL_free(name);
+                                EVP_MD_CTX_free(evp_ctx);
+                                CompositeSignature_free(compsig);
+                                OPENSSL_free(final_tbs);
+                                goto endverify;
+                            }
+                            EVP_MD_CTX_free(evp_ctx);
                         } else {
-                            if (!strncmp(name, "pss2048", 7)) {
-                                salt = 32;
-                                pss_mgf1 = EVP_sha256();
+                            if (((ctx_verify = EVP_PKEY_CTX_new_from_pkey(
+                                    libctx, oqsxkey->classical_pkey, NULL)) ==
+                                NULL) ||
+                                (EVP_PKEY_verify_init(ctx_verify) <= 0)) {
+                                ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                                OPENSSL_free(name);
+                                CompositeSignature_free(compsig);
+                                OPENSSL_free(final_tbs);
+                                goto endverify;
+                            }
+                            if (!strncmp(name, "pss", 3)) {
+                                int salt;
+                                const EVP_MD *pss_mgf1;
+                                if (!strncmp(name, "pss3072", 7)) {
+                                    salt = 64;
+                                    pss_mgf1 = EVP_sha512();
+                                } else {
+                                    if (!strncmp(name, "pss2048", 7)) {
+                                        salt = 32;
+                                        pss_mgf1 = EVP_sha256();
+                                    } else {
+                                        ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                                        OPENSSL_free(name);
+                                        CompositeSignature_free(compsig);
+                                        OPENSSL_free(final_tbs);
+                                        goto endverify;
+                                    }
+                                }
+                                if ((EVP_PKEY_CTX_set_rsa_padding(
+                                        ctx_verify, RSA_PKCS1_PSS_PADDING) <= 0) ||
+                                    (EVP_PKEY_CTX_set_rsa_pss_saltlen(ctx_verify,
+                                                                    salt) <= 0) ||
+                                    (EVP_PKEY_CTX_set_rsa_mgf1_md(ctx_verify,
+                                                                pss_mgf1) <= 0)) {
+                                    ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
+                                    OPENSSL_free(name);
+                                    CompositeSignature_free(compsig);
+                                    OPENSSL_free(final_tbs);
+                                    goto endverify;
+                                }
+                            } else if (oqsxkey->oqsx_provider_ctx.oqsx_evp_ctx->evp_info
+                                        ->keytype == EVP_PKEY_RSA) {
+                                if (EVP_PKEY_CTX_set_rsa_padding(
+                                        ctx_verify, RSA_PKCS1_PADDING) <= 0) {
+                                    ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
+                                    OPENSSL_free(name);
+                                    CompositeSignature_free(compsig);
+                                    OPENSSL_free(final_tbs);
+                                    goto endverify;
+                                }
+                            }
+                            if (comp_idx < 6) {
+                                classical_md = EVP_sha256();
+                                digest_len = SHA256_DIGEST_LENGTH;
+                                SHA256((const unsigned char *)final_tbs, final_tbslen,
+                                    (unsigned char *)&digest);
                             } else {
+                                classical_md = EVP_sha512();
+                                digest_len = SHA512_DIGEST_LENGTH;
+                                SHA512((const unsigned char *)final_tbs, final_tbslen,
+                                    (unsigned char *)&digest);
+                            }
+
+                            if ((EVP_PKEY_CTX_set_signature_md(ctx_verify,
+                                                            classical_md) <= 0) ||
+                                (EVP_PKEY_verify(ctx_verify, buf, buf_len, digest,
+                                                digest_len) <= 0)) {
                                 ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
                                 OPENSSL_free(name);
                                 CompositeSignature_free(compsig);
@@ -1501,79 +1526,474 @@ static int oqs_sig_verify(void *vpoqs_sigctx, const unsigned char *sig,
                                 goto endverify;
                             }
                         }
-                        if ((EVP_PKEY_CTX_set_rsa_padding(
-                                 ctx_verify, RSA_PKCS1_PSS_PADDING) <= 0) ||
-                            (EVP_PKEY_CTX_set_rsa_pss_saltlen(ctx_verify,
-                                                              salt) <= 0) ||
-                            (EVP_PKEY_CTX_set_rsa_mgf1_md(ctx_verify,
-                                                          pss_mgf1) <= 0)) {
-                            ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
-                            OPENSSL_free(name);
-                            CompositeSignature_free(compsig);
-                            OPENSSL_free(final_tbs);
-                            goto endverify;
-                        }
-                    } else if (oqsxkey->oqsx_provider_ctx.oqsx_evp_ctx->evp_info
-                                   ->keytype == EVP_PKEY_RSA) {
-                        if (EVP_PKEY_CTX_set_rsa_padding(
-                                ctx_verify, RSA_PKCS1_PADDING) <= 0) {
-                            ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
-                            OPENSSL_free(name);
-                            CompositeSignature_free(compsig);
-                            OPENSSL_free(final_tbs);
-                            goto endverify;
-                        }
-                    }
-                    if (comp_idx < 6) {
-                        classical_md = EVP_sha256();
-                        digest_len = SHA256_DIGEST_LENGTH;
-                        SHA256((const unsigned char *)final_tbs, final_tbslen,
-                               (unsigned char *)&digest);
-                    } else {
-                        classical_md = EVP_sha512();
-                        digest_len = SHA512_DIGEST_LENGTH;
-                        SHA512((const unsigned char *)final_tbs, final_tbslen,
-                               (unsigned char *)&digest);
                     }
 
-                    if ((EVP_PKEY_CTX_set_signature_md(ctx_verify,
-                                                       classical_md) <= 0) ||
-                        (EVP_PKEY_verify(ctx_verify, buf, buf_len, digest,
-                                         digest_len) <= 0)) {
+                    OPENSSL_free(name);
+                }
+                CompositeSignature_free(compsig);
+                OPENSSL_free(final_tbs);
+            } else {
+                if (!oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) {
+                    ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
+                    goto endverify;
+                }
+            #if !defined OQS_VERSION_MINOR ||                                              \
+            (OQS_VERSION_MAJOR == 0 && OQS_VERSION_MINOR < 12)
+                if (OQS_SIG_verify(
+                        oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
+                        oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) != OQS_SUCCESS) 
+            #else
+                if (OQS_SIG_verify_with_ctx_str(
+                        oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
+                        poqs_sigctx->context_string, poqs_sigctx->context_string_length,
+                        oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) != OQS_SUCCESS) 
+            #endif
+                {
+                    ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                    goto endverify;
+                }
+            }
+            rv = 1;
+        }
+        else if (sig_alg == SIG_BH) {
+            OQS_SIG_PRINTF3("OQS SIG provider: verify called with siglen %ld bytes and "
+                "tbslen %ld\n",
+                siglen, tbslen);
+
+            if (!oqsxkey || !oqs_key || !oqsxkey->pubkey || sig == NULL ||
+                (tbs == NULL && tbslen > 0)) {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
+                goto endverify;
+            }
+
+            // const EVP_MD *classical_md;
+            uint32_t actual_classical_sig_len = 0;
+            int digest_len;
+            unsigned char digest[SHA512_DIGEST_LENGTH]; /* init with max length */
+            size_t max_pq_sig_len =
+                oqsxkey->oqsx_provider_ctx.oqsx_qs_ctx.sig->length_signature;
+            size_t max_classical_sig_len =
+                oqsxkey->oqsx_provider_ctx.oqsx_evp_ctx->evp_info->length_signature;
+
+            if ((ctx_verify = EVP_PKEY_CTX_new_from_pkey(
+                    libctx, oqsxkey->classical_pkey, NULL)) == NULL ||
+                EVP_PKEY_verify_init(ctx_verify) <= 0) {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                goto endverify;
+            }
+            if (siglen > SIZE_OF_UINT32) {
+                size_t actual_pq_sig_len = 0;
+                DECODE_UINT32(actual_classical_sig_len, sig);
+                actual_pq_sig_len =
+                    siglen - SIZE_OF_UINT32 - actual_classical_sig_len;
+                if (siglen <= (SIZE_OF_UINT32 + actual_classical_sig_len) ||
+                    actual_classical_sig_len > max_classical_sig_len ||
+                    actual_pq_sig_len > max_pq_sig_len) {
+                    ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
+                    goto endverify;
+                }
+            } else {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
+                goto endverify;
+            }
+
+            // /* same as with sign: activate if pre-existing hashing to be used:
+            // *  if (poqs_sigctx->mdctx == NULL) { // hashing not yet done
+            // */
+            // switch (oqs_key->claimed_nist_level) {
+            // case 1:
+            //     classical_md = EVP_sha256();
+            //     digest_len = SHA256_DIGEST_LENGTH;
+            //     SHA256(tbs, tbslen, (unsigned char *)&digest);
+            //     break;
+            // case 2:
+            // case 3:
+            //     classical_md = EVP_sha384();
+            //     digest_len = SHA384_DIGEST_LENGTH;
+            //     SHA384(tbs, tbslen, (unsigned char *)&digest);
+            //     break;
+            // case 4:
+            // case 5:
+            // default:
+            //     classical_md = EVP_sha512();
+            //     digest_len = SHA512_DIGEST_LENGTH;
+            //     SHA512(tbs, tbslen, (unsigned char *)&digest);
+            //     break;
+            // }
+            // if ((EVP_PKEY_CTX_set_signature_md(ctx_verify, classical_md) <= 0) ||
+            //     (EVP_PKEY_verify(ctx_verify, sig + SIZE_OF_UINT32,
+            //                     actual_classical_sig_len, digest,
+            //                     digest_len) <= 0)) {
+            //     ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+            //     goto endverify;
+            // } else {
+            //     OQS_SIG_PRINTF("OQS SIG: classic verification OK\n");
+            // }
+            // /* activate for using pre-existing digest:
+            // * }
+            // *  else { // hashing already done:
+            // *     if (EVP_PKEY_verify(ctx_verify, sig + SIZE_OF_UINT32,
+            // * actual_classical_sig_len, tbs, tbslen) <= 0) {
+            // *       ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+            // *       goto endverify;
+            // *     }
+            // *  }
+            // */
+            // classical_sig_len = SIZE_OF_UINT32 + actual_classical_sig_len;
+            // index += classical_sig_len;
+
+            if (!oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
+                goto endverify;
+            }
+            printf("Verification debuging starts\n");
+            // TODO:
+            #if !defined OQS_VERSION_MINOR ||                                              \
+            (OQS_VERSION_MAJOR == 0 && OQS_VERSION_MINOR < 12)
+                if (OQS_SIG_verify(
+                        oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
+                        oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) != OQS_SUCCESS) 
+            #else
+                if (OQS_SIG_verify_with_ctx_str(
+                        oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
+                        poqs_sigctx->context_string, poqs_sigctx->context_string_length,
+                        oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) != OQS_SUCCESS) 
+            #endif
+                {
+                    ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                    goto endverify;
+                }
+            rv = 1;
+        }
+    }
+
+
+
+    // Original signature algorithms here.
+    else {
+        OQS_SIG_PRINTF3("OQS SIG provider: verify called with siglen %ld bytes and "
+                        "tbslen %ld\n",
+                        siglen, tbslen);
+    
+        if (!oqsxkey || !oqs_key || !oqsxkey->pubkey || sig == NULL ||
+            (tbs == NULL && tbslen > 0)) {
+            ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
+            goto endverify;
+        }
+    
+        if (is_hybrid) {
+            const EVP_MD *classical_md;
+            uint32_t actual_classical_sig_len = 0;
+            int digest_len;
+            unsigned char digest[SHA512_DIGEST_LENGTH]; /* init with max length */
+            size_t max_pq_sig_len =
+                oqsxkey->oqsx_provider_ctx.oqsx_qs_ctx.sig->length_signature;
+            size_t max_classical_sig_len =
+                oqsxkey->oqsx_provider_ctx.oqsx_evp_ctx->evp_info->length_signature;
+    
+            if ((ctx_verify = EVP_PKEY_CTX_new_from_pkey(
+                     libctx, oqsxkey->classical_pkey, NULL)) == NULL ||
+                EVP_PKEY_verify_init(ctx_verify) <= 0) {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                goto endverify;
+            }
+            if (oqsxkey->evp_info->keytype == EVP_PKEY_RSA) {
+                if (EVP_PKEY_CTX_set_rsa_padding(ctx_verify, RSA_PKCS1_PADDING) <=
+                    0) {
+                    ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
+                    goto endverify;
+                }
+            }
+            if (siglen > SIZE_OF_UINT32) {
+                size_t actual_pq_sig_len = 0;
+                DECODE_UINT32(actual_classical_sig_len, sig);
+                actual_pq_sig_len =
+                    siglen - SIZE_OF_UINT32 - actual_classical_sig_len;
+                if (siglen <= (SIZE_OF_UINT32 + actual_classical_sig_len) ||
+                    actual_classical_sig_len > max_classical_sig_len ||
+                    actual_pq_sig_len > max_pq_sig_len) {
+                    ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
+                    goto endverify;
+                }
+            } else {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
+                goto endverify;
+            }
+    
+            /* same as with sign: activate if pre-existing hashing to be used:
+             *  if (poqs_sigctx->mdctx == NULL) { // hashing not yet done
+             */
+            switch (oqs_key->claimed_nist_level) {
+            case 1:
+                classical_md = EVP_sha256();
+                digest_len = SHA256_DIGEST_LENGTH;
+                SHA256(tbs, tbslen, (unsigned char *)&digest);
+                break;
+            case 2:
+            case 3:
+                classical_md = EVP_sha384();
+                digest_len = SHA384_DIGEST_LENGTH;
+                SHA384(tbs, tbslen, (unsigned char *)&digest);
+                break;
+            case 4:
+            case 5:
+            default:
+                classical_md = EVP_sha512();
+                digest_len = SHA512_DIGEST_LENGTH;
+                SHA512(tbs, tbslen, (unsigned char *)&digest);
+                break;
+            }
+            if ((EVP_PKEY_CTX_set_signature_md(ctx_verify, classical_md) <= 0) ||
+                (EVP_PKEY_verify(ctx_verify, sig + SIZE_OF_UINT32,
+                                 actual_classical_sig_len, digest,
+                                 digest_len) <= 0)) {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                goto endverify;
+            } else {
+                OQS_SIG_PRINTF("OQS SIG: classic verification OK\n");
+            }
+            /* activate for using pre-existing digest:
+             * }
+             *  else { // hashing already done:
+             *     if (EVP_PKEY_verify(ctx_verify, sig + SIZE_OF_UINT32,
+             * actual_classical_sig_len, tbs, tbslen) <= 0) {
+             *       ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+             *       goto endverify;
+             *     }
+             *  }
+             */
+            classical_sig_len = SIZE_OF_UINT32 + actual_classical_sig_len;
+            index += classical_sig_len;
+        }
+        if (is_composite) {
+            CompositeSignature *compsig;
+            int i;
+            int nid = OBJ_sn2nid(oqsxkey->tls_name);
+            int comp_idx = get_composite_idx(oqsxkey->tls_name);
+            if (comp_idx == -1)
+                goto endverify;
+            unsigned char *buf;
+            size_t buf_len;
+            const unsigned char *oid_prefix = composite_OID_prefix[comp_idx - 1];
+            char *final_tbs;
+            size_t final_tbslen = COMPOSITE_OID_PREFIX_LEN / 2;
+            int aux = 0;
+            unsigned char *tbs_hash;
+    
+            if ((compsig = d2i_CompositeSignature(NULL, &sig, siglen)) == NULL) {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                CompositeSignature_free(compsig);
+                goto endverify;
+            }
+    
+            // prepare the pre hash
+            for (i = 0; i < oqsxkey->numkeys; i++) {
+                char *name;
+                char *upcase_name;
+                if ((name = get_cmpname(nid, i)) == NULL) {
+                    ERR_raise(ERR_LIB_USER, ERR_R_FATAL);
+                    CompositeSignature_free(compsig);
+                    goto endverify;
+                }
+                upcase_name = get_oqsname_fromtls(name);
+    
+                if ((upcase_name != 0) &&
+                        ((!strcmp(upcase_name, OQS_SIG_alg_ml_dsa_65)) ||
+                         (!strcmp(upcase_name, OQS_SIG_alg_ml_dsa_87))) ||
+                    (name[0] == 'e')) {
+                    aux = 1;
+                    OPENSSL_free(name);
+                    break;
+                }
+                OPENSSL_free(name);
+            }
+            switch (aux) {
+            case 0:
+                tbs_hash = OPENSSL_malloc(SHA256_DIGEST_LENGTH);
+                SHA256(tbs, tbslen, tbs_hash);
+                final_tbslen += SHA256_DIGEST_LENGTH;
+                break;
+            case 1:
+                tbs_hash = OPENSSL_malloc(SHA512_DIGEST_LENGTH);
+                SHA512(tbs, tbslen, tbs_hash);
+                final_tbslen += SHA512_DIGEST_LENGTH;
+                break;
+            default:
+                ERR_raise(ERR_LIB_USER, ERR_R_FATAL);
+                CompositeSignature_free(compsig);
+                goto endverify;
+            }
+            final_tbs = OPENSSL_malloc(final_tbslen);
+            composite_prefix_conversion(final_tbs, oid_prefix);
+            memcpy(final_tbs + COMPOSITE_OID_PREFIX_LEN / 2, tbs_hash,
+                   final_tbslen - COMPOSITE_OID_PREFIX_LEN / 2);
+            OPENSSL_free(tbs_hash);
+    
+            // verify
+            for (i = 0; i < oqsxkey->numkeys; i++) {
+                if (i == 0) {
+                    buf = compsig->sig1->data;
+                    buf_len = compsig->sig1->length;
+                } else {
+                    buf = compsig->sig2->data;
+                    buf_len = compsig->sig2->length;
+                }
+    
+                char *name;
+                if ((name = get_cmpname(nid, i)) == NULL) {
+                    ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                    CompositeSignature_free(compsig);
+                    OPENSSL_free(final_tbs);
+                    goto endverify;
+                }
+    
+                if (get_oqsname_fromtls(name)) {
+    #if !defined OQS_VERSION_MINOR ||                                              \
+        (OQS_VERSION_MAJOR == 0 && OQS_VERSION_MINOR < 12)
+                    if (OQS_SIG_verify(oqs_key, (const unsigned char *)final_tbs,
+                                       final_tbslen, buf, buf_len,
+                                       oqsxkey->comp_pubkey[i]) != OQS_SUCCESS) 
+    #else
+                    if (OQS_SIG_verify_with_ctx_str(
+                            oqs_key, (const unsigned char *)final_tbs, final_tbslen,
+                            buf, buf_len, poqs_sigctx->context_string,
+                            poqs_sigctx->context_string_length,
+                            oqsxkey->comp_pubkey[i]) != OQS_SUCCESS) 
+    #endif
+                    {
                         ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
                         OPENSSL_free(name);
                         CompositeSignature_free(compsig);
                         OPENSSL_free(final_tbs);
                         goto endverify;
                     }
+                } else {
+                    const EVP_MD *classical_md;
+                    int digest_len;
+                    int aux;
+                    unsigned char digest[SHA512_DIGEST_LENGTH]; /* init with max
+                                                                   length */
+    
+                    if (name[0] == 'e') { // ed25519 or ed448
+                        EVP_MD_CTX *evp_ctx = EVP_MD_CTX_new();
+                        if ((EVP_DigestVerifyInit_ex(evp_ctx, NULL, NULL, libctx,
+                                                     NULL, oqsxkey->classical_pkey,
+                                                     NULL) <= 0) ||
+                            (EVP_DigestVerify(evp_ctx, buf, buf_len,
+                                              (const unsigned char *)final_tbs,
+                                              final_tbslen) <= 0)) {
+                            ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                            OPENSSL_free(name);
+                            EVP_MD_CTX_free(evp_ctx);
+                            CompositeSignature_free(compsig);
+                            OPENSSL_free(final_tbs);
+                            goto endverify;
+                        }
+                        EVP_MD_CTX_free(evp_ctx);
+                    } else {
+                        if (((ctx_verify = EVP_PKEY_CTX_new_from_pkey(
+                                  libctx, oqsxkey->classical_pkey, NULL)) ==
+                             NULL) ||
+                            (EVP_PKEY_verify_init(ctx_verify) <= 0)) {
+                            ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                            OPENSSL_free(name);
+                            CompositeSignature_free(compsig);
+                            OPENSSL_free(final_tbs);
+                            goto endverify;
+                        }
+                        if (!strncmp(name, "pss", 3)) {
+                            int salt;
+                            const EVP_MD *pss_mgf1;
+                            if (!strncmp(name, "pss3072", 7)) {
+                                salt = 64;
+                                pss_mgf1 = EVP_sha512();
+                            } else {
+                                if (!strncmp(name, "pss2048", 7)) {
+                                    salt = 32;
+                                    pss_mgf1 = EVP_sha256();
+                                } else {
+                                    ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                                    OPENSSL_free(name);
+                                    CompositeSignature_free(compsig);
+                                    OPENSSL_free(final_tbs);
+                                    goto endverify;
+                                }
+                            }
+                            if ((EVP_PKEY_CTX_set_rsa_padding(
+                                     ctx_verify, RSA_PKCS1_PSS_PADDING) <= 0) ||
+                                (EVP_PKEY_CTX_set_rsa_pss_saltlen(ctx_verify,
+                                                                  salt) <= 0) ||
+                                (EVP_PKEY_CTX_set_rsa_mgf1_md(ctx_verify,
+                                                              pss_mgf1) <= 0)) {
+                                ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
+                                OPENSSL_free(name);
+                                CompositeSignature_free(compsig);
+                                OPENSSL_free(final_tbs);
+                                goto endverify;
+                            }
+                        } else if (oqsxkey->oqsx_provider_ctx.oqsx_evp_ctx->evp_info
+                                       ->keytype == EVP_PKEY_RSA) {
+                            if (EVP_PKEY_CTX_set_rsa_padding(
+                                    ctx_verify, RSA_PKCS1_PADDING) <= 0) {
+                                ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
+                                OPENSSL_free(name);
+                                CompositeSignature_free(compsig);
+                                OPENSSL_free(final_tbs);
+                                goto endverify;
+                            }
+                        }
+                        if (comp_idx < 6) {
+                            classical_md = EVP_sha256();
+                            digest_len = SHA256_DIGEST_LENGTH;
+                            SHA256((const unsigned char *)final_tbs, final_tbslen,
+                                   (unsigned char *)&digest);
+                        } else {
+                            classical_md = EVP_sha512();
+                            digest_len = SHA512_DIGEST_LENGTH;
+                            SHA512((const unsigned char *)final_tbs, final_tbslen,
+                                   (unsigned char *)&digest);
+                        }
+    
+                        if ((EVP_PKEY_CTX_set_signature_md(ctx_verify,
+                                                           classical_md) <= 0) ||
+                            (EVP_PKEY_verify(ctx_verify, buf, buf_len, digest,
+                                             digest_len) <= 0)) {
+                            ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                            OPENSSL_free(name);
+                            CompositeSignature_free(compsig);
+                            OPENSSL_free(final_tbs);
+                            goto endverify;
+                        }
+                    }
                 }
+    
+                OPENSSL_free(name);
             }
-
-            OPENSSL_free(name);
+            CompositeSignature_free(compsig);
+            OPENSSL_free(final_tbs);
+        } else {
+            if (!oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
+                goto endverify;
+            }
+    #if !defined OQS_VERSION_MINOR ||                                              \
+        (OQS_VERSION_MAJOR == 0 && OQS_VERSION_MINOR < 12)
+            if (OQS_SIG_verify(
+                    oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
+                    oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) != OQS_SUCCESS) 
+    #else
+            if (OQS_SIG_verify_with_ctx_str(
+                    oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
+                    poqs_sigctx->context_string, poqs_sigctx->context_string_length,
+                    oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) != OQS_SUCCESS) 
+    #endif
+            {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                goto endverify;
+            }
         }
-        CompositeSignature_free(compsig);
-        OPENSSL_free(final_tbs);
-    } else {
-        if (!oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) {
-            ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
-            goto endverify;
-        }
-#if !defined OQS_VERSION_MINOR ||                                              \
-    (OQS_VERSION_MAJOR == 0 && OQS_VERSION_MINOR < 12)
-        if (OQS_SIG_verify(
-                oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
-                oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) != OQS_SUCCESS) {
-#else
-        if (OQS_SIG_verify_with_ctx_str(
-                oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
-                poqs_sigctx->context_string, poqs_sigctx->context_string_length,
-                oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) != OQS_SUCCESS) {
-#endif
-            ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
-            goto endverify;
-        }
+        rv = 1;        
     }
-    rv = 1;
 
 endverify:
     if (ctx_verify) {
