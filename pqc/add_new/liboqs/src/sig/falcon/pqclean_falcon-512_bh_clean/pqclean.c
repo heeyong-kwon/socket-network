@@ -217,7 +217,9 @@ do_sign(uint8_t *nonce, uint8_t *sigbuf, size_t *sigbuflen,
 static int
 do_verify(
     const uint8_t *nonce, const uint8_t *sigbuf, size_t sigbuflen,
-    const uint8_t *m, size_t mlen, const uint8_t *pk) {
+    const uint8_t *m, size_t mlen, const uint8_t *pk, 
+    // 
+    void *ctx_classical) {
     union {
         uint8_t b[2 * 512];
         uint64_t dummy_u64;
@@ -306,7 +308,9 @@ PQCLEAN_FALCON512_BH_CLEAN_crypto_sign_signature(
 int
 PQCLEAN_FALCON512_BH_CLEAN_crypto_sign_verify(
     const uint8_t *sig, size_t siglen,
-    const uint8_t *m, size_t mlen, const uint8_t *pk) {
+    const uint8_t *m, size_t mlen, const uint8_t *pk, 
+    // 
+    void *ctx_classical) {
     if (siglen < 1 + NONCELEN) {
         return -1;
     }
@@ -314,7 +318,9 @@ PQCLEAN_FALCON512_BH_CLEAN_crypto_sign_verify(
         return -1;
     }
     return do_verify(sig + 1,
-                     sig + 1 + NONCELEN, siglen - 1 - NONCELEN, m, mlen, pk);
+                     sig + 1 + NONCELEN, siglen - 1 - NONCELEN, m, mlen, pk, 
+                    // 
+                    ctx_classical);
 }
 
 /* see api.h */
@@ -351,7 +357,9 @@ PQCLEAN_FALCON512_BH_CLEAN_crypto_sign(
 int
 PQCLEAN_FALCON512_BH_CLEAN_crypto_sign_open(
     uint8_t *m, size_t *mlen,
-    const uint8_t *sm, size_t smlen, const uint8_t *pk) {
+    const uint8_t *sm, size_t smlen, const uint8_t *pk, 
+    // 
+    void *ctx_classical) {
     const uint8_t *sigbuf;
     size_t pmlen, sigbuflen;
 
@@ -376,7 +384,7 @@ PQCLEAN_FALCON512_BH_CLEAN_crypto_sign_open(
      * the signature value (excluding the header byte).
      */
     if (do_verify(sm + 2, sigbuf, sigbuflen,
-                  sm + 2 + NONCELEN, pmlen, pk) < 0) {
+                  sm + 2 + NONCELEN, pmlen, pk, ctx_classical) < 0) {
         return -1;
     }
 

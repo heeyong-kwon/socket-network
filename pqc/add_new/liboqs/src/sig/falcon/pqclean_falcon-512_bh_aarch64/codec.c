@@ -403,6 +403,8 @@ PQCLEAN_FALCON512_BH_AARCH64_comp_decode(int16_t *x, const void *in, size_t max_
          * absolute value.
          */
         if (v >= max_in_len) {
+            printf("WHERE 1?\n");
+
             return 0;
         }
         acc = (acc << 8) | (uint32_t)buf[v ++];
@@ -416,6 +418,7 @@ PQCLEAN_FALCON512_BH_AARCH64_comp_decode(int16_t *x, const void *in, size_t max_
         for (;;) {
             if (acc_len == 0) {
                 if (v >= max_in_len) {
+            printf("WHERE 2?\n");
                     return 0;
                 }
                 acc = (acc << 8) | (uint32_t)buf[v ++];
@@ -427,6 +430,7 @@ PQCLEAN_FALCON512_BH_AARCH64_comp_decode(int16_t *x, const void *in, size_t max_
             }
             m += 128;
             if (m > 2047) {
+            printf("WHERE 3?\n");
                 return 0;
             }
         }
@@ -435,6 +439,7 @@ PQCLEAN_FALCON512_BH_AARCH64_comp_decode(int16_t *x, const void *in, size_t max_
          * "-0" is forbidden.
          */
         if (s && m == 0) {
+            printf("WHERE 4?\n");
             return 0;
         }
 
@@ -445,7 +450,8 @@ PQCLEAN_FALCON512_BH_AARCH64_comp_decode(int16_t *x, const void *in, size_t max_
      * Unused bits in the last byte must be zero.
      */
     if ((acc & ((1u << acc_len) - 1u)) != 0) {
-        return 0;
+            printf("WHERE 5?\n");
+            return 0;
     }
 
     return v;

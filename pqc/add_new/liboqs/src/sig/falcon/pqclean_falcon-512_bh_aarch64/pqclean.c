@@ -224,8 +224,8 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
     // BN_CTX *ctx = BN_CTX_new_ex(ctx_ecdsa->libctx);
     BN_CTX *ctx = BN_CTX_new_ex(NULL);
 
-    uint8_t size_r2;
-    uint8_t size_s;
+    size_t size_r2;
+    size_t size_s;
     uint8_t *tmp_sig    = malloc(*sigbuflen);
     // uint8_t size_classical;
     // uint8_t size_new_sig_r2;
@@ -315,18 +315,19 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
         BN_mod_mul(s, s, k, order, ctx);
 
         BN_free(hash_bn);
-    BN_free(sk2);
+        BN_free(sk2);
         free(bin_r2);
         EC_POINT_free(kp);
     } while (BN_is_zero(r2) || BN_is_zero(s));
 
 
     // Make a hybrid signature (r_1, z_2, r_2, s)
-    uint8_t size_ecdsa  = 0;
+    size_t size_ecdsa   = 0;
     size_s          = BN_num_bytes(s);
     uint8_t *bin_s  = malloc(size_s);
     uint8_t *bin_r2 = malloc(size_r2);
     BN_bn2bin(s, bin_s);
+    BN_bn2bin(r2, bin_r2);
     bool flag_r2 = 0, flag_s = 0;
     if (bin_r2[0] & 0x80) {
         size_r2 += 1;
@@ -342,7 +343,7 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
 
     // ^ ECDSA
     // First 4 bytes (The total length of the ECDSA signature)
-    uint8_t new_sig_idx = 0;
+    size_t new_sig_idx  = 0;
     for(int i=0; i < 3; i++){
         sigbuf[new_sig_idx++]   = 0x00;
     }
@@ -361,10 +362,11 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
     if (flag_r2) {
         sigbuf[new_sig_idx++]   = 0x00;
         memcpy(sigbuf + new_sig_idx, bin_r2, size_r2 - 1);
+        new_sig_idx += (size_r2 - 1);
     } else {
         memcpy(sigbuf + new_sig_idx, bin_r2, size_r2);
+        new_sig_idx += size_r2;
     }
-    new_sig_idx += size_r2;
 
     //^ s : ECDSA s
     // 2 bytes (The length of the ECDSA s)
@@ -373,10 +375,11 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
     if (flag_s) {
         sigbuf[new_sig_idx++]   = 0x00;
         memcpy(sigbuf + new_sig_idx, bin_s, size_s - 1);
+        new_sig_idx += (size_s - 1);
     } else {
         memcpy(sigbuf + new_sig_idx, bin_s, size_s);
+        new_sig_idx += size_s;
     }
-    new_sig_idx += size_s;
 
     // ^ Falcon
     // First 1 byte
@@ -425,8 +428,10 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
  */
 static int
 do_verify(
-    const uint8_t *nonce, const uint8_t *sigbuf, size_t sigbuflen,
-    const uint8_t *m, size_t mlen, const uint8_t *pk) {
+    const uint8_t *sigbuf, const uint8_t *unused, size_t sigbuflen,
+    const uint8_t *m, size_t mlen, const uint8_t *pk, 
+    // 
+    void *ctx_classical) {
     union {
         uint8_t b[2 * FALCON_N];
         uint64_t dummy_u64;
@@ -451,26 +456,44 @@ do_verify(
     }
     // We move the conversion to NTT domain of `h` inside verify_raw()
     
-    // (Mizzou, 2025) revised (32: the size of r in ECDSA)
-    // new sigbuf and sigbuflen
-    sigbuf      -= 32;
-    sigbuflen   += 32;
 
+    
+    // (Mizzou, 2025) revised
+    // Algorithm 21 in "A Note on Hybrid Signature Schemes", Bindel and Britta Hale
+    
+    /*
+     * Divide signature to ECDSA and Falcon signatures.
+     */
+    uint8_t *sig_ecdsa      = sigbuf + 4;
+    size_t sig_ecdsa_len    = sigbuf[3];
+
+    uint8_t *sig_falcon             = sig_ecdsa + sig_ecdsa_len;
+    uint8_t *sig_falcon_nonce       = sig_falcon + 1;
+    uint8_t *sig_falcon_body        = sig_falcon_nonce + NONCELEN;
+    size_t sig_falcon_body_len      = sigbuflen - 4 - sig_ecdsa_len - 1 - NONCELEN;
+    printf("1Do I get here?\n");
+    fflush(stdout);
+    
     /*
      * Decode signature.
      */
-    if (sigbuflen == 0) {
+    if (sig_falcon_body_len == 0) {
         return -1;
     }
+    printf("2Do I get here (sig_falcon_body_len: %d)?\n", sig_falcon_body_len);
+    printf("  total_len: %d\n  ecdsa_len: %d\n  falcon_body_len: %d\n  nonce_len: %d\n", sigbuflen, sig_ecdsa_len, sig_falcon_body_len, NONCELEN);
+    fflush(stdout);
 
-    v = PQCLEAN_FALCON512_BH_AARCH64_comp_decode(sig, sigbuf, sigbuflen);
+    v = PQCLEAN_FALCON512_BH_AARCH64_comp_decode(sig, sig_falcon_body, sig_falcon_body_len);
     if (v == 0) {
         return -1;
     }
-    if (v != sigbuflen) {
-        if (sigbuflen == PQCLEAN_FALCONPADDED512_BH_AARCH64_CRYPTO_BYTES - NONCELEN - 1) {
-            while (v < sigbuflen) {
-                if (sigbuf[v++] != 0) {
+    printf("3Do I get here?\n");
+    fflush(stdout);
+    if (v != sig_falcon_body_len) {
+        if (sig_falcon_body_len == PQCLEAN_FALCONPADDED512_BH_AARCH64_CRYPTO_BYTES - NONCELEN - 1) {
+            while (v < sig_falcon_body_len) {
+                if (sig_falcon_body[v++] != 0) {
                     return -1;
                 }
             }
@@ -478,43 +501,45 @@ do_verify(
             return -1;
         }
     }
+    printf("4Do I get here?\n");
+    fflush(stdout);
 
-    /*
-     * Hash nonce + message into a vector.
-     */
-    // (Mizzou, 2025) revised
-    // Kwon et al. hybrid signature scheme (2024)
-    // Restore the nonce
-    uint8_t *r_ecdsa        = nonce - 1;
-    uint8_t size_r_ecdsa    = 32;
+    // /*
+    //  * Hash nonce + message into a vector.
+    //  */
+    // // (Mizzou, 2025) revised
+    // // Kwon et al. hybrid signature scheme (2024)
+    // // Restore the nonce
+    // uint8_t *r_ecdsa        = nonce - 1;
+    // uint8_t size_r_ecdsa    = 32;
     
-    if (*(r_ecdsa - size_r_ecdsa) & 0x80)
-        r_ecdsa = r_ecdsa - (2 * size_r_ecdsa) - 2;
-    else
-        r_ecdsa = r_ecdsa - (2 * size_r_ecdsa) - 1;
+    // if (*(r_ecdsa - size_r_ecdsa) & 0x80)
+    //     r_ecdsa = r_ecdsa - (2 * size_r_ecdsa) - 2;
+    // else
+    //     r_ecdsa = r_ecdsa - (2 * size_r_ecdsa) - 1;
 
-    uint8_t *new_nonce = malloc(NONCELEN);
-    memcpy(new_nonce, r_ecdsa, size_r_ecdsa);
-    memcpy(new_nonce + size_r_ecdsa, nonce, NONCELEN - size_r_ecdsa);
+    // uint8_t *new_nonce = malloc(NONCELEN);
+    // memcpy(new_nonce, r_ecdsa, size_r_ecdsa);
+    // memcpy(new_nonce + size_r_ecdsa, nonce, NONCELEN - size_r_ecdsa);
 
-    inner_shake256_init(&sc);
-    inner_shake256_inject(&sc, new_nonce, NONCELEN);
-    // inner_shake256_inject(&sc, nonce, NONCELEN);
-    inner_shake256_inject(&sc, m, mlen);
-    inner_shake256_flip(&sc);
-    PQCLEAN_FALCON512_BH_AARCH64_hash_to_point_ct(&sc, (uint16_t *) hm, FALCON_LOGN, tmp.b);
-    inner_shake256_ctx_release(&sc);
+    // inner_shake256_init(&sc);
+    // inner_shake256_inject(&sc, new_nonce, NONCELEN);
+    // // inner_shake256_inject(&sc, nonce, NONCELEN);
+    // inner_shake256_inject(&sc, m, mlen);
+    // inner_shake256_flip(&sc);
+    // PQCLEAN_FALCON512_BH_AARCH64_hash_to_point_ct(&sc, (uint16_t *) hm, FALCON_LOGN, tmp.b);
+    // inner_shake256_ctx_release(&sc);
 
-    // (Mizzou, 2025) revised
-    free(new_nonce);
+    // // (Mizzou, 2025) revised
+    // free(new_nonce);
 
-    /*
-     * Verify signature.
-     */
-    if (!PQCLEAN_FALCON512_BH_AARCH64_verify_raw(hm, sig, h, (int16_t *) tmp.b)) {
-        return -1;
-    }
-    return 0;
+    // /*
+    //  * Verify signature.
+    //  */
+    // if (!PQCLEAN_FALCON512_BH_AARCH64_verify_raw(hm, sig, h, (int16_t *) tmp.b)) {
+    //     return -1;
+    // }
+    // return 0;
 }
 
 /* see api.h */
@@ -545,15 +570,20 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_signature(
 int
 PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_verify(
     const uint8_t *sig, size_t siglen,
-    const uint8_t *m, size_t mlen, const uint8_t *pk) {
+    const uint8_t *m, size_t mlen, const uint8_t *pk, 
+    // 
+    void *ctx_classical) {
+    printf("(function) PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_verify.\n");
     if (siglen < 1 + NONCELEN) {
         return -1;
     }
-    if (sig[0] != 0x30 + FALCON_LOGN) {
-        return -1;
-    }
-    return do_verify(sig + 1,
-                     sig + 1 + NONCELEN, siglen - 1 - NONCELEN, m, mlen, pk);
+    // if (sig[0] != 0x30 + FALCON_LOGN) {
+    //     return -1;
+    // }
+    return do_verify(sig,
+                     NULL, siglen, m, mlen, pk, 
+                    // 
+                    ctx_classical);
 }
 
 /* see api.h */
@@ -591,7 +621,10 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign(
 int
 PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_open(
     uint8_t *m, size_t *mlen,
-    const uint8_t *sm, size_t smlen, const uint8_t *pk) {
+    const uint8_t *sm, size_t smlen, const uint8_t *pk, 
+    // 
+    void *ctx_classical) {
+    printf("(function) PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_open.\n");
     const uint8_t *sigbuf;
     size_t pmlen, sigbuflen;
 
@@ -616,7 +649,9 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_open(
      * the signature value (excluding the header byte).
      */
     if (do_verify(sm + 2, sigbuf, sigbuflen,
-                  sm + 2 + NONCELEN, pmlen, pk) < 0) {
+                  sm + 2 + NONCELEN, pmlen, pk, 
+                // 
+                ctx_classical) < 0) {
         return -1;
     }
 

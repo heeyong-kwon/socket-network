@@ -803,12 +803,12 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
             //     goto endsign;
             // }
 
-
             if (OQS_SIG_sign_with_ctx_str_bh(
                 oqs_key, sig, &oqs_sig_len, tbs, tbslen,
                 poqs_sigctx->context_string,
                 poqs_sigctx->context_string_length,
                 oqsxkey->comp_privkey[oqsxkey->numkeys - 1], 
+                // 
                 (void *) classical_ctx_sign, &actual_classical_sig_len) != OQS_SUCCESS) {
                 ERR_raise(ERR_LIB_USER, OQSPROV_R_SIGNING_FAILED);
                 goto endsign;
@@ -831,6 +831,7 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
             // index += classical_sig_len;
     
             *siglen = classical_sig_len + oqs_sig_len;
+            printf("(SIGN) Signature length: %d\n", *siglen);
             OQS_SIG_PRINTF2("OQS SIG provider: signing completes with size %ld\n",
                             *siglen);
             rv = 1; /* success */
@@ -1565,37 +1566,39 @@ static int oqs_sig_verify(void *vpoqs_sigctx, const unsigned char *sig,
                 ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
                 goto endverify;
             }
-
+            ctx_verify = EVP_PKEY_CTX_new_from_pkey(libctx, oqsxkey->classical_pkey, NULL);
+            
+            EVP_PKEY_verify_init(ctx_verify);
             // const EVP_MD *classical_md;
-            uint32_t actual_classical_sig_len = 0;
-            int digest_len;
-            unsigned char digest[SHA512_DIGEST_LENGTH]; /* init with max length */
-            size_t max_pq_sig_len =
-                oqsxkey->oqsx_provider_ctx.oqsx_qs_ctx.sig->length_signature;
-            size_t max_classical_sig_len =
-                oqsxkey->oqsx_provider_ctx.oqsx_evp_ctx->evp_info->length_signature;
+            // uint32_t actual_classical_sig_len = 0;
+            // int digest_len;
+            // unsigned char digest[SHA512_DIGEST_LENGTH]; /* init with max length */
+            // size_t max_pq_sig_len =
+            //     oqsxkey->oqsx_provider_ctx.oqsx_qs_ctx.sig->length_signature;
+            // size_t max_classical_sig_len =
+            //     oqsxkey->oqsx_provider_ctx.oqsx_evp_ctx->evp_info->length_signature;
 
-            if ((ctx_verify = EVP_PKEY_CTX_new_from_pkey(
-                    libctx, oqsxkey->classical_pkey, NULL)) == NULL ||
-                EVP_PKEY_verify_init(ctx_verify) <= 0) {
-                ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
-                goto endverify;
-            }
-            if (siglen > SIZE_OF_UINT32) {
-                size_t actual_pq_sig_len = 0;
-                DECODE_UINT32(actual_classical_sig_len, sig);
-                actual_pq_sig_len =
-                    siglen - SIZE_OF_UINT32 - actual_classical_sig_len;
-                if (siglen <= (SIZE_OF_UINT32 + actual_classical_sig_len) ||
-                    actual_classical_sig_len > max_classical_sig_len ||
-                    actual_pq_sig_len > max_pq_sig_len) {
-                    ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
-                    goto endverify;
-                }
-            } else {
-                ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
-                goto endverify;
-            }
+            // if ((ctx_verify = EVP_PKEY_CTX_new_from_pkey(
+            //         libctx, oqsxkey->classical_pkey, NULL)) == NULL ||
+            //     EVP_PKEY_verify_init(ctx_verify) <= 0) {
+            //     ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+            //     goto endverify;
+            // }
+            // if (siglen > SIZE_OF_UINT32) {
+            //     size_t actual_pq_sig_len = 0;
+            //     DECODE_UINT32(actual_classical_sig_len, sig);
+            //     actual_pq_sig_len =
+            //         siglen - SIZE_OF_UINT32 - actual_classical_sig_len;
+            //     if (siglen <= (SIZE_OF_UINT32 + actual_classical_sig_len) ||
+            //         actual_classical_sig_len > max_classical_sig_len ||
+            //         actual_pq_sig_len > max_pq_sig_len) {
+            //         ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
+            //         goto endverify;
+            //     }
+            // } else {
+            //     ERR_raise(ERR_LIB_USER, OQSPROV_R_INVALID_ENCODING);
+            //     goto endverify;
+            // }
 
             // /* same as with sign: activate if pre-existing hashing to be used:
             // *  if (poqs_sigctx->mdctx == NULL) { // hashing not yet done
@@ -1646,18 +1649,26 @@ static int oqs_sig_verify(void *vpoqs_sigctx, const unsigned char *sig,
                 ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
                 goto endverify;
             }
+
             printf("Verification debuging starts\n");
-            // TODO:
+
             #if !defined OQS_VERSION_MINOR ||                                              \
             (OQS_VERSION_MAJOR == 0 && OQS_VERSION_MINOR < 12)
                 if (OQS_SIG_verify(
                         oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
                         oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) != OQS_SUCCESS) 
             #else
-                if (OQS_SIG_verify_with_ctx_str(
-                        oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
-                        poqs_sigctx->context_string, poqs_sigctx->context_string_length,
-                        oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) != OQS_SUCCESS) 
+            if (OQS_SIG_verify_with_ctx_str_bh(
+                    oqs_key, tbs, tbslen, sig, siglen,
+                    poqs_sigctx->context_string, poqs_sigctx->context_string_length,
+                    oqsxkey->comp_pubkey[oqsxkey->numkeys - 1], 
+                // 
+                (void *) classical_ctx_sign) != OQS_SUCCESS) 
+            // ^ Original code
+            // if (OQS_SIG_verify_with_ctx_str(
+            //         oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
+            //         poqs_sigctx->context_string, poqs_sigctx->context_string_length,
+            //         oqsxkey->comp_pubkey[oqsxkey->numkeys - 1]) != OQS_SUCCESS) 
             #endif
                 {
                     ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
