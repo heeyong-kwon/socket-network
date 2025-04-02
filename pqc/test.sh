@@ -1,6 +1,7 @@
 #!/bin/bash
 
 bash add_new.sh
+echo All files copied to the original directories.
 
 generate_certificates() {
   local ALG=$1

@@ -203,8 +203,6 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
     // if (!ec_key) return 0;
     // const EC_GROUP *group = EC_KEY_get0_group(ec_key);
     // const EC_GROUP *group = EVP_PKEY_get_params(pkey, NULL);
-    BIGNUM *order = NULL;
-    EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_EC_ORDER, &order);
     EC_GROUP *group = NULL;
     char curve_name[80];
     OSSL_PARAM params[] = {
@@ -221,6 +219,13 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
         printf("Failed to retrieve EC_GROUP\n");
         return 0;
     }
+    BIGNUM *order = BN_new();
+    if (!EC_GROUP_get_order(group, order, NULL)) {
+        printf("(SIGN) len_order: %d\n", BN_num_bytes(order));
+        printf("Error: EC_GROUP_get_order() failed\n");
+        return -1;
+    }
+    printf("(SIGN) len_order: %d\n", BN_num_bytes(order));
     // BN_CTX *ctx = BN_CTX_new_ex(ctx_ecdsa->libctx);
     BN_CTX *ctx = BN_CTX_new_ex(NULL);
 
@@ -258,7 +263,7 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
 	do {
 		/*
 		 * Line 5, r_2 <- ( f_2(g^k) mod p ) mod q
-		 * In ECDSA, r = (kG).x mod n
+		 * In ECDSA, r_2 = (kG).x mod n
 		 */
         EC_POINT *kp = EC_POINT_new(group);
         EC_POINT_mul(group, kp, k, NULL, NULL, ctx);
@@ -309,7 +314,9 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
         EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_PRIV_KEY, &sk2);
         // EC_KEY_get0_private_key(ec_key);
         BN_mod_mul(s, sk2, r2, order, ctx);
-        BIGNUM *hash_bn = BN_bin2bn((unsigned char *) (&(r.hm)), FALCON_N, NULL);
+        uint8_t tmp_hm[FALCON_N * 2];
+        memcpy(tmp_hm, r.hm, sizeof(r.hm));
+        BIGNUM *hash_bn = BN_bin2bn((unsigned char *) (tmp_hm), FALCON_N * 2, NULL);
         BN_mod_add(s, s, hash_bn, order, ctx);
         BN_mod_inverse(k, k, order, ctx);
         BN_mod_mul(s, s, k, order, ctx);
@@ -496,14 +503,47 @@ do_verify(
     }
     /* 
      * Prepare for ECDSA
-     */    
+     */
     EVP_PKEY_CTX *ctx_ecdsa = (EVP_PKEY_CTX *) ctx_classical;
+    if (!ctx_classical) {
+        printf("Error: ctx_classical is NULL\n");
+        return -1;
+    }
     const EVP_PKEY *pkey    = EVP_PKEY_CTX_get0_pkey(ctx_ecdsa);
-    BIGNUM *order = NULL;
-    EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_EC_ORDER, &order);
+    if (!pkey) {
+        printf("Error: pkey is NULL\n");
+        return -1;
+    }
+    // BIGNUM *sk2     = NULL;
+    // EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_PRIV_KEY, &sk2);
+    EC_GROUP *group = NULL;
+    char curve_name[80];
+    OSSL_PARAM params[] = {
+        OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME, curve_name, sizeof(curve_name)),
+        OSSL_PARAM_construct_end()
+    };
+    if (EVP_PKEY_get_params(pkey, params)) {
+        int nid = OBJ_sn2nid(curve_name);
+        if (nid != NID_undef) {
+            group = EC_GROUP_new_by_curve_name(nid);
+        }
+    }
+    if (!group) {
+        printf("Failed to retrieve EC_GROUP\n");
+        return 0;
+    }
+    BIGNUM *order = BN_new();
+    if (!EC_GROUP_get_order(group, order, NULL)) {
+        printf("len_order: %d\n", BN_num_bytes(order));
+        printf("Error: EC_GROUP_get_order() failed\n");
+        return -1;
+    }
+    printf("len_order: %d\n", BN_num_bytes(order));
     BN_CTX *ctx = BN_CTX_new_ex(NULL);
-    BIGNUM *sk2     = NULL;
-    EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_PRIV_KEY, &sk2);
+
+    EC_KEY *ec_key = EVP_PKEY_get1_EC_KEY(pkey);
+    const EC_POINT *ec_pub_key = EC_KEY_get0_public_key(ec_key);
+
 
     size_t r2_len   = sig_ecdsa[3];
     size_t s_len    = *(sig_ecdsa + 4 + r2_len + 1);
@@ -549,16 +589,91 @@ do_verify(
      * ( f_2 ( 
      * g^{ F((r_2, r_1),m)*s^-1} (pk_2)^{r_2*s^-1} 
      * ) mod p ) mod q, r_1, m ))
+     * In ECDSA, r_2 = (kG).x mod n
      */
-    printf("(1) Can I get here?\n");
-    BIGNUM *bn_hm       = BN_bin2bn((unsigned char *) (hm), FALCON_N, NULL);
+    printf("(12) Can I get here?\n");
+    fflush(stdout);
+    uint8_t tmp_hm[FALCON_N * 2];
+    memcpy(tmp_hm, hm, sizeof(hm));
+    BIGNUM *bn_hm       = BN_bin2bn((unsigned char *) (tmp_hm), FALCON_N * 2, NULL);
+    printf("(13) Can I get here?\n");
+    fflush(stdout);
     BIGNUM *bn_s_inv    = BN_bin2bn((unsigned char *) (bin_s), 32, NULL);
-    BN_mod_inverse(bn_s_inv, bn_s_inv, order, ctx);
+    printf("(14) Can I get here?\n");
+    fflush(stdout);
+    if (!bn_s_inv || !order || !ctx) {
+        printf("Error: NULL pointer detected\n");
+        if (!bn_s_inv){
+            printf("Error: (bn_s_inv) NULL pointer detected\n");
+        }
+        if (!order){
+            printf("Error: (order) NULL pointer detected\n");
+        }
+        if (!ctx){
+            printf("Error: (ctx) NULL pointer detected\n");
+        }
+        return -1;
+    }
+    if (BN_mod_inverse(bn_s_inv, bn_s_inv, order, ctx) == NULL) {
+        printf("Error: BN_mod_inverse() failed (inverse does not exist)\n");
+        return -1;
+    }
+    printf("(15) Can I get here?\n");
+    fflush(stdout);
+
+
+
+    BIGNUM *u_1         = BN_new();
+    BN_mod_mul(u_1, bn_hm, bn_s_inv, order, ctx);
+    EC_POINT *P_1 = EC_POINT_new(group);
+    EC_POINT_mul(group, P_1, u_1, NULL, NULL, ctx);
     
+    BIGNUM *u_2         = BN_new();
+    BIGNUM *bn_r2       = BN_bin2bn((unsigned char *) (bin_r2), 32, NULL);
+    BN_mod_mul(u_2, bn_r2, bn_s_inv, order, ctx);
+    EC_POINT *P_2 = EC_POINT_new(group);
+    EC_POINT_mul(group, P_2, NULL, ec_pub_key, u_2, ctx);
+    
+    EC_POINT_add(group, P_1, P_1, P_2, ctx);
+    BIGNUM *tmp_r2      = BN_new();
+    EC_POINT_get_affine_coordinates(group, P_1, tmp_r2, NULL, ctx);
+    BN_mod(tmp_r2, tmp_r2, order, ctx);
     printf("(2) Can I get here?\n");
 
-    // TODO HERERERERERERERERE
+    // 이제 r2 등등 붙여서 여기저기 넣어서 다시 hm 만들어서 실제 hm이랑 비교 
+    inner_shake256_context rsc;
+    
+    size_t size_r2  = BN_num_bytes(tmp_r2);
+    printf("size_r2: %d\n", size_r2);
+    bin_r2          = malloc(sizeof(uint8_t) * size_r2);
+    BN_bn2bin(tmp_r2, bin_r2);
 
+    inner_shake256_init(&rsc);
+    inner_shake256_inject(&rsc, bin_r2, size_r2);
+    inner_shake256_inject(&rsc, sig_falcon_nonce, NONCELEN);
+    inner_shake256_inject(&rsc, m, mlen);
+    inner_shake256_flip(&rsc);
+    
+    int16_t recon_hm[FALCON_N];
+    PQCLEAN_FALCON512_BH_AARCH64_hash_to_point_ct(&rsc, (uint16_t *) recon_hm, FALCON_LOGN, tmp.b);
+    inner_shake256_ctx_release(&rsc);
+    
+    uint8_t recon_tmp_hm[FALCON_N * 2];
+    memcpy(recon_tmp_hm, recon_hm, sizeof(recon_hm));
+    if (memcmp(tmp_hm, recon_tmp_hm, FALCON_N * 2) == 0) {
+        printf("Arrays are equal\n");
+        // 이거 성공하면 통과임
+        // 근데 안 되는디?
+    }
+    for(int i=0; i<10; i++) {
+        printf("%ld : %02x %02x\n", i, tmp_hm[i], recon_tmp_hm[i]);
+    }
+
+
+
+    
+    
+    
 
 
     
@@ -566,7 +681,10 @@ do_verify(
     fflush(stdout);
     return 0;
 
-    // todo: Memory freeeeeee
+    // todo: Memory freeeeeee for whole processes including the signing method
+
+    EC_KEY_free(ec_key);
+
 }
 
 /* see api.h */

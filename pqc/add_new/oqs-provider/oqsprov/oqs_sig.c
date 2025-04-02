@@ -1566,9 +1566,15 @@ static int oqs_sig_verify(void *vpoqs_sigctx, const unsigned char *sig,
                 ERR_raise(ERR_LIB_USER, OQSPROV_R_WRONG_PARAMETERS);
                 goto endverify;
             }
-            ctx_verify = EVP_PKEY_CTX_new_from_pkey(libctx, oqsxkey->classical_pkey, NULL);
+
+            if ((ctx_verify = EVP_PKEY_CTX_new_from_pkey(
+                    libctx, oqsxkey->classical_pkey, NULL)) == NULL ||
+                EVP_PKEY_verify_init(ctx_verify) <= 0) {
+                ERR_raise(ERR_LIB_USER, OQSPROV_R_VERIFY_ERROR);
+                goto endverify;
+            }
             
-            EVP_PKEY_verify_init(ctx_verify);
+            
             // const EVP_MD *classical_md;
             // uint32_t actual_classical_sig_len = 0;
             // int digest_len;
@@ -1663,7 +1669,7 @@ static int oqs_sig_verify(void *vpoqs_sigctx, const unsigned char *sig,
                     poqs_sigctx->context_string, poqs_sigctx->context_string_length,
                     oqsxkey->comp_pubkey[oqsxkey->numkeys - 1], 
                 // 
-                (void *) classical_ctx_sign) != OQS_SUCCESS) 
+                (void *) ctx_verify) != OQS_SUCCESS) 
             // ^ Original code
             // if (OQS_SIG_verify_with_ctx_str(
             //         oqs_key, tbs, tbslen, sig + index, siglen - classical_sig_len,
