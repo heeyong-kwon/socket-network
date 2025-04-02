@@ -126,7 +126,7 @@ ASN1_NDEF_SEQUENCE(CompositeSignature) =
     int operation;
 } PROV_OQSSIG_CTX;
 
-// (2025, Mizzou)
+// (Mizzou, 2025)
 const char *OQS_NEW_SIG_ALGS_KBL[] = {
     "p256_falcon512_kbl", 
     "p521_falcon1024_kbl", 

@@ -471,8 +471,6 @@ do_verify(
     uint8_t *sig_falcon_nonce       = sig_falcon + 1;
     uint8_t *sig_falcon_body        = sig_falcon_nonce + NONCELEN;
     size_t sig_falcon_body_len      = sigbuflen - 4 - sig_ecdsa_len - 1 - NONCELEN;
-    printf("1Do I get here?\n");
-    fflush(stdout);
     
     /*
      * Decode signature.
@@ -480,16 +478,11 @@ do_verify(
     if (sig_falcon_body_len == 0) {
         return -1;
     }
-    printf("2Do I get here (sig_falcon_body_len: %d)?\n", sig_falcon_body_len);
-    printf("  total_len: %d\n  ecdsa_len: %d\n  falcon_body_len: %d\n  nonce_len: %d\n", sigbuflen, sig_ecdsa_len, sig_falcon_body_len, NONCELEN);
-    fflush(stdout);
 
     v = PQCLEAN_FALCON512_BH_AARCH64_comp_decode(sig, sig_falcon_body, sig_falcon_body_len);
     if (v == 0) {
         return -1;
     }
-    printf("3Do I get here?\n");
-    fflush(stdout);
     if (v != sig_falcon_body_len) {
         if (sig_falcon_body_len == PQCLEAN_FALCONPADDED512_BH_AARCH64_CRYPTO_BYTES - NONCELEN - 1) {
             while (v < sig_falcon_body_len) {
@@ -501,45 +494,50 @@ do_verify(
             return -1;
         }
     }
-    printf("4Do I get here?\n");
-    fflush(stdout);
-
-    // /*
-    //  * Hash nonce + message into a vector.
-    //  */
-    // // (Mizzou, 2025) revised
-    // // Kwon et al. hybrid signature scheme (2024)
-    // // Restore the nonce
-    // uint8_t *r_ecdsa        = nonce - 1;
-    // uint8_t size_r_ecdsa    = 32;
     
-    // if (*(r_ecdsa - size_r_ecdsa) & 0x80)
-    //     r_ecdsa = r_ecdsa - (2 * size_r_ecdsa) - 2;
-    // else
-    //     r_ecdsa = r_ecdsa - (2 * size_r_ecdsa) - 1;
+    /* 
+     * Prepare for ECDSA
+     */    
+    size_t r2_len   = sig_ecdsa[3];
+    size_t s_len    = *(sig_ecdsa + 4 + r2_len + 1);
+    
+    bool r2_flag    = (r2_len  == 32) ? false : true;
+    bool s_flag     = (s_len  == 32) ? false : true;
 
-    // uint8_t *new_nonce = malloc(NONCELEN);
-    // memcpy(new_nonce, r_ecdsa, size_r_ecdsa);
-    // memcpy(new_nonce + size_r_ecdsa, nonce, NONCELEN - size_r_ecdsa);
+    uint8_t *bin_r2 = (r2_flag) ? (sig_ecdsa[4] + 1) : (sig_ecdsa[4] + 2);
+    uint8_t *bin_s  = (s_flag) ? (sig_ecdsa + 4 + r2_len + 2) : (sig_ecdsa + 4 + r2_len + 3);
+    
+    /*
+     * Line 1, c <- F( (r_2, r_1) || m )
+     */
 
-    // inner_shake256_init(&sc);
-    // inner_shake256_inject(&sc, new_nonce, NONCELEN);
-    // // inner_shake256_inject(&sc, nonce, NONCELEN);
-    // inner_shake256_inject(&sc, m, mlen);
-    // inner_shake256_flip(&sc);
-    // PQCLEAN_FALCON512_BH_AARCH64_hash_to_point_ct(&sc, (uint16_t *) hm, FALCON_LOGN, tmp.b);
-    // inner_shake256_ctx_release(&sc);
+    /* Original comment
+    * Hash nonce + message into a vector.
+    */
+    inner_shake256_init(&sc);
+    inner_shake256_inject(&sc, bin_r2, 32);
+    inner_shake256_inject(&sc, sig_falcon_nonce, NONCELEN);
+    inner_shake256_inject(&sc, m, mlen);
+    inner_shake256_flip(&sc);
+    PQCLEAN_FALCON512_BH_AARCH64_hash_to_point_ct(&sc, (uint16_t *) hm, FALCON_LOGN, tmp.b);
+    inner_shake256_ctx_release(&sc);
 
-    // // (Mizzou, 2025) revised
-    // free(new_nonce);
 
-    // /*
-    //  * Verify signature.
-    //  */
-    // if (!PQCLEAN_FALCON512_BH_AARCH64_verify_raw(hm, sig, h, (int16_t *) tmp.b)) {
-    //     return -1;
-    // }
-    // return 0;
+
+
+
+
+    
+    // (Mizzou, 2025) revised
+    free(new_nonce);
+
+    /*
+     * Verify signature.
+     */
+    if (!PQCLEAN_FALCON512_BH_AARCH64_verify_raw(hm, sig, h, (int16_t *) tmp.b)) {
+        return -1;
+    }
+    return 0;
 }
 
 /* see api.h */
