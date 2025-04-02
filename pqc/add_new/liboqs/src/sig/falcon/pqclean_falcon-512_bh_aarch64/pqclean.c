@@ -494,23 +494,31 @@ do_verify(
             return -1;
         }
     }
-    
     /* 
      * Prepare for ECDSA
      */    
+    EVP_PKEY_CTX *ctx_ecdsa = (EVP_PKEY_CTX *) ctx_classical;
+    const EVP_PKEY *pkey    = EVP_PKEY_CTX_get0_pkey(ctx_ecdsa);
+    BIGNUM *order = NULL;
+    EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_EC_ORDER, &order);
+    BN_CTX *ctx = BN_CTX_new_ex(NULL);
+    BIGNUM *sk2     = NULL;
+    EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_PRIV_KEY, &sk2);
+
     size_t r2_len   = sig_ecdsa[3];
     size_t s_len    = *(sig_ecdsa + 4 + r2_len + 1);
     
     bool r2_flag    = (r2_len  == 32) ? false : true;
     bool s_flag     = (s_len  == 32) ? false : true;
 
-    uint8_t *bin_r2 = (r2_flag) ? (sig_ecdsa[4] + 1) : (sig_ecdsa[4] + 2);
-    uint8_t *bin_s  = (s_flag) ? (sig_ecdsa + 4 + r2_len + 2) : (sig_ecdsa + 4 + r2_len + 3);
+    printf("r2_flag = %d\n", r2_flag);
+    printf("s_flag = %d\n", s_flag);
+    uint8_t *bin_r2 = (r2_flag) ? (sig_ecdsa + 4 + 1) : (sig_ecdsa + 4);
+    uint8_t *bin_s  = (s_flag) ? (sig_ecdsa + 4 + r2_len + 2 + 1) : (sig_ecdsa + 4 + r2_len + 2);
     
     /*
      * Line 1, c <- F( (r_2, r_1) || m )
      */
-
     /* Original comment
     * Hash nonce + message into a vector.
     */
@@ -522,22 +530,43 @@ do_verify(
     PQCLEAN_FALCON512_BH_AARCH64_hash_to_point_ct(&sc, (uint16_t *) hm, FALCON_LOGN, tmp.b);
     inner_shake256_ctx_release(&sc);
 
+    /* Original comment
+     * Verify signature.
+     */
+    /*
+     * Line 2-3 and the second condition of Line 4 (i.e., (b < beta))
+     */
+    if (!PQCLEAN_FALCON512_BH_AARCH64_verify_raw(hm, sig, h, (int16_t *) tmp.b)) {
+        printf("Signature verification failed\n");
+        fflush(stdout);
+        return -1;
+    }
 
+    /*
+     * The first condition of Line 4 
+     * (i.e., (c = 
+     * F (
+     * ( f_2 ( 
+     * g^{ F((r_2, r_1),m)*s^-1} (pk_2)^{r_2*s^-1} 
+     * ) mod p ) mod q, r_1, m ))
+     */
+    printf("(1) Can I get here?\n");
+    BIGNUM *bn_hm       = BN_bin2bn((unsigned char *) (hm), FALCON_N, NULL);
+    BIGNUM *bn_s_inv    = BN_bin2bn((unsigned char *) (bin_s), 32, NULL);
+    BN_mod_inverse(bn_s_inv, bn_s_inv, order, ctx);
+    
+    printf("(2) Can I get here?\n");
 
+    // TODO HERERERERERERERERE
 
 
 
     
-    // (Mizzou, 2025) revised
-    free(new_nonce);
-
-    /*
-     * Verify signature.
-     */
-    if (!PQCLEAN_FALCON512_BH_AARCH64_verify_raw(hm, sig, h, (int16_t *) tmp.b)) {
-        return -1;
-    }
+    printf("Signature verification success\n");
+    fflush(stdout);
     return 0;
+
+    // todo: Memory freeeeeee
 }
 
 /* see api.h */
