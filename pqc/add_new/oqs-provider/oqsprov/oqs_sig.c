@@ -812,7 +812,7 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
                 (void *) classical_ctx_sign, &actual_classical_sig_len) != OQS_SUCCESS) {
                 ERR_raise(ERR_LIB_USER, OQSPROV_R_SIGNING_FAILED);
                 goto endsign;
-            }            
+            }
             printf("Complete to sign of BH scheme\n");
     
             // // It has to be in OQS_SIG_sign_with_ctx_str
@@ -831,7 +831,6 @@ static int oqs_sig_sign(void *vpoqs_sigctx, unsigned char *sig, size_t *siglen,
             // index += classical_sig_len;
     
             *siglen = classical_sig_len + oqs_sig_len;
-            printf("(SIGN) Signature length: %d\n", *siglen);
             OQS_SIG_PRINTF2("OQS SIG provider: signing completes with size %ld\n",
                             *siglen);
             rv = 1; /* success */
