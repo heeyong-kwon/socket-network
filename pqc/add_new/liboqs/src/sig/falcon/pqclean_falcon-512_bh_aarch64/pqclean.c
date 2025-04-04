@@ -20,7 +20,6 @@
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
 #include <openssl/ec.h>
-// #include <openssl/types.h>
 
 /*
  * Encoding formats (nnnn = log of degree, 9 for Falcon-512, 10 for Falcon-1024)
@@ -250,7 +249,6 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
      * Line 2, k <- Z^*_q
      */
     BIGNUM *k	= BN_new();
-    // BN_rand_range(k, EC_GROUP_get0_order(group));
     BN_rand_range(k, order);
 
     /*
@@ -273,7 +271,6 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
         kp = EC_POINT_new(group);
         EC_POINT_mul(group, kp, k, NULL, NULL, ctx);
         EC_POINT_get_affine_coordinates(group, kp, r2, NULL, ctx);
-        // BN_mod(r2, r2, EC_GROUP_get0_order(group), ctx);
         BN_mod(r2, r2, order, ctx);
 
 		/*
@@ -418,7 +415,6 @@ do_sign(uint8_t *sigbuf, uint8_t *unused, size_t *sigbuflen,
     if (v != 0) {
         inner_shake256_ctx_release(&sc);
         *sigbuflen                  = v;
-        // ^ ecdsa 도 길이 줘야 되는거 아닌가? -> signature에 들어 있으니 상관 없을듯 -> Anyway, I gave the classical signature length to signature_len_classical
         *signature_len_classical    = size_ecdsa;
         return 0;
     }
@@ -436,6 +432,7 @@ do_verify(
     const uint8_t *m, size_t mlen, const uint8_t *pk, 
     // 
     void *ctx_classical) {
+        
     union {
         uint8_t b[2 * FALCON_N];
         uint64_t dummy_u64;
@@ -537,7 +534,8 @@ do_verify(
         return -1;
     }
 
-    BN_CTX *ctx = BN_CTX_new_ex(NULL);
+    BN_CTX *ctx         = BN_CTX_new_ex(NULL);
+    size_t BASE_LEN_R_S = 32;
 
     BIGNUM *ec_pub_x    = NULL;
     BIGNUM *ec_pub_y    = NULL;
@@ -551,8 +549,8 @@ do_verify(
     size_t r2_len   = sig_ecdsa[3];
     size_t s_len    = *(sig_ecdsa + 4 + r2_len + 1);
     
-    bool r2_flag    = (r2_len  == 32) ? false : true;
-    bool s_flag     = (s_len  == 32) ? false : true;
+    bool r2_flag    = (r2_len  == BASE_LEN_R_S) ? false : true;
+    bool s_flag     = (s_len  == BASE_LEN_R_S) ? false : true;
 
     uint8_t *bin_r2 = (r2_flag) ? (sig_ecdsa + 4 + 1) : (sig_ecdsa + 4);
     uint8_t *bin_s  = (s_flag) ? (sig_ecdsa + 4 + r2_len + 2 + 1) : (sig_ecdsa + 4 + r2_len + 2);
@@ -564,7 +562,7 @@ do_verify(
     * Hash nonce + message into a vector.
     */
     inner_shake256_init(&sc);
-    inner_shake256_inject(&sc, bin_r2, 32);
+    inner_shake256_inject(&sc, bin_r2, BASE_LEN_R_S);
     inner_shake256_inject(&sc, sig_falcon_nonce, NONCELEN);
     inner_shake256_inject(&sc, m, mlen);
     inner_shake256_flip(&sc);
@@ -594,7 +592,7 @@ do_verify(
     uint8_t bin_hm[FALCON_N * 2];
     memcpy(bin_hm, hm, sizeof(hm));
     BIGNUM *bn_hm       = BN_bin2bn((unsigned char *) (bin_hm), FALCON_N * 2, NULL);
-    BIGNUM *bn_s_inv    = BN_bin2bn((unsigned char *) (bin_s), 32, NULL);
+    BIGNUM *bn_s_inv    = BN_bin2bn((unsigned char *) (bin_s), BASE_LEN_R_S, NULL);
     
     // s^-1
     if (BN_mod_inverse(bn_s_inv, bn_s_inv, order, ctx) == NULL) {
@@ -612,7 +610,7 @@ do_verify(
     
     // r_2 * s^-1
     BIGNUM *u_2         = BN_new();
-    BIGNUM *bn_r2       = BN_bin2bn((unsigned char *) (bin_r2), 32, NULL);
+    BIGNUM *bn_r2       = BN_bin2bn((unsigned char *) (bin_r2), BASE_LEN_R_S, NULL);
     BN_mod_mul(u_2, bn_r2, bn_s_inv, order, ctx);
 
     // P_2 = {r_2 * s^-1} P (ec public key)
@@ -685,6 +683,7 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_signature(
         ctx_classical, signature_len_classical) < 0) {
         return -1;
     }
+    // Original code copied from liboqs
     // sig[0] = 0x30 + FALCON_LOGN;
     
     // (Mizzou, 2025) revised
