@@ -701,7 +701,6 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_verify(
     const uint8_t *m, size_t mlen, const uint8_t *pk, 
     // 
     void *ctx_classical) {
-    printf("(function) PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_verify.\n");
     if (siglen < 1 + NONCELEN) {
         return -1;
     }
@@ -752,7 +751,6 @@ PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_open(
     const uint8_t *sm, size_t smlen, const uint8_t *pk, 
     // 
     void *ctx_classical) {
-    printf("(function) PQCLEAN_FALCON512_BH_AARCH64_crypto_sign_open.\n");
     const uint8_t *sigbuf;
     size_t pmlen, sigbuflen;
 
