@@ -534,7 +534,6 @@ do_verify(
     }
 
     BN_CTX *ctx         = BN_CTX_new_ex(NULL);
-    size_t BASE_LEN_R_S = 32;
 
     BIGNUM *ec_pub_x    = NULL;
     BIGNUM *ec_pub_y    = NULL;
@@ -548,8 +547,8 @@ do_verify(
     size_t r2_len   = sig_ecdsa[3];
     size_t s_len    = *(sig_ecdsa + 4 + r2_len + 1);
     
-    bool r2_flag    = (r2_len  == BASE_LEN_R_S) ? false : true;
-    bool s_flag     = (s_len  == BASE_LEN_R_S) ? false : true;
+    bool r2_flag    = (*(sig_ecdsa + 4) == 0x00) ? true: false;
+    bool s_flag     = (*(sig_ecdsa + 4 + r2_len + 2)  == 0x00) ? true : false;
 
     uint8_t *bin_r2 = (r2_flag) ? (sig_ecdsa + 4 + 1) : (sig_ecdsa + 4);
     uint8_t *bin_s  = (s_flag) ? (sig_ecdsa + 4 + r2_len + 2 + 1) : (sig_ecdsa + 4 + r2_len + 2);
@@ -561,7 +560,7 @@ do_verify(
     * Hash nonce + message into a vector.
     */
     inner_shake256_init(&sc);
-    inner_shake256_inject(&sc, bin_r2, BASE_LEN_R_S);
+    (r2_flag) ? inner_shake256_inject(&sc, bin_r2, r2_len - 1) : inner_shake256_inject(&sc, bin_r2, r2_len);
     inner_shake256_inject(&sc, sig_falcon_nonce, NONCELEN);
     inner_shake256_inject(&sc, m, mlen);
     inner_shake256_flip(&sc);
@@ -591,7 +590,7 @@ do_verify(
     uint8_t bin_hm[FALCON_N * 2];
     memcpy(bin_hm, hm, sizeof(hm));
     BIGNUM *bn_hm       = BN_bin2bn((unsigned char *) (bin_hm), FALCON_N * 2, NULL);
-    BIGNUM *bn_s_inv    = BN_bin2bn((unsigned char *) (bin_s), BASE_LEN_R_S, NULL);
+    BIGNUM *bn_s_inv    = (s_flag) ? BN_bin2bn((unsigned char *) (bin_s), s_len - 1, NULL) : BN_bin2bn((unsigned char *) (bin_s), s_len, NULL);
     
     // s^-1
     if (BN_mod_inverse(bn_s_inv, bn_s_inv, order, ctx) == NULL) {
@@ -609,7 +608,7 @@ do_verify(
     
     // r_2 * s^-1
     BIGNUM *u_2         = BN_new();
-    BIGNUM *bn_r2       = BN_bin2bn((unsigned char *) (bin_r2), BASE_LEN_R_S, NULL);
+    BIGNUM *bn_r2       = (r2_flag) ? BN_bin2bn((unsigned char *) (bin_r2), r2_len - 1, NULL) : BN_bin2bn((unsigned char *) (bin_r2), r2_len, NULL);
     BN_mod_mul(u_2, bn_r2, bn_s_inv, order, ctx);
 
     // P_2 = {r_2 * s^-1} P (ec public key)

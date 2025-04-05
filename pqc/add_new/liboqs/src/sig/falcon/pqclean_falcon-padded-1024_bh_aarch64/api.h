@@ -33,7 +33,9 @@ int PQCLEAN_FALCONPADDED1024_BH_AARCH64_crypto_sign_keypair(
  */
 int PQCLEAN_FALCONPADDED1024_BH_AARCH64_crypto_sign_signature(
     uint8_t *sig, size_t *siglen,
-    const uint8_t *m, size_t mlen, const uint8_t *sk);
+    const uint8_t *m, size_t mlen, const uint8_t *sk, 
+    //
+    void *ctx_classical, size_t *signature_len_classical);
 
 /*
  * Verify a signature (sig, siglen) on a message (m, mlen) with a given
@@ -45,7 +47,9 @@ int PQCLEAN_FALCONPADDED1024_BH_AARCH64_crypto_sign_signature(
  */
 int PQCLEAN_FALCONPADDED1024_BH_AARCH64_crypto_sign_verify(
     const uint8_t *sig, size_t siglen,
-    const uint8_t *m, size_t mlen, const uint8_t *pk);
+    const uint8_t *m, size_t mlen, const uint8_t *pk, 
+    // 
+    void *ctx_classical);
 
 /*
  * Compute a signature on a message and pack the signature and message
@@ -60,7 +64,9 @@ int PQCLEAN_FALCONPADDED1024_BH_AARCH64_crypto_sign_verify(
  */
 int PQCLEAN_FALCONPADDED1024_BH_AARCH64_crypto_sign(
     uint8_t *sm, size_t *smlen,
-    const uint8_t *m, size_t mlen, const uint8_t *sk);
+    const uint8_t *m, size_t mlen, const uint8_t *sk, 
+    //
+    void *ctx_classical, size_t *signature_len_classical);
 
 /*
  * Open a signed message object (sm, smlen) and verify the signature;
@@ -75,6 +81,8 @@ int PQCLEAN_FALCONPADDED1024_BH_AARCH64_crypto_sign(
  */
 int PQCLEAN_FALCONPADDED1024_BH_AARCH64_crypto_sign_open(
     uint8_t *m, size_t *mlen,
-    const uint8_t *sm, size_t smlen, const uint8_t *pk);
+    const uint8_t *sm, size_t smlen, const uint8_t *pk, 
+    // 
+    void *ctx_classical);
 
 #endif
