@@ -298,7 +298,7 @@ do_verify(
     // (Mizzou, 2025) revised
     // Kwon et al. hybrid signature scheme (2024)
     // Restore the nonce
-    uint8_t *r_ecdsa        = nonce - 1;
+    uint8_t *r_ecdsa        = (uint8_t *) nonce - 1;
     uint8_t size_r_ecdsa    = 32;
     
     if (*(r_ecdsa - size_r_ecdsa) & 0x80)

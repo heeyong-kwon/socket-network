@@ -465,7 +465,7 @@ do_verify(
     /*
      * Divide signature to ECDSA and Falcon signatures.
      */
-    uint8_t *sig_ecdsa      = sigbuf + 4;
+    uint8_t *sig_ecdsa      = (uint8_t *) sigbuf + 4;
     size_t sig_ecdsa_len    = sigbuf[3];
 
     uint8_t *sig_falcon             = sig_ecdsa + sig_ecdsa_len;
