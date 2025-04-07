@@ -33,3 +33,5 @@ generate_certificates "p256_falcon512_bh"
 generate_certificates "p521_falcon1024_bh"
 generate_certificates "p256_falconpadded512_bh"
 generate_certificates "p521_falconpadded1024_bh"
+
+echo "I will change this file to construct a test environment"
