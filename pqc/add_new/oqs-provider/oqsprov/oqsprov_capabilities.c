@@ -270,6 +270,11 @@ static OQS_SIGALG_CONSTANTS oqs_sigalg_list[] = {
     {0xf003, 128, TLS1_3_VERSION, 0}, {0xf004, 128, TLS1_3_VERSION, 0},
     {0xf005, 256, TLS1_3_VERSION, 0}, {0xf006, 256, TLS1_3_VERSION, 0},
     {0xf007, 256, TLS1_3_VERSION, 0}, {0xf008, 256, TLS1_3_VERSION, 0},
+
+    {0xf009, 128, TLS1_3_VERSION, 0}, {0xf00a, 128, TLS1_3_VERSION, 0}, 
+    {0xf00b, 128, TLS1_3_VERSION, 0}, {0xf00c, 128, TLS1_3_VERSION, 0},
+    {0xf00d, 256, TLS1_3_VERSION, 0}, {0xf00e, 256, TLS1_3_VERSION, 0},
+    {0xf00f, 256, TLS1_3_VERSION, 0}, {0xf010, 256, TLS1_3_VERSION, 0},
     ///// OQS_TEMPLATE_FRAGMENT_SIGALG_ASSIGNMENTS_END
 };
 
@@ -548,6 +553,25 @@ int oqs_patch_codepoints() {
         oqs_sigalg_list[56].code_point = atoi(getenv("OQS_CODEPOINT_FALCONPADDED1024_KBL"));
     if (getenv("OQS_CODEPOINT_P521_FALCONPADDED1024_KBL"))
         oqs_sigalg_list[57].code_point = atoi(getenv("OQS_CODEPOINT_P521_FALCONPADDED1024_KBL"));
+    
+
+
+    if (getenv("OQS_CODEPOINT_FALCON512_BH"))
+        oqs_sigalg_list[58].code_point = atoi(getenv("OQS_CODEPOINT_FALCON512_BH"));
+    if (getenv("OQS_CODEPOINT_P256_FALCON512_BH"))
+        oqs_sigalg_list[59].code_point = atoi(getenv("OQS_CODEPOINT_P256_FALCON512_BH"));
+    if (getenv("OQS_CODEPOINT_FALCONPADDED512_BH"))
+        oqs_sigalg_list[60].code_point = atoi(getenv("OQS_CODEPOINT_FALCONPADDED512_BH"));
+    if (getenv("OQS_CODEPOINT_P256_FALCONPADDED512_BH"))
+        oqs_sigalg_list[61].code_point = atoi(getenv("OQS_CODEPOINT_P256_FALCONPADDED512_BH"));
+    if (getenv("OQS_CODEPOINT_FALCON1024_BH"))
+        oqs_sigalg_list[62].code_point = atoi(getenv("OQS_CODEPOINT_FALCON1024_BH"));
+    if (getenv("OQS_CODEPOINT_P521_FALCON1024_BH"))
+        oqs_sigalg_list[63].code_point = atoi(getenv("OQS_CODEPOINT_P521_FALCON1024_BH"));
+    if (getenv("OQS_CODEPOINT_FALCONPADDED1024_BH"))
+        oqs_sigalg_list[64].code_point = atoi(getenv("OQS_CODEPOINT_FALCONPADDED1024_BH"));
+    if (getenv("OQS_CODEPOINT_P521_FALCONPADDED1024_BH"))
+        oqs_sigalg_list[65].code_point = atoi(getenv("OQS_CODEPOINT_P521_FALCONPADDED1024_BH"));
 
 
     ///// OQS_TEMPLATE_FRAGMENT_CODEPOINT_PATCHING_END
@@ -721,12 +745,31 @@ static const OSSL_PARAM oqs_param_sigalg_list[][12] = {
     OQS_SIGALG_ENTRY(p256_falconpadded512_kbl, p256_falconpadded512_kbl, p256_falconpadded512_kbl, "1.3.9999.3.53", 53),
 #endif
 #ifdef OQS_ENABLE_SIG_falcon_1024_kbl
-    OQS_SIGALG_ENTRY(falcon1024_kbl, falcon1024_kbl, falcon1024_kbl, "1.3.9999.3.54",546),
+    OQS_SIGALG_ENTRY(falcon1024_kbl, falcon1024_kbl, falcon1024_kbl, "1.3.9999.3.54",54),
     OQS_SIGALG_ENTRY(p521_falcon1024_kbl, p521_falcon1024_kbl, p521_falcon1024_kbl, "1.3.9999.3.55", 55),
 #endif
 #ifdef OQS_ENABLE_SIG_falcon_padded_1024_kbl
     OQS_SIGALG_ENTRY(falconpadded1024_kbl, falconpadded1024_kbl, falconpadded1024_kbl, "1.3.9999.3.56", 56),
     OQS_SIGALG_ENTRY(p521_falconpadded1024_kbl, p521_falconpadded1024_kbl, p521_falconpadded1024_kbl, "1.3.9999.3.57", 57),
+#endif
+
+
+
+#ifdef OQS_ENABLE_SIG_falcon_512_bh
+    OQS_SIGALG_ENTRY(falcon512_bh, falcon512_bh, falcon512_bh, "1.3.9999.3.58", 58),
+    OQS_SIGALG_ENTRY(p256_falcon512_bh, p256_falcon512_bh, p256_falcon512_bh, "1.3.9999.3.59", 59),
+#endif
+#ifdef OQS_ENABLE_SIG_falcon_padded_512_bh
+    OQS_SIGALG_ENTRY(falconpadded512_bh, falconpadded512_bh, falconpadded512_bh, "1.3.9999.3.60", 60),
+    OQS_SIGALG_ENTRY(p256_falconpadded512_bh, p256_falconpadded512_bh, p256_falconpadded512_bh, "1.3.9999.3.61", 61),
+#endif
+#ifdef OQS_ENABLE_SIG_falcon_1024_bh
+    OQS_SIGALG_ENTRY(falcon1024_bh, falcon1024_bh, falcon1024_bh, "1.3.9999.3.62",62),
+    OQS_SIGALG_ENTRY(p521_falcon1024_bh, p521_falcon1024_bh, p521_falcon1024_bh, "1.3.9999.3.63", 63),
+#endif
+#ifdef OQS_ENABLE_SIG_falcon_padded_1024_bh
+    OQS_SIGALG_ENTRY(falconpadded1024_bh, falconpadded1024_bh, falconpadded1024_bh, "1.3.9999.3.64", 64),
+    OQS_SIGALG_ENTRY(p521_falconpadded1024_bh, p521_falconpadded1024_bh, p521_falconpadded1024_bh, "1.3.9999.3.65", 65),
 #endif
 
 

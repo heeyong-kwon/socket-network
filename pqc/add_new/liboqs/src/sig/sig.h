@@ -56,6 +56,14 @@ extern "C" {
 #define OQS_SIG_alg_falcon_padded_1024_kbl "Falcon-padded-1024_kbl"
 
 
+
+/** New Algorithm identifiers for BH method */
+#define OQS_SIG_alg_falcon_512_bh "Falcon-512_bh"
+#define OQS_SIG_alg_falcon_1024_bh "Falcon-1024_bh"
+#define OQS_SIG_alg_falcon_padded_512_bh "Falcon-padded-512_bh"
+#define OQS_SIG_alg_falcon_padded_1024_bh "Falcon-padded-1024_bh"
+
+
 /** Algorithm identifier for Falcon-1024 */
 #define OQS_SIG_alg_falcon_1024 "Falcon-1024"
 /** Algorithm identifier for Falcon-padded-512 */
@@ -136,7 +144,7 @@ extern "C" {
 
 /** Number of algorithm identifiers above. */
 // Default: 44
-#define OQS_SIG_algs_length 48
+#define OQS_SIG_algs_length 52
 ///// OQS_COPY_FROM_UPSTREAM_FRAGMENT_ALGS_LENGTH_END
 
 /**
@@ -228,6 +236,7 @@ typedef struct OQS_SIG {
 	 * @return OQS_SUCCESS or OQS_ERROR
 	 */
 	OQS_STATUS (*sign)(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *secret_key);
+	OQS_STATUS (*sign_bh)(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *secret_key, void *ctx_classical, size_t *signature_len_classical);
 
 	/**
 	 * Signature generation algorithm, with custom context string.
@@ -246,6 +255,7 @@ typedef struct OQS_SIG {
 	 * @return OQS_SUCCESS or OQS_ERROR
 	 */
 	OQS_STATUS (*sign_with_ctx_str)(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key);
+	OQS_STATUS (*sign_with_ctx_str_bh)(uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key, void *ctx_classical, size_t *signature_len_classical);
 
 	/**
 	 * Signature verification algorithm.
@@ -258,6 +268,7 @@ typedef struct OQS_SIG {
 	 * @return OQS_SUCCESS or OQS_ERROR
 	 */
 	OQS_STATUS (*verify)(const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *public_key);
+	OQS_STATUS (*verify_bh)(const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *public_key, void *ctx_classical);
 
 	/**
 	 * Signature verification algorithm, with custom context string.
@@ -272,6 +283,7 @@ typedef struct OQS_SIG {
 	 * @return OQS_SUCCESS or OQS_ERROR
 	 */
 	OQS_STATUS (*verify_with_ctx_str)(const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *public_key);
+	OQS_STATUS (*verify_with_ctx_str_bh)(const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *public_key, void *ctx_classical);
 
 
 } OQS_SIG;
@@ -336,6 +348,7 @@ OQS_API OQS_STATUS OQS_SIG_sign(const OQS_SIG *sig, uint8_t *signature, size_t *
  * @return OQS_SUCCESS or OQS_ERROR
  */
 OQS_API OQS_STATUS OQS_SIG_sign_with_ctx_str(const OQS_SIG *sig, uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key);
+OQS_API OQS_STATUS OQS_SIG_sign_with_ctx_str_bh(const OQS_SIG *sig, uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key, void *ctx, size_t *siglen);
 
 /**
  * Signature verification algorithm.
@@ -364,6 +377,7 @@ OQS_API OQS_STATUS OQS_SIG_verify(const OQS_SIG *sig, const uint8_t *message, si
  * @return OQS_SUCCESS or OQS_ERROR
  */
 OQS_API OQS_STATUS OQS_SIG_verify_with_ctx_str(const OQS_SIG *sig, const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *public_key);
+OQS_API OQS_STATUS OQS_SIG_verify_with_ctx_str_bh(const OQS_SIG *sig, const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *public_key, void *ctx);
 
 /**
  * Frees an OQS_SIG object that was constructed by OQS_SIG_new.
