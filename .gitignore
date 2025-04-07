@@ -5,3 +5,7 @@ pqc/src/test/certs
 pqc/src/test/csrs
 pqc/src/test/keys
 pqc/src/build
+*.key
+*.crt
+*.csr
+*.srl

@@ -1229,6 +1229,32 @@ static int oqsx_pki_priv_to_der(const void *vxkey, unsigned char **pder) {
 #define p521_falconpadded1024_kbl_pem_type "p521_falconpadded1024_kbl"
 
 
+#define falcon512_bh_evp_type 0
+#define falcon512_bh_input_type "falcon512_bh"
+#define falcon512_bh_pem_type "falcon512_bh"
+#define p256_falcon512_bh_evp_type 0
+#define p256_falcon512_bh_input_type "p256_falcon512_bh"
+#define p256_falcon512_bh_pem_type "p256_falcon512_bh"
+#define falconpadded512_bh_evp_type 0
+#define falconpadded512_bh_input_type "falconpadded512_bh"
+#define falconpadded512_bh_pem_type "falconpadded512_bh"
+#define p256_falconpadded512_bh_evp_type 0
+#define p256_falconpadded512_bh_input_type "p256_falconpadded512_bh"
+#define p256_falconpadded512_bh_pem_type "p256_falconpadded512_bh"
+#define falcon1024_bh_evp_type 0
+#define falcon1024_bh_input_type "falcon1024_bh"
+#define falcon1024_bh_pem_type "falcon1024_bh"
+#define p521_falcon1024_bh_evp_type 0
+#define p521_falcon1024_bh_input_type "p521_falcon1024_bh"
+#define p521_falcon1024_bh_pem_type "p521_falcon1024_bh"
+#define falconpadded1024_bh_evp_type 0
+#define falconpadded1024_bh_input_type "falconpadded1024_bh"
+#define falconpadded1024_bh_pem_type "falconpadded1024_bh"
+#define p521_falconpadded1024_bh_evp_type 0
+#define p521_falconpadded1024_bh_input_type "p521_falconpadded1024_bh"
+#define p521_falconpadded1024_bh_pem_type "p521_falconpadded1024_bh"
+
+
 
 #define sphincssha2128fsimple_evp_type 0
 #define sphincssha2128fsimple_input_type "sphincssha2128fsimple"
@@ -2524,6 +2550,65 @@ MAKE_ENCODER(, p521_falconpadded1024_kbl, oqsx, PrivateKeyInfo, pem);
 MAKE_ENCODER(, p521_falconpadded1024_kbl, oqsx, SubjectPublicKeyInfo, der);
 MAKE_ENCODER(, p521_falconpadded1024_kbl, oqsx, SubjectPublicKeyInfo, pem);
 MAKE_TEXT_ENCODER(, p521_falconpadded1024_kbl);
+
+
+
+MAKE_ENCODER(, falcon512_bh, oqsx, EncryptedPrivateKeyInfo, der);
+MAKE_ENCODER(, falcon512_bh, oqsx, EncryptedPrivateKeyInfo, pem);
+MAKE_ENCODER(, falcon512_bh, oqsx, PrivateKeyInfo, der);
+MAKE_ENCODER(, falcon512_bh, oqsx, PrivateKeyInfo, pem);
+MAKE_ENCODER(, falcon512_bh, oqsx, SubjectPublicKeyInfo, der);
+MAKE_ENCODER(, falcon512_bh, oqsx, SubjectPublicKeyInfo, pem);
+MAKE_TEXT_ENCODER(, falcon512_bh);
+MAKE_ENCODER(, p256_falcon512_bh, oqsx, EncryptedPrivateKeyInfo, der);
+MAKE_ENCODER(, p256_falcon512_bh, oqsx, EncryptedPrivateKeyInfo, pem);
+MAKE_ENCODER(, p256_falcon512_bh, oqsx, PrivateKeyInfo, der);
+MAKE_ENCODER(, p256_falcon512_bh, oqsx, PrivateKeyInfo, pem);
+MAKE_ENCODER(, p256_falcon512_bh, oqsx, SubjectPublicKeyInfo, der);
+MAKE_ENCODER(, p256_falcon512_bh, oqsx, SubjectPublicKeyInfo, pem);
+MAKE_TEXT_ENCODER(, p256_falcon512_bh);
+MAKE_ENCODER(, falconpadded512_bh, oqsx, EncryptedPrivateKeyInfo, der);
+MAKE_ENCODER(, falconpadded512_bh, oqsx, EncryptedPrivateKeyInfo, pem);
+MAKE_ENCODER(, falconpadded512_bh, oqsx, PrivateKeyInfo, der);
+MAKE_ENCODER(, falconpadded512_bh, oqsx, PrivateKeyInfo, pem);
+MAKE_ENCODER(, falconpadded512_bh, oqsx, SubjectPublicKeyInfo, der);
+MAKE_ENCODER(, falconpadded512_bh, oqsx, SubjectPublicKeyInfo, pem);
+MAKE_TEXT_ENCODER(, falconpadded512_bh);
+MAKE_ENCODER(, p256_falconpadded512_bh, oqsx, EncryptedPrivateKeyInfo, der);
+MAKE_ENCODER(, p256_falconpadded512_bh, oqsx, EncryptedPrivateKeyInfo, pem);
+MAKE_ENCODER(, p256_falconpadded512_bh, oqsx, PrivateKeyInfo, der);
+MAKE_ENCODER(, p256_falconpadded512_bh, oqsx, PrivateKeyInfo, pem);
+MAKE_ENCODER(, p256_falconpadded512_bh, oqsx, SubjectPublicKeyInfo, der);
+MAKE_ENCODER(, p256_falconpadded512_bh, oqsx, SubjectPublicKeyInfo, pem);
+MAKE_TEXT_ENCODER(, p256_falconpadded512_bh);
+MAKE_ENCODER(, falcon1024_bh, oqsx, EncryptedPrivateKeyInfo, der);
+MAKE_ENCODER(, falcon1024_bh, oqsx, EncryptedPrivateKeyInfo, pem);
+MAKE_ENCODER(, falcon1024_bh, oqsx, PrivateKeyInfo, der);
+MAKE_ENCODER(, falcon1024_bh, oqsx, PrivateKeyInfo, pem);
+MAKE_ENCODER(, falcon1024_bh, oqsx, SubjectPublicKeyInfo, der);
+MAKE_ENCODER(, falcon1024_bh, oqsx, SubjectPublicKeyInfo, pem);
+MAKE_TEXT_ENCODER(, falcon1024_bh);
+MAKE_ENCODER(, p521_falcon1024_bh, oqsx, EncryptedPrivateKeyInfo, der);
+MAKE_ENCODER(, p521_falcon1024_bh, oqsx, EncryptedPrivateKeyInfo, pem);
+MAKE_ENCODER(, p521_falcon1024_bh, oqsx, PrivateKeyInfo, der);
+MAKE_ENCODER(, p521_falcon1024_bh, oqsx, PrivateKeyInfo, pem);
+MAKE_ENCODER(, p521_falcon1024_bh, oqsx, SubjectPublicKeyInfo, der);
+MAKE_ENCODER(, p521_falcon1024_bh, oqsx, SubjectPublicKeyInfo, pem);
+MAKE_TEXT_ENCODER(, p521_falcon1024_bh);
+MAKE_ENCODER(, falconpadded1024_bh, oqsx, EncryptedPrivateKeyInfo, der);
+MAKE_ENCODER(, falconpadded1024_bh, oqsx, EncryptedPrivateKeyInfo, pem);
+MAKE_ENCODER(, falconpadded1024_bh, oqsx, PrivateKeyInfo, der);
+MAKE_ENCODER(, falconpadded1024_bh, oqsx, PrivateKeyInfo, pem);
+MAKE_ENCODER(, falconpadded1024_bh, oqsx, SubjectPublicKeyInfo, der);
+MAKE_ENCODER(, falconpadded1024_bh, oqsx, SubjectPublicKeyInfo, pem);
+MAKE_TEXT_ENCODER(, falconpadded1024_bh);
+MAKE_ENCODER(, p521_falconpadded1024_bh, oqsx, EncryptedPrivateKeyInfo, der);
+MAKE_ENCODER(, p521_falconpadded1024_bh, oqsx, EncryptedPrivateKeyInfo, pem);
+MAKE_ENCODER(, p521_falconpadded1024_bh, oqsx, PrivateKeyInfo, der);
+MAKE_ENCODER(, p521_falconpadded1024_bh, oqsx, PrivateKeyInfo, pem);
+MAKE_ENCODER(, p521_falconpadded1024_bh, oqsx, SubjectPublicKeyInfo, der);
+MAKE_ENCODER(, p521_falconpadded1024_bh, oqsx, SubjectPublicKeyInfo, pem);
+MAKE_TEXT_ENCODER(, p521_falconpadded1024_bh);
 
 
 

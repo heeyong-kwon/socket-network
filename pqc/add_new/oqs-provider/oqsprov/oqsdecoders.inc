@@ -185,6 +185,11 @@ DECODER_w_structure("p256_falcon512_kbl", der, PrivateKeyInfo, p256_falcon512_kb
 
 
 
+DECODER_w_structure("falcon512_bh", der, PrivateKeyInfo, falcon512_bh),DECODER_w_structure("falcon512_bh", der, SubjectPublicKeyInfo, falcon512_bh),
+DECODER_w_structure("p256_falcon512_bh", der, PrivateKeyInfo, p256_falcon512_bh),DECODER_w_structure("p256_falcon512_bh", der, SubjectPublicKeyInfo, p256_falcon512_bh),
+
+
+
 #endif
 #ifdef OQS_ENABLE_SIG_falcon_padded_512
 DECODER_w_structure("falconpadded512", der, PrivateKeyInfo, falconpadded512),
@@ -196,6 +201,11 @@ DECODER_w_structure("rsa3072_falconpadded512", der, SubjectPublicKeyInfo, rsa307
 
 DECODER_w_structure("falconpadded512_kbl", der, PrivateKeyInfo, falconpadded512_kbl),DECODER_w_structure("falconpadded512_kbl", der, SubjectPublicKeyInfo, falconpadded512_kbl),
 DECODER_w_structure("p256_falconpadded512_kbl", der, PrivateKeyInfo, p256_falconpadded512_kbl),DECODER_w_structure("p256_falconpadded512_kbl", der, SubjectPublicKeyInfo, p256_falconpadded512_kbl),
+
+
+
+DECODER_w_structure("falconpadded512_bh", der, PrivateKeyInfo, falconpadded512_bh),DECODER_w_structure("falconpadded512_bh", der, SubjectPublicKeyInfo, falconpadded512_bh),
+DECODER_w_structure("p256_falconpadded512_bh", der, PrivateKeyInfo, p256_falconpadded512_bh),DECODER_w_structure("p256_falconpadded512_bh", der, SubjectPublicKeyInfo, p256_falconpadded512_bh),
 
 
 
@@ -212,6 +222,11 @@ DECODER_w_structure("p521_falcon1024_kbl", der, PrivateKeyInfo, p521_falcon1024_
 
 
 
+DECODER_w_structure("falcon1024_bh", der, PrivateKeyInfo, falcon1024_bh),DECODER_w_structure("falcon1024_bh", der, SubjectPublicKeyInfo, falcon1024_bh),
+DECODER_w_structure("p521_falcon1024_bh", der, PrivateKeyInfo, p521_falcon1024_bh),DECODER_w_structure("p521_falcon1024_bh", der, SubjectPublicKeyInfo, p521_falcon1024_bh),
+
+
+
 #endif
 #ifdef OQS_ENABLE_SIG_falcon_padded_1024
 DECODER_w_structure("falconpadded1024", der, PrivateKeyInfo, falconpadded1024),
@@ -222,6 +237,11 @@ DECODER_w_structure("p521_falconpadded1024", der, SubjectPublicKeyInfo, p521_fal
 
 DECODER_w_structure("falconpadded1024_kbl", der, PrivateKeyInfo, falconpadded1024_kbl),DECODER_w_structure("falconpadded1024_kbl", der, SubjectPublicKeyInfo, falconpadded1024_kbl),
 DECODER_w_structure("p521_falconpadded1024_kbl", der, PrivateKeyInfo, p521_falconpadded1024_kbl),DECODER_w_structure("p521_falconpadded1024_kbl", der, SubjectPublicKeyInfo, p521_falconpadded1024_kbl),
+
+
+
+DECODER_w_structure("falconpadded1024_bh", der, PrivateKeyInfo, falconpadded1024_bh),DECODER_w_structure("falconpadded1024_bh", der, SubjectPublicKeyInfo, falconpadded1024_bh),
+DECODER_w_structure("p521_falconpadded1024_bh", der, PrivateKeyInfo, p521_falconpadded1024_bh),DECODER_w_structure("p521_falconpadded1024_bh", der, SubjectPublicKeyInfo, p521_falconpadded1024_bh),
 
 
 

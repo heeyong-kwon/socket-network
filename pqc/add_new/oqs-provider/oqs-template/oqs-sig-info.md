@@ -64,6 +64,17 @@
 
 
 
+| falcon512_bh                                     | 20250310                                         | 3            |                    1 | 0xf009       | 1.3.9999.3.58               |
+| falcon512_bh **hybrid with** p256                | 20250310                                         | 3            |                    1 | 0xf00a       | 1.3.9999.3.59               |
+| falconpadded512_bh                               | 20250310                                         | 3            |                    1 | 0xf00b       | 1.3.9999.3.60               |
+| falconpadded512_bh **hybrid with** p256          | 20250310                                         | 3            |                    1 | 0xf00c       | 1.3.9999.3.61               |
+| falcon1024_bh                                    | 20250310                                         | 3            |                    5 | 0xf00d       | 1.3.9999.3.62               |
+| falcon1024_bh **hybrid with** p521               | 20250310                                         | 3            |                    5 | 0xf00e       | 1.3.9999.3.63               |
+| falconpadded1024_bh                              | 20250310                                         | 3            |                    5 | 0xf00f       | 1.3.9999.3.64               |
+| falconpadded1024_bh **hybrid with** p521         | 20250310                                         | 3            |                    5 | 0xf010       | 1.3.9999.3.65               |
+
+
+
 | mayo1                                             | https://doi.org/10.46586/tches.v2024.i2.252-275  | 1            |                    1 | 0xfeee       | 1.3.9999.8.1.1              |
 | mayo1 **hybrid with** p256                        | https://doi.org/10.46586/tches.v2024.i2.252-275  | 1            |                    1 | 0xfef2       | 1.3.9999.8.1.2              |
 | mayo2                                             | https://doi.org/10.46586/tches.v2024.i2.252-275  | 1            |                    1 | 0xfeef       | 1.3.9999.8.2.1              |

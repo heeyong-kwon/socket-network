@@ -1260,6 +1260,77 @@ static void *p521_falconpadded1024_kbl_gen_init(void *provctx, int selection) {
 
 
 
+static void *falcon512_bh_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_512_bh,
+                        "falcon512_bh", KEY_TYPE_SIG, NULL, 128, 50, 0);
+}
+static void *falcon512_bh_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_512_bh,
+                         "falcon512_bh", 0, 128, 50, 0);
+}
+static void *p256_falcon512_bh_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_512_bh,
+                        "p256_falcon512_bh", KEY_TYPE_HYB_SIG, NULL, 128, 51, 0);
+}
+static void *p256_falcon512_bh_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_512_bh,
+                         "p256_falcon512_bh", KEY_TYPE_HYB_SIG, 128, 51, 0);
+}
+static void *falconpadded512_bh_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx),
+                        OQS_SIG_alg_falcon_padded_512_bh, "falconpadded512_bh",
+                        KEY_TYPE_SIG, NULL, 128, 23, 0);
+}
+static void *falconpadded512_bh_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_padded_512_bh,
+                         "falconpadded512_bh", 0, 128, 23, 0);
+}
+static void *p256_falconpadded512_bh_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx),
+                        OQS_SIG_alg_falcon_padded_512_bh, "p256_falconpadded512_bh",
+                        KEY_TYPE_HYB_SIG, NULL, 128, 24, 0);
+}
+static void *p256_falconpadded512_bh_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_padded_512_bh,
+                         "p256_falconpadded512_bh", KEY_TYPE_HYB_SIG, 128, 24, 0);
+}
+static void *falcon1024_bh_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_1024_bh,
+                        "falcon1024_bh", KEY_TYPE_SIG, NULL, 256, 26, 0);
+}
+static void *falcon1024_bh_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_1024_bh,
+                         "falcon1024_bh", 0, 256, 26, 0);
+}
+static void *p521_falcon1024_bh_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx), OQS_SIG_alg_falcon_1024_bh,
+                        "p521_falcon1024_bh", KEY_TYPE_HYB_SIG, NULL, 256, 27, 0);
+}
+static void *p521_falcon1024_bh_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_1024_bh,
+                         "p521_falcon1024_bh", KEY_TYPE_HYB_SIG, 256, 27, 0);
+}
+static void *falconpadded1024_bh_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx),
+                        OQS_SIG_alg_falcon_padded_1024_bh, "falconpadded1024_bh",
+                        KEY_TYPE_SIG, NULL, 256, 28, 0);
+}
+static void *falconpadded1024_bh_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_padded_1024_bh,
+                         "falconpadded1024_bh", 0, 256, 28, 0);
+}
+static void *p521_falconpadded1024_bh_new_key(void *provctx) {
+    return oqsx_key_new(PROV_OQS_LIBCTX_OF(provctx),
+                        OQS_SIG_alg_falcon_padded_1024_bh, "p521_falconpadded1024_bh",
+                        KEY_TYPE_HYB_SIG, NULL, 256, 29, 0);
+}
+static void *p521_falconpadded1024_bh_gen_init(void *provctx, int selection) {
+    return oqsx_gen_init(provctx, selection, OQS_SIG_alg_falcon_padded_1024_bh,
+                         "p521_falconpadded1024_bh", KEY_TYPE_HYB_SIG, 256, 29, 0);
+}
+
+
+
 ///// OQS_TEMPLATE_FRAGMENT_KEYMGMT_CONSTRUCTORS_END
 
 #define MAKE_SIG_KEYMGMT_FUNCTIONS(alg)                                        \
@@ -1445,6 +1516,17 @@ MAKE_SIG_KEYMGMT_FUNCTIONS(falcon1024_kbl)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p521_falcon1024_kbl)
 MAKE_SIG_KEYMGMT_FUNCTIONS(falconpadded1024_kbl)
 MAKE_SIG_KEYMGMT_FUNCTIONS(p521_falconpadded1024_kbl)
+
+
+
+MAKE_SIG_KEYMGMT_FUNCTIONS(falcon512_bh)
+MAKE_SIG_KEYMGMT_FUNCTIONS(p256_falcon512_bh)
+MAKE_SIG_KEYMGMT_FUNCTIONS(falconpadded512_bh)
+MAKE_SIG_KEYMGMT_FUNCTIONS(p256_falconpadded512_bh)
+MAKE_SIG_KEYMGMT_FUNCTIONS(falcon1024_bh)
+MAKE_SIG_KEYMGMT_FUNCTIONS(p521_falcon1024_bh)
+MAKE_SIG_KEYMGMT_FUNCTIONS(falconpadded1024_bh)
+MAKE_SIG_KEYMGMT_FUNCTIONS(p521_falconpadded1024_bh)
 
 
 

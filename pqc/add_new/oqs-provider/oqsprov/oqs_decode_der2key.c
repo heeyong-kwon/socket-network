@@ -743,6 +743,25 @@ MAKE_DECODER(, "p521_falconpadded1024_kbl", p521_falconpadded1024_kbl, oqsx, Sub
 
 
 
+MAKE_DECODER(, "falcon512_bh", falcon512_bh, oqsx, PrivateKeyInfo);
+MAKE_DECODER(, "falcon512_bh", falcon512_bh, oqsx, SubjectPublicKeyInfo);
+MAKE_DECODER(, "p256_falcon512_bh", p256_falcon512_bh, oqsx, PrivateKeyInfo);
+MAKE_DECODER(, "p256_falcon512_bh", p256_falcon512_bh, oqsx, SubjectPublicKeyInfo);
+MAKE_DECODER(, "falconpadded512_bh", falconpadded512_bh, oqsx, PrivateKeyInfo);
+MAKE_DECODER(, "falconpadded512_bh", falconpadded512_bh, oqsx, SubjectPublicKeyInfo);
+MAKE_DECODER(, "p256_falconpadded512_bh", p256_falconpadded512_bh, oqsx, PrivateKeyInfo);
+MAKE_DECODER(, "p256_falconpadded512_bh", p256_falconpadded512_bh, oqsx, SubjectPublicKeyInfo);
+MAKE_DECODER(, "falcon1024_bh", falcon1024_bh, oqsx, PrivateKeyInfo);
+MAKE_DECODER(, "falcon1024_bh", falcon1024_bh, oqsx, SubjectPublicKeyInfo);
+MAKE_DECODER(, "p521_falcon1024_bh", p521_falcon1024_bh, oqsx, PrivateKeyInfo);
+MAKE_DECODER(, "p521_falcon1024_bh", p521_falcon1024_bh, oqsx, SubjectPublicKeyInfo);
+MAKE_DECODER(, "falconpadded1024_bh", falconpadded1024_bh, oqsx, PrivateKeyInfo);
+MAKE_DECODER(, "falconpadded1024_bh", falconpadded1024_bh, oqsx, SubjectPublicKeyInfo);
+MAKE_DECODER(, "p521_falconpadded1024_bh", p521_falconpadded1024_bh, oqsx, PrivateKeyInfo);
+MAKE_DECODER(, "p521_falconpadded1024_bh", p521_falconpadded1024_bh, oqsx, SubjectPublicKeyInfo);
+
+
+
 MAKE_DECODER(, "sphincssha2128fsimple", sphincssha2128fsimple, oqsx,
              PrivateKeyInfo);
 MAKE_DECODER(, "sphincssha2128fsimple", sphincssha2128fsimple, oqsx,

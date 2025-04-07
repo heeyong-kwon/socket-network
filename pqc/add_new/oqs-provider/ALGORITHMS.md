@@ -99,6 +99,17 @@ As standardization for these algorithms within TLS is not done, all TLS code poi
 
 
 
+| falcon512_bh | 0xf009 | Yes | OQS_CODEPOINT_FALCON512_BH |
+| p256_falcon512_bh | 0xf00a | Yes | OQS_CODEPOINT_P256_FALCON512_BH |
+| falconpadded512_bh | 0xf00b |Yes| OQS_CODEPOINT_FALCONPADDED512_BH
+| p256_falconpadded512_bh | 0xf00c |Yes| OQS_CODEPOINT_P256_FALCONPADDED512_BH
+| falcon1024_bh | 0xf00d |Yes| OQS_CODEPOINT_FALCON1024_BH
+| p521_falcon1024_bh | 0xf00e |Yes| OQS_CODEPOINT_P521_FALCON1024_BH
+| falconpadded1024_bh | 0xf00f |Yes| OQS_CODEPOINT_FALCONPADDED1024_BH
+| p521_falconpadded1024_bh | 0xf010 |Yes| OQS_CODEPOINT_P521_FALCONPADDED1024_BH
+
+
+
 | sphincssha2128fsimple | 0xfeb3 |Yes| OQS_CODEPOINT_SPHINCSSHA2128FSIMPLE
 | p256_sphincssha2128fsimple | 0xfeb4 |Yes| OQS_CODEPOINT_P256_SPHINCSSHA2128FSIMPLE
 | rsa3072_sphincssha2128fsimple | 0xfeb5 |Yes| OQS_CODEPOINT_RSA3072_SPHINCSSHA2128FSIMPLE
@@ -221,6 +232,17 @@ discussed in https://github.com/open-quantum-safe/oqs-provider/issues/351.
 | p521_falcon1024_kbl | 1.3.9999.3.55 |Yes| OQS_OID_P521_FALCON1024_KBL
 | falconpadded1024_kbl | 1.3.9999.3.56 |Yes| OQS_OID_FALCONPADDED1024_KBL
 | p521_falconpadded1024_kbl | 1.3.9999.3.57 |Yes| OQS_OID_P521_FALCONPADDED1024_KBL
+
+
+
+| falcon512_bh | 1.3.9999.3.58 | Yes | OQS_OID_FALCON512_BH |
+| p256_falcon512_bh | 1.3.9999.3.59 | Yes | OQS_OID_P256_FALCON512_BH |
+| falconpadded512_bh | 1.3.9999.3.60 |Yes| OQS_OID_FALCONPADDED512_BH
+| p256_falconpadded512_bh | 1.3.9999.3.61 |Yes| OQS_OID_P256_FALCONPADDED512_BH
+| falcon1024_bh | 1.3.9999.3.62 |Yes| OQS_OID_FALCON1024_BH
+| p521_falcon1024_bh | 1.3.9999.3.63 |Yes| OQS_OID_P521_FALCON1024_BH
+| falconpadded1024_bh | 1.3.9999.3.64 |Yes| OQS_OID_FALCONPADDED1024_BH
+| p521_falconpadded1024_bh | 1.3.9999.3.65 |Yes| OQS_OID_P521_FALCONPADDED1024_BH
 
 
 

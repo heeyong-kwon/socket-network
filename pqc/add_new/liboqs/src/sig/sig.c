@@ -10,6 +10,7 @@
 #endif
 
 #include <oqs/oqs.h>
+#include <openssl/evp.h>
 
 OQS_API const char *OQS_SIG_alg_identifier(size_t i) {
 	// EDIT-WHEN-ADDING-SIG
@@ -32,6 +33,13 @@ OQS_API const char *OQS_SIG_alg_identifier(size_t i) {
 		OQS_SIG_alg_falcon_1024_kbl,
 		OQS_SIG_alg_falcon_padded_512_kbl,
 		OQS_SIG_alg_falcon_padded_1024_kbl,
+		
+		
+		
+		OQS_SIG_alg_falcon_512_bh,
+		OQS_SIG_alg_falcon_1024_bh,
+		OQS_SIG_alg_falcon_padded_512_bh,
+		OQS_SIG_alg_falcon_padded_1024_bh,
 
 
 
@@ -182,6 +190,36 @@ OQS_API int OQS_SIG_alg_is_enabled(const char *method_name) {
 
 } else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_1024_kbl)) {
 #ifdef OQS_ENABLE_SIG_falcon_padded_1024_kbl
+	return 1;
+#else
+	return 0;
+#endif
+
+
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_512_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_512_bh
+	return 1;
+#else
+	return 0;
+#endif
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_1024_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_1024_bh
+	return 1;
+#else
+	return 0;
+#endif
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_512_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_512_bh
+	return 1;
+#else
+	return 0;
+#endif
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_1024_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_1024_bh
 	return 1;
 #else
 	return 0;
@@ -540,6 +578,36 @@ OQS_API OQS_SIG *OQS_SIG_new(const char *method_name) {
 
 
 
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_512_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_512_bh
+	return OQS_SIG_falcon_512_bh_new();
+#else
+	return NULL;
+#endif
+
+	} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_1024_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_1024_bh
+	return OQS_SIG_falcon_1024_bh_new();
+#else
+	return NULL;
+#endif
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_512_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_512_bh
+	return OQS_SIG_falcon_padded_512_bh_new();
+#else
+	return NULL;
+#endif
+
+} else if (0 == strcasecmp(method_name, OQS_SIG_alg_falcon_padded_1024_bh)) {
+#ifdef OQS_ENABLE_SIG_falcon_padded_1024_bh
+	return OQS_SIG_falcon_padded_1024_bh_new();
+#else
+	return NULL;
+#endif
+
+
+
 	} else if (0 == strcasecmp(method_name, OQS_SIG_alg_sphincs_sha2_128f_simple)) {
 #ifdef OQS_ENABLE_SIG_sphincs_sha2_128f_simple
 		return OQS_SIG_sphincs_sha2_128f_simple_new();
@@ -808,6 +876,18 @@ OQS_API OQS_STATUS OQS_SIG_sign_with_ctx_str(const OQS_SIG *sig, uint8_t *signat
 	}
 }
 
+
+
+OQS_API OQS_STATUS OQS_SIG_sign_with_ctx_str_bh(const OQS_SIG *sig, uint8_t *signature, size_t *signature_len, const uint8_t *message, size_t message_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *secret_key, void *ctx, size_t *siglen) {
+	if (sig == NULL || sig->sign_with_ctx_str_bh(signature, signature_len, message, message_len, ctx_str, ctx_str_len, secret_key, ctx, siglen) != OQS_SUCCESS) {
+		return OQS_ERROR;
+	} else {
+		return OQS_SUCCESS;
+	}
+}
+
+
+
 OQS_API OQS_STATUS OQS_SIG_verify(const OQS_SIG *sig, const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *public_key) {
 	if (sig == NULL || sig->verify(message, message_len, signature, signature_len, public_key) != OQS_SUCCESS) {
 		return OQS_ERROR;
@@ -823,6 +903,18 @@ OQS_API OQS_STATUS OQS_SIG_verify_with_ctx_str(const OQS_SIG *sig, const uint8_t
 		return OQS_SUCCESS;
 	}
 }
+
+
+
+OQS_API OQS_STATUS OQS_SIG_verify_with_ctx_str_bh(const OQS_SIG *sig, const uint8_t *message, size_t message_len, const uint8_t *signature, size_t signature_len, const uint8_t *ctx_str, size_t ctx_str_len, const uint8_t *public_key, void *ctx) {
+	if (sig == NULL || sig->verify_with_ctx_str_bh(message, message_len, signature, signature_len, ctx_str, ctx_str_len, public_key, ctx) != OQS_SUCCESS) {
+		return OQS_ERROR;
+	} else {
+		return OQS_SUCCESS;
+	}
+}
+
+
 
 OQS_API void OQS_SIG_free(OQS_SIG *sig) {
 	OQS_MEM_insecure_free(sig);
