@@ -9,4 +9,5 @@ pqc/src/build
 *.crt
 *.csr
 *.srl
-
+DMC_2025/p256*
+DMC_2025/p521*
