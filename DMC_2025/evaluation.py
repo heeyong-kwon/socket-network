@@ -15,7 +15,7 @@ for alg in ALG_LIST:
 # Create directories for the signature schemes
 print("Directories for signature schemes created successfully.")
 
-N_ITERATION = 1000  # Number of iterations
+N_ITERATION = 10  # Number of iterations
 
 for alg in ALG_LIST:
     # Generate keys and certificates for each algorithm
